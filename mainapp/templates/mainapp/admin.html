@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Админ панель</title>
+    <link rel="stylesheet" href="{% static 'css/adminstyle.css' %}">
+</head>
+<body>
+        <div class="message__wrapper">
+            {% for message in messages %}
+                <div class="message">
+                    <div class="message__firstblock">
+                        <p>Имя</p>
+                        {% if message.name %}
+                            <p>{{message.name}}</p>
+                        {% else %}
+                            <p>Не указано</p>
+                        {% endif %}
+                        <p>Отдел</p>
+                        {% if message.department %}
+                            <p>{{message.department}}</p>
+                        {% else %}
+                            <p>Не указан</p>
+                        {% endif %}
+                    </div>
+                    <div class="message__secondblock">
+                        <p>Номер телефона</p>
+                        {% if message.phone %}
+                            <p>{{message.phone}}</p>
+                        {% else %}
+                            <p>Не указан</p>
+                        {% endif %}
+                        <p>Дата</p>
+                        <p>{{message.created|date:'Y-m-d H:i'}}</p>
+                    </div>
+                    <div class="message__thirdblock">
+                        <p>Текст</p>
+                        <p>{{message.msg_text}}</p>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+</body>
+</html>
