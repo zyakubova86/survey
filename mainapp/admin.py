@@ -1,21 +1,49 @@
+import pandas as pd
 from django.contrib import admin
-from .models import Message
-from django.conf.locale.es import formats as es_formats
+from django.http import HttpResponse
+from django.urls import path
+from .models import *
+from io import BytesIO
 
 
-# Register your models here.
-@admin.register(Message)
-class PortalAdmin(admin.ModelAdmin):
-
-    def date_time_display(self, obj):
-        return obj.created.strftime("%d-%m-%Y %H:%M")
-
-    date_time_display.short_description = 'Дата'
-
-    list_display = ('name', 'department', 'phone', 'msg_text', 'created')
-    list_filter = ('name', "department", 'created')
+class EmployeesAdmin(admin.ModelAdmin):
+    list_display = ('code', 'name', 'department')
+    list_filter = ('name', "department")
 
     class Meta:
-        ordering = ('-created',)
-        verbose_name = "Портал"
-        verbose_name_plural = "Портал"
+        ordering = ('name',)
+        verbose_name = "Сотрудники"
+        verbose_name_plural = "Сотрудники"
+
+
+class DepartmentAdmin(admin.ModelAdmin):
+    ordering = ('name',)
+    list_display = ('name',)
+
+    class Meta:
+        verbose_name = "Отдел"
+        verbose_name_plural = "Отделы"
+
+
+class QuestionsAdmin(admin.ModelAdmin):
+    list_display = ('pk', 'question_ru', 'question_uz',  'is_active', 'has_options', 'option1_ru', 'option1_uz', 'option2_ru', 'option2_uz', 'option3_ru', 'option3_uz', 'option4_ru', 'option5_ru', 'option4_uz', 'option5_uz', 'created', 'option1_count', 'option2_count', 'option3_count', 'option4_count', 'option5_count')
+    list_filter = ('question_ru', 'question_uz',  'is_active', 'has_options', 'option1_ru', 'option1_uz', 'option2_ru', 'option2_uz', 'option3_ru', 'option3_uz', 'option4_ru', 'option5_ru', 'option4_uz', 'option5_uz', 'created', 'option1_count', 'option2_count', 'option3_count', 'option4_count', 'option5_count')
+
+    class Meta:
+        verbose_name = "Вопрос"
+        verbose_name_plural = 'Вопросы'
+
+
+class EmployeeResponseAdmin(admin.ModelAdmin):
+    list_display = ('question', 'question_text', 'response', 'response_option', 'department', 'created_at')
+    list_filter = ('question', 'response', 'department')
+
+    class Meta:
+        verbose_name = "Ответ сотрудника"
+        verbose_name_plural = 'Ответы сотрудников'
+
+
+admin.site.register(Employees, EmployeesAdmin)
+admin.site.register(Department, DepartmentAdmin)
+admin.site.register(Questions, QuestionsAdmin)
+admin.site.register(EmployeeResponse, EmployeeResponseAdmin)

@@ -3,77 +3,84 @@
 {% block title %}Ответы{% endblock %}
 
 {% block content %}
-
-<div class="container-fluid">
+<div class="container">
     <div class="row">
-        {% include 'mainapp/apanel/sidebar.html' %}
-        <div class="col-md-9">
+        <div class="col-md-12">
             <div class="container">
                 <div class="row gy-4 text-center justify-content-center">
                     <div class="col-10 order-2 order-lg-1 d-flex flex-column justify-content-center text-center">
+
+
                         <div class="responses_wrapper">
                             {% if report_data %}
 
-                                {% for department in report_data %}
-                                <table class="table table-bordered">
-                                    <thead>
-                                    <div class="card-header">
-                                        <h2 class="m-0"> {{ department.department }}</h2>
-                                    </div>
-                                    <tr>
-                                        <th scope="col">Вопрос</th>
-                                        {% if department.questions.0.has_options %}
-                                        <th scope="col">Вариант</th>
-                                        <th scope="col">Количество</th>
-                                        {% else %}
-                                        <th scope="col">Ответы</th>
-                                        {% endif %}
-                                    </tr>
-                                    </thead>
 
-                                    <tbody>
-                                    {% for question in department.questions %}
-                                    {% if question.has_options %}
-                                    <tr>
-                                        <!--<td scope="row">{{ forloop.counter }}</td>-->
-                                        <td rowspan="{{ question.options|length }}">{{ question.question_text_ru }}</td>
-                                        {% for option in question.options %}
-                                        {% if forloop.first %}
-                                        <td>{{ option.value }}</td>
-                                        <td>{{ option.count }}</td>
-                                        {% else %}
-                                    <tr>
-                                        <td>{{ option.value }}</td>
-                                        <td>{{ option.count }}</td>
-                                    </tr>
-                                    {% endif %}
-                                    {% endfor %}
-                                    </tr>
+                            {% for department, questions in report_data.items %}
+                            <h2> {{ department }}</h2>
+                            <table border="1" class="table table-bordered">
+                                <thead class="thead-light">
+                                <tr>
+                                    <th>Вопрос ID</th>
+                                    <th>Вопрос</th>
+                                    <th>Вариант</th>
+                                    <th>Количество</th>
+                                </tr>
+                                </thead>
+
+                                <tbody>
+
+                                {% for question_id, details in questions.items %}
+
+
+                                {% if details.options %}
+
+                                <tr>
+                                    <td rowspan="{{ details.options|length }}">{{ question_id }}</td>
+                                    <td class="text-left" rowspan="{{ details.options|length }}">{{
+                                        details.question_text }}
+                                    </td>
+
+
+                                    {% for option, count in details.options.items %}
+
+                                    {% if forloop.first %}
+                                    <td>{{ option }}</td>
+                                    <td>{{ count }}</td>
+
                                     {% else %}
+                                <tr>
+                                    <td>{{ option }}</td>
+                                    <td>{{ count }}</td>
+                                </tr>
 
-                                    <tr>
-                                        <td>{{ question.question_text }}</td>
-                                        <td colspan="2">
-                                            <!--<ul class="m-0 p-2">
-                                                {% for response in question.responses.response_values %}
-                                                <li class="text-left" style="list-style-type: none;">{{ response }}</li>
-                                                {% endfor %}
-                                            </ul>-->
-                                            {{ question.responses.response_count }}
-                                        </td>
-
-                                    </tr>
-
-                                    {% endif %}
-                                    {% endfor %}
-                                    </tbody>
-                                </table>
+                                {% endif %}
                                 {% endfor %}
 
+                                </tr>
+                                {% else %}
+                                <tr>
+                                    <td>{{ question_id }}</td>
+                                    <td class="text-left">{{ details.question_text }}</td>
+                                    <td colspan="2">
+
+                                        {{ details.responses.count }}
+                                    </td>
+                                </tr>
+                                {% endif %}
+                                {% endfor %}
+
+                                </tbody>
+
+                            </table>
+                            {% endfor %}
+
+
                             {% else %}
-                            <h3>Нет данных</h3>
+                            <h2>Нет данных</h2>
                             {% endif %}
                         </div>
+
+
                     </div>
                 </div>
             </div>
@@ -81,23 +88,6 @@
     </div>
 </div>
 
-{% block extra_js %}
-<script type="text/javascript">
-    function setNavigation() {
-        let current_location = location.pathname.split('/')[1];
-
-        let menu_items = document.querySelector(".nav-item").getElementsByTagName("a");
-        for (let i = 0, len = menu_items.length; i < len; i++) {
-            let href = menu_items[i].getAttribute("href");
-
-            if ((!current_location && href === '/') || (current_location && href.indexOf(current_location) !== -1)) {
-                menu_items[i].className = "active";
-            }
-        }
-    }
-    setNavigation();
-</script>
-{% endblock extra_js %}
-
-
 {% endblock %}
+
+

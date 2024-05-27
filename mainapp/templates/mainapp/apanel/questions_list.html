@@ -1,74 +1,93 @@
 {% extends 'base.html' %}
 {% load static %}
-{% block title %}Ответы{% endblock %}
+{% block title %} Список вопросов {% endblock %}
 
 {% block content %}
+
 <div class="container-fluid">
     <div class="row">
         {% include 'mainapp/apanel/sidebar.html' %}
+
         <div class="col-md-9">
-            <div class="container">
-        <div class="row gy-4 text-center justify-content-center">
-            <div class="col-10 order-2 order-lg-1 d-flex flex-column justify-content-center text-center">
-                <div class="responses_wrapper">
-                    {% for department, questions in report_data.items %}
-                    <h2> {{ department }}</h2>
-                    <table border="1" class="table table-bordered">
-                        <thead class="thead-light">
-                            <tr>
-                                <th>Вопрос</th>
-                                <th>Вариант</th>
-                                <th>Количество</th>
-                            </tr>
-                        </thead>
+            <div class="container-fluid">
+                <div class="row text-center justify-content-center">
+                    <div class="col-md-12">
+                        <div class="responses_wrapper">
+                            {% if questions %}
+                            <table class="table table-responsive table-hover">
+                                <thead class="thead-light sticky-top">
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Вопрос</th>
+                                    <th>Вариант1</th>
+                                    <th>Вариант2</th>
+                                    <th>Вариант3</th>
+                                    <th>Вариант4</th>
+                                    <th>Вариант5</th>
+                                    <th>Есть варианты</th>
+                                    <th>Action</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for question in questions %}
+                                <tr>
+                                    <form method="post">
+                                        {% csrf_token %}
+                                        <td>{{ question.id }}<input type="hidden" name="question_id"
+                                                                    value="{{ question.id }}"></td>
+                                        <td><input type="text" name="question_text"
+                                                   value="{{ question.question_text|default_if_none:'-' }}"></td>
+                                        <td><input type="text" name="option1"
+                                                   value="{{ question.option1|default_if_none:'-' }}"></td>
+                                        <td><input type="text" name="option2"
+                                                   value="{{ question.option2|default_if_none:'-' }}"></td>
+                                        <td><input type="text" name="option3"
+                                                   value="{{ question.option3|default_if_none:'-' }}"></td>
+                                        <td><input type="text" name="option4"
+                                                   value="{{ question.option4|default_if_none:'-' }}"></td>
+                                        <td><input type="text" name="option5"
+                                                   value="{{ question.option5|default_if_none:'-' }}"></td>
+                                        <td><input type="checkbox" name="has_options"
+                                                   {% if question.has_options %}checked{% endif %}>
+                                        </td>
+                                        <td>
+                                            <button type="submit">Save</button>
+                                        </td>
+                                    </form>
+                                </tr>
+                                {% endfor %}
 
-                        <tbody>
-
-                        {% for question_text, details in questions.items %}
-                        {% if details.options %}
-                        <tr>
-                            <td rowspan="{{ details.options|length }}">{{ question_text }}</td>
-                            {% for option, count in details.options.items %}
-                            {% if forloop.first %}
-                            <td>{{ option }}</td>
-                            <td>{{ count }}</td>
+                                </tbody>
+                            </table>
                             {% else %}
-                        <tr>
-                            <td>{{ option }}</td>
-                            <td>{{ count }}</td>
-                        </tr>
-                        {% endif %}
-                        {% endfor %}
-                        </tr>
-                        {% else %}
-                        <tr>
-
-                            <td>{{ question_text }}</td>
-                            <td colspan="2">
-
-                                {{ details.responses.count }}
-
-                                <!--<ul class="m-0 p-2">
-                                    {% for response in details.responses.answers %}
-                                    <li class="text-left" style="list-style-type: none;">{{ response }}</li>
-                                    {% endfor %}
-                                </ul>
-                                <p class="text-left">Total answers: {{ details.responses.count }}</p>-->
-                            </td>
-                        </tr>
-                        {% endif %}
-                        {% endfor %}
-
-                        </tbody>
-
-
-                    </table>
-                    {% endfor %}
+                            <h2>Список вопросов пока пуст</h2>
+                            {% endif %}
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-        </div>
-    </div>
 </div>
+
+
+{% block extra_js %}
+<script type="text/javascript">
+    function setNavigation() {
+        let current_location = location.pathname.split('/')[1];
+
+        let menu_items = document.querySelector(".nav-item").getElementsByTagName("a");
+        for (let i = 0, len = menu_items.length; i < len; i++) {
+            let href = menu_items[i].getAttribute("href");
+
+            if ((!current_location && href === '/') || (current_location && href.indexOf(current_location) !== -1)) {
+                menu_items[i].className = "active";
+            }
+        }
+    }
+    setNavigation();
+</script>
+{% endblock extra_js %}
+
+
 {% endblock %}

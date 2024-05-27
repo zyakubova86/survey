@@ -1,12 +1,11 @@
 {% extends 'base.html' %}
 {% load static %}
-{% block title %}Ответы{% endblock %}
+{% block title %}Stats{% endblock %}
 
 {% block content %}
-<div class="container-fluid">
+<div class="container">
     <div class="row">
-        {% include 'mainapp/apanel/sidebar.html' %}
-        <div class="col-md-9">
+        <div class="col-md-12">
             <div class="container">
                 <div class="row gy-4 text-center justify-content-center">
                     <div class="col-10 order-2 order-lg-1 d-flex flex-column justify-content-center text-center">
@@ -18,6 +17,7 @@
                             <table border="1" class="table table-bordered">
                                 <thead class="thead-light">
                                 <tr>
+                                    <th>Вопрос ID</th>
                                     <th>Вопрос</th>
                                     <th>Вариант</th>
                                     <th>Количество</th>
@@ -26,43 +26,45 @@
 
                                 <tbody>
 
-                                {% for question_text, details in questions.items %}
-                                {% if details.options %}
-                                <tr>
-                                    <td class="text-left" rowspan="{{ details.options|length }}">{{ question_text }}</td>
-                                    {% for option, count in details.options.items %}
-                                    {% if forloop.first %}
-                                    <td>{{ option }}</td>
-                                    <td>{{ count }}</td>
-                                    {% else %}
-                                <tr>
-                                    <td>{{ option }}</td>
-                                    <td>{{ count }}</td>
-                                </tr>
-                                {% endif %}
-                                {% endfor %}
-                                </tr>
-                                {% else %}
-                                <tr>
+                                {% for question_id, details in questions.items %}
 
-                                    <td class="text-left">{{ question_text }}</td>
-                                    <td colspan="2">
+
+                                {% if details.options %}
+
+                                    <tr>
+                                        <td rowspan="{{ details.options|length }}">{{ question_id }}</td>
+                                        <td class="text-left" rowspan="{{ details.options|length }}">{{ details.question_text }}</td>
+
+
+                                        {% for option, count in details.options.items %}
+
+                                            {% if forloop.first %}
+                                            <td>{{ option }}</td>
+                                            <td>{{ count }}</td>
+
+                                            {% else %}
+                                            <tr>
+                                                <td>{{ option }}</td>
+                                                <td>{{ count }}</td>
+                                            </tr>
+
+                                            {% endif %}
+                                        {% endfor %}
+
+                                    </tr>
+                                {% else %}
+                                    <tr>
+                                        <td>{{ question_id }}</td>
+                                        <td class="text-left">{{ details.question_text }}</td>
+                                        <td colspan="2">
 
                                         {{ details.responses.count }}
-
-                                        <!--<ul class="m-0 p-2">
-                                            {% for response in details.responses.answers %}
-                                            <li class="text-left" style="list-style-type: none;">{{ response }}</li>
-                                            {% endfor %}
-                                        </ul>
-                                        <p class="text-left">Total answers: {{ details.responses.count }}</p>-->
                                     </td>
                                 </tr>
                                 {% endif %}
                                 {% endfor %}
 
                                 </tbody>
-
 
                             </table>
                             {% endfor %}
@@ -77,26 +79,5 @@
         </div>
     </div>
 </div>
-
-
-{% block extra_js %}
-<script type="text/javascript">
-    function setNavigation() {
-        let current_location = location.pathname.split('/')[-1];
-        console.log(current_location);
-        console.log(location.pathname);
-
-        let menu_items = document.querySelector(".nav-item").getElementsByTagName("a");
-        for (let i = 0, len = menu_items.length; i < len; i++) {
-            let href = menu_items[i].getAttribute("href");
-            if ((!current_location && href === '/') || (current_location && href.indexOf(current_location) !== -1)) {
-                menu_items[i].className = "active";
-            }
-        }
-    }
-    setNavigation();
-</script>
-{% endblock extra_js %}
-
 
 {% endblock %}

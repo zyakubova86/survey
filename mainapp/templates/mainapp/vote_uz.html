@@ -1,10 +1,100 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>$Title$</title>
-</head>
-<body>
-$END$
-</body>
-</html>
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Сўровнома{% endblock %}
+
+
+{% block content %}
+
+<section class="questions_list section">
+    <div class="container">
+        {% if questions %}
+        <form method="POST" action="#">
+            {% csrf_token %}
+            <div class="row">
+                {% for question in questions %}
+                <div class="col-md-6 text-center">
+                    <div class="card mb-4 questions_card">
+                        <div class="card-header text-white text-left" style="background-color: var(--blue-light);">
+                            <h4 class="card-title m-0">
+                                {{ forloop.counter }}. {{ question.question_uz }}
+                            </h4>
+                        </div>
+                        <div class="px-4">
+                            <input type="hidden" name="question_id" value="{{ question.id }}">
+                            <input type="hidden" name="department_name" value="{{ department }}"/>
+
+                            <div class="form-group mt-2">
+                                <div class="question_block text-left d-flex justify-content-center">
+                                    {% if question.has_options %}
+                                        {% if question.option1_uz %}
+                                        <div class="form-check m-2">
+                                            <label class="form-check-label">
+                                                <input name="response_{{ question.id }}" class="form-check-input" type="radio" value="option1" required/>
+                                                <h4>{{ question.option1_uz }}</h4>
+                                            </label>
+                                        </div>
+                                        {% endif %}
+                                        {% if question.option2_uz %}
+                                        <div class="form-check m-2">
+                                            <label class="form-check-label">
+                                                <input name="response_{{ question.id }}" class="form-check-input" type="radio" value="option2" required/>
+                                                <h4>{{ question.option2_uz }}</h4>
+                                            </label>
+                                        </div>
+                                        {% endif %}
+                                        {% if question.option3_uz %}
+                                        <div class="form-check m-2">
+                                            <label class="form-check-label">
+                                                <input name="response_{{ question.id }}" class="form-check-input" type="radio" value="option3" required/>
+                                                <h4>{{ question.option3_uz }}</h4>
+                                            </label>
+                                        </div>
+                                        {% endif %}
+                                        {% if question.option4_uz %}
+                                        <div class="form-check m-2">
+                                            <label class="form-check-label">
+                                                <input name="response_{{ question.id }}" class="form-check-input" type="radio" value="option4" required/>
+                                                <h4>{{ question.option4_uz }}</h4>
+                                            </label>
+                                        </div>
+                                        {% endif %}
+                                        {% if question.option5_uz %}
+                                        <div class="form-check m-2">
+                                            <label class="form-check-label">
+                                                <input name="response_{{ question.id }}" class="form-check-input" type="radio" value="option5" required/>
+                                                <h4>{{ question.option5_uz }}</h4>
+                                            </label>
+                                        </div>
+                                        {% endif %}
+                                    {% else %}
+                                    <div data-mdb-input-init class="form-outline textarea_wrapper">
+                                        <textarea name="response_{{ question.id }}" class="vote_textarea" rows="2" required></textarea>
+                                    </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+                <div class="col-md-12 d-flex justify-content-center">
+                    <div class="card-footer w-100 text-center">
+                        <button type="submit" class="btn-get-started">Тугатиш</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+        {% else %}
+        <div class="row">
+            <div class="col-md-12 d-flex justify-content-center">
+                <h1>Саволлар киритилмаган</h1>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</section>
+
+
+{% endblock %}
+
+

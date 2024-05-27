@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 {% load static %}
-{% block title %}Опросник{% endblock %}
+{% block title %}Сўровнома{% endblock %}
+
 
 {% block content %}
 <section class="ftco-section">
@@ -11,29 +12,22 @@
                     <div class="card survey_card">
                         <div class="card-header">
                             <h5 class="card-title text-white mt-2" id="exampleModalLabel">
-                                Анкетирование: {{ department_name }}
+                                Сўровнома саволлари
                             </h5>
                         </div>
 
                         <div class="modal-body">
                             <div class="text-center">
-                                <!--<svg xmlns="http://www.w3.org/2000/svg" width="60" height="60" fill="currentColor"
-                                     class="bi bi-file-earmark-text mb-3 " viewBox="0 0 16 16">
-                                    <path d="M5.5 7a.5.5 0 0 0 0 1h5a.5.5 0 0 0 0-1zM5 9.5a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5m0 2a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5"/>
-                                    <path d="M9.5 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V4.5zm0 1v2A1.5 1.5 0 0 0 11 4.5h2V14a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1z"/>
-                                </svg>
-                                <p><strong>Ваше мнение важно для нас</strong></p>-->
 
                                 <!-- Progress Bar -->
                                 <div class="text-right mb-5">
-                                    <!--<p>Total questions: {{ total_questions }} </p>-->
                                     <span>{{ current_question }} / {{ total_questions }}</span>
                                     <progress value="{{ current_question }}" max="{{ total_questions }}"></progress>
                                 </div>
 
                             </div>
                             <div class="text-center">
-                                <h3> {{ question.question_text }}</h3>
+                                <h3> {{ question.question_text_uz }}</h3>
                             </div>
 
                             <hr/>
@@ -47,46 +41,51 @@
                                     <div class="question_block text-left">
                                         {% if question.has_options %}
 
-                                        {% if question.option1 %}
-                                        <div class="form-check mb-2">
-                                            <input name="response" class="form-check-input" type="radio" value="{{ question.option1 }}" required/>
+                                        {% if question.option1_uz %}
+                                        <div class="form-check m-2">
+                                            <input name="response" class="form-check-input" type="radio"
+                                                   value="{{ question.option1_uz }}" required/>
                                             <label class="form-check-label">
-                                                <h4>{{ question.option1 }}</h4>
+                                                <h4>{{ question.option1_uz }}</h4>
                                             </label>
                                         </div>
                                         {% endif %}
 
-                                        {% if question.option2 %}
-                                        <div class="form-check mb-2">
-                                            <input name="response" class="form-check-input" type="radio" value="{{ question.option2 }}" required/>
+                                        {% if question.option2_uz %}
+                                        <div class="form-check m-2">
+                                            <input name="response" class="form-check-input" type="radio"
+                                                   value="{{ question.option2_uz }}" required/>
                                             <label class="form-check-label">
-                                               <h4>{{ question.option2 }}</h4>
+                                                <h4>{{ question.option2_uz }}</h4>
                                             </label>
                                         </div>
                                         {% endif %}
 
-                                        {% if question.option3 %}
-                                        <div class="form-check mb-2">
-                                            <input name="response" class="form-check-input" type="radio" value="{{ question.option3 }}" required/>
+                                        {% if question.option3_uz %}
+                                        <div class="form-check m-2">
+                                            <input name="response" class="form-check-input" type="radio"
+                                                   value="{{ question.option3_uz }}" required/>
                                             <label class="form-check-label">
-                                                <h4>{{ question.option3 }}</h4>
+                                                <h4>{{ question.option3_uz }}</h4>
                                             </label>
                                         </div>
                                         {% endif %}
 
-                                        {% if question.option4 %}
-                                        <div class="form-check mb-2">
-                                            <input name="response" class="form-check-input" type="radio" value="{{ question.option4 }}" required/>
+                                        {% if question.option4_uz %}
+                                        <div class="form-check m-2">
+                                            <input name="response" class="form-check-input" type="radio"
+                                                   value="{{ question.option4_uz }}" required/>
                                             <label class="form-check-label">
-                                                <h4>{{ question.option4 }}</h4>
+                                                <h4>{{ question.option4_uz }}</h4>
                                             </label>
                                         </div>
                                         {% endif %}
-                                        {% if question.option5 %}
-                                        <div class="form-check mb-2">
-                                            <input name="response" class="form-check-input" type="radio" value="{{ question.option5 }}" required/>
+                                        {% if question.option5_uz %}
+                                        <div class="form-check m-2">
+                                            <input name="response" class="form-check-input" type="radio"
+                                                   value="{{ question.option5_uz }}" required/>
                                             <label class="form-check-label">
-                                                <h4>{{ question.option5 }}</h4>
+                                                <h4>{{ question.option5_uz }}</h4>
                                             </label>
                                         </div>
                                         {% endif %}
@@ -109,20 +108,20 @@
                                     {% if previous_question_id %}
                                     <button type="button" data-mdb-button-init data-mdb-ripple-init
                                             class="btn main_btn"
-                                            onclick="window.location.href='{% url 'survey' department_name previous_question_id %}'">
-                                        <h5 class="mb-0">Предыдущий</h5>
+                                            onclick="window.location.href='{% url 'survey_uz' department_name previous_question_id %}'">
+                                        <h5 class="mb-0">Олдингиси</h5>
                                     </button>
                                     {% endif %}
                                     {% if is_last_question %}
                                     <button type="submit" data-mdb-button-init data-mdb-ripple-init
                                             class="btn main_btn">
-                                        <h5 class="mb-0">Завершить</h5>
+                                        <h5 class="mb-0">Тугатиш</h5>
                                     </button>
                                     {% else %}
                                     <button type="submit" data-mdb-button-init data-mdb-ripple-init
                                             class="btn main_btn"
                                             onclick="document.getElementById('next_question_id').value='{{ next_question_id }}';">
-                                        <h5 class="mb-0">Следующий</h5>
+                                        <h5 class="mb-0">Кейингиси</h5>
                                     </button>
                                     {% endif %}
 
@@ -131,7 +130,7 @@
                             </form>
 
                             {% else %}
-                            <h4>Вопросы еще не заданы</h4>
+                            <h4>Саволлар ҳали киритилмаган</h4>
                             {% endif %}
                         </div>
                     </div>
@@ -140,11 +139,6 @@
         </div>
     </div>
 </section>
-
-
-<!--<div class="lang">
-    <a href="{% url 'departments' %}" class="btn main_btn">Назад</a>
-</div>-->
 {% endblock %}
 
 
