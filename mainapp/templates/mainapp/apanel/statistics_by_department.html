@@ -1,0 +1,83 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Stats{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="container">
+                <div class="row gy-4 text-center justify-content-center">
+                    <div class="col-10 order-2 order-lg-1 d-flex flex-column justify-content-center text-center">
+                        <div class="responses_wrapper">
+                            {% if report_data %}
+
+                            {% for department, questions in report_data.items %}
+                            <h2> {{ department }}</h2>
+                            <table border="1" class="table table-bordered">
+                                <thead class="thead-light">
+                                <tr>
+                                    <th>Вопрос ID</th>
+                                    <th>Вопрос</th>
+                                    <th>Вариант</th>
+                                    <th>Количество</th>
+                                </tr>
+                                </thead>
+
+                                <tbody>
+
+                                {% for question_id, details in questions.items %}
+
+
+                                {% if details.options %}
+
+                                    <tr>
+                                        <td rowspan="{{ details.options|length }}">{{ question_id }}</td>
+                                        <td class="text-left" rowspan="{{ details.options|length }}">{{ details.question_text }}</td>
+
+
+                                        {% for option, count in details.options.items %}
+
+                                            {% if forloop.first %}
+                                            <td>{{ option }}</td>
+                                            <td>{{ count }}</td>
+
+                                            {% else %}
+                                            <tr>
+                                                <td>{{ option }}</td>
+                                                <td>{{ count }}</td>
+                                            </tr>
+
+                                            {% endif %}
+                                        {% endfor %}
+
+                                    </tr>
+                                {% else %}
+                                    <tr>
+                                        <td>{{ question_id }}</td>
+                                        <td class="text-left">{{ details.question_text }}</td>
+                                        <td colspan="2">
+
+                                        {{ details.responses.count }}
+                                    </td>
+                                </tr>
+                                {% endif %}
+                                {% endfor %}
+
+                                </tbody>
+
+                            </table>
+                            {% endfor %}
+
+                            {% else %}
+                            <h2>Нет данных</h2>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
