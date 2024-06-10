@@ -12,7 +12,7 @@
             {% csrf_token %}
             <div class="row">
                 {% for question in questions %}
-                <div class="col-md-6 text-center">
+                <div class="col-lg-6 text-center">
                     <div class="card mb-4 questions_card">
                         <div class="card-header text-white text-left" style="background-color: var(--blue-light);">
                             <h4 class="card-title m-0">
@@ -68,7 +68,7 @@
                                     {% endif %}
                                     {% else %}
                                     <div data-mdb-input-init class="form-outline p-3 w-100">
-                                        <textarea name="response_{{ question.id }}" class="form-control" rows="2" required></textarea>
+                                        <textarea inputmode="text" name="response_{{ question.id }}" class="form-control" rows="2" required></textarea>
                                     </div>
                                     {% endif %}
                                 </div>

@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %} Список вопросов {% endblock %}
+
+{% block content %}
+
+<div class="container-fluid">
+    <div class="row">
+        {% include 'mainapp/apanel/sidebar.html' %}
+
+        <div class="col-md-9 h-100">
+            <div class="container-fluid">
+                <div class="row text-center justify-content-center">
+                    <div class="col-md-12 p-5">
+                        <div class="responses_wrapper">
+                            <h4>Вы уверены, что хотите удалить этот вопрос?</h4>
+                            <hr>
+                            <h5 class="p-3"> ID:{{ question.id }} Вопрос: {{ question.question_ru }}</h5><br>
+                            <form method="post">
+                                {% csrf_token %}
+                                <button class="btn btn-outline-danger" type="submit">Подтвердить</button>
+                                <a href="{% url 'questions_list' %}" class="btn btn-outline-primary">Отменить</a>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+{% block extra_js %}
+<script type="text/javascript">
+
+</script>
+{% endblock extra_js %}
+
+{% endblock %}

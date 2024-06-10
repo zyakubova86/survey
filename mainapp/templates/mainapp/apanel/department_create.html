@@ -1,0 +1,99 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %} Список вопросов {% endblock %}
+
+{% block content %}
+<style>
+    form {
+        width: 70%;
+        margin: 0 auto;
+        padding: 20px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+    label {
+        display: block;
+        margin: 10px 0 5px;
+    }
+    textarea {
+        width: 100%;
+        padding: 8px;
+        margin: 5px 0 10px;
+        box-sizing: border-box;
+    }
+    input[type="checkbox"] {
+        width: 5%;
+    }
+
+    textarea {
+        height: 60px;
+<!--        resize: vertical;-->
+    }
+    input[type="submit"] {
+        background-color: #4CAF50;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        cursor: pointer;
+        border-radius: 5px;
+    }
+    input[type="submit"]:hover {
+        background-color: #45a049;
+    }
+
+    label {
+        font-size: 16px;
+    }
+</style>
+
+
+<div class="container-fluid">
+    <div class="row">
+        {% include 'mainapp/apanel/sidebar.html' %}
+
+        <div class="col-md-9">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-md-12 p-5">
+                        <div class="responses_wrapper">
+                            <h4 class="text-center p-3">Добавить отдел</h4>
+
+                            <form method="post" class="pt-5">
+                                {% csrf_token %}
+
+                                <div class="form-group row">
+                                    <label class="col-sm-3 m-0"> Отдел ru</label>
+                                    <div class="col-sm-9">
+                                        <input class="form-control" name="department_name_ru" required>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-sm-3 m-0"> Отдел uz</label>
+                                    <div class="col-sm-9">
+                                        <input class="form-control" name="department_name_uz" required>
+                                    </div>
+                                </div>
+
+                                <div class="form-group row">
+                                    <label class="col-sm-3 m-0">Активен</label>
+                                    <div class="col-sm-9">
+                                        <input class="form-control" type="checkbox" name="is_active">
+                                    </div>
+                                </div>
+
+                                <hr>
+
+                                <div class="form-group col-md-12 text-center pt-3">
+                                    <button class="btn btn-lg btn-outline-primary" type="submit">Сохранить</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,191 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %} Список вопросов {% endblock %}
+
+{% block content %}
+
+<style>
+    form {
+        width: 70%;
+        margin: 0 auto;
+        padding: 20px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+    label {
+        display: block;
+        margin: 10px 0 5px;
+    }
+    textarea {
+        width: 100%;
+        padding: 8px;
+        margin: 5px 0 10px;
+        box-sizing: border-box;
+    }
+    input[type="checkbox"] {
+        width: 5%;
+    }
+
+    textarea {
+        height: 60px;
+<!--        resize: vertical;-->
+    }
+    input[type="submit"] {
+        background-color: #4CAF50;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        cursor: pointer;
+        border-radius: 5px;
+    }
+    input[type="submit"]:hover {
+        background-color: #45a049;
+    }
+
+    label {
+        font-size: 16px;
+    }
+</style>
+
+
+<div class="container-fluid">
+    <div class="row">
+        {% include 'mainapp/apanel/sidebar.html' %}
+
+        <div class="col-md-9">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-md-12 p-5">
+                        <div class="responses_wrapper">
+                            <h4 class="text-center p-3">Обновить вопрос</h4>
+
+                            <form method="post" class="pt-5">
+                                {% csrf_token %}
+
+                                <div class="form-group row">
+                                    <label class="col-sm-3 m-0">ID</label>
+                                    <div class="col-sm-9">
+                                        <input class="form-control" type="text" name="question_id"
+                                               value="{{ question.id }}" readonly>
+                                    </div>
+                                </div>
+
+                                <div class="form-group row">
+                                    <label class="col-sm-3 m-0"> Вопрос ru</label>
+                                    <div class="col-sm-9">
+                                        <textarea class="form-control"
+                                                  name="question_ru">{{ question.question_ru }}</textarea>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-sm-3 m-0"> Вопрос uz</label>
+                                    <div class="col-sm-9">
+                                        <textarea class="form-control"
+                                                  name="question_uz">{{ question.question_uz }}
+                                        </textarea>
+                                    </div>
+                                </div>
+
+                                <div class="form-group row">
+                                    <label class="col-sm-3 m-0">Активен</label>
+                                    <div class="col-sm-9">
+                                        <input class="form-control" type="checkbox" name="is_active"
+                                               {% if question.is_active %}checked{% endif %}>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-sm-3 m-0">Есть варианты</label>
+                                    <div class="col-sm-9">
+                                        <input class="form-control" type="checkbox" name="has_options"
+                                               {% if question.has_options %}checked{% endif %}>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-sm-3 m-0">Вариант 1 ru</label>
+                                    <div class="col-sm-9">
+                                        <input class="form-control" type="text" name="option1_ru"
+                                               value="{{ question.option1_ru|default_if_none:'' }}">
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-sm-3 m-0">Вариант 1 uz</label>
+                                    <div class="col-sm-9">
+                                        <input class="form-control" type="text" name="option1_uz"
+                                               value="{{ question.option1_uz|default_if_none:'' }}">
+                                    </div>
+                                </div>
+
+                                <div class="form-group row">
+                                    <label class="col-sm-3 m-0">Вариант 2 ru</label>
+                                    <div class="col-sm-9">
+                                        <input class="form-control" type="text" name="option2_ru"
+                                               value="{{ question.option2_ru|default_if_none:'' }}">
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-sm-3 m-0">Вариант 2 uz</label>
+                                    <div class="col-sm-9">
+                                        <input class="form-control" type="text" name="option2_uz"
+                                               value="{{ question.option2_uz|default_if_none:'' }}">
+                                    </div>
+                                </div>
+
+                                <div class="form-group row">
+                                    <label class="col-sm-3 m-0">Вариант 3 ru</label>
+                                    <div class="col-sm-9">
+                                        <input class="form-control" type="text" name="option3_ru"
+                                               value="{{ question.option3_ru|default_if_none:'' }}">
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-sm-3 m-0">Вариант 3 uz</label>
+                                    <div class="col-sm-9">
+                                        <input class="form-control" type="text" name="option3_uz"
+                                               value="{{ question.option3_uz|default_if_none:'' }}">
+                                    </div>
+                                </div>
+
+                                <div class="form-group row">
+                                    <label class="col-sm-3 m-0">Вариант 4 ru</label>
+                                    <div class="col-sm-9">
+                                        <input class="form-control" type="text" name="option4_ru"
+                                               value="{{ question.option4_ru|default_if_none:'' }}">
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-sm-3 m-0">Вариант 4 uz</label>
+                                    <div class="col-sm-9">
+                                        <input class="form-control" type="text" name="option4_uz"
+                                               value="{{ question.option4_uz|default_if_none:'' }}">
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-sm-3 m-0">Вариант 5 ru</label>
+                                    <div class="col-sm-9">
+                                        <input class="form-control" type="text" name="option5_ru"
+                                               value="{{ question.option5_ru|default_if_none:'' }}">
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-sm-3 m-0">Вариант 5 uz</label>
+                                    <div class="col-sm-9">
+                                        <input class="form-control" type="text" name="option5_uz"
+                                               value="{{ question.option5_uz|default_if_none:'' }}">
+                                    </div>
+                                </div>
+
+
+                                <div class="form-group col-md-12 text-center">
+                                    <button class="btn btn-lg btn-outline-primary" type="submit">Сохранить</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

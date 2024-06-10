@@ -51,21 +51,7 @@
 
 
 {% block extra_js %}
-<script type="text/javascript">
-    function setNavigation() {
-        let current_location = location.pathname.split('/')[1];
 
-        let menu_items = document.querySelector(".nav-item").getElementsByTagName("a");
-        for (let i = 0, len = menu_items.length; i < len; i++) {
-            let href = menu_items[i].getAttribute("href");
-
-            if ((!current_location && href === '/') || (current_location && href.indexOf(current_location) !== -1)) {
-                menu_items[i].className = "active";
-            }
-        }
-    }
-    setNavigation();
-</script>
 {% endblock extra_js %}
 
 

@@ -5,7 +5,9 @@
 {% block content %}
 <div class="container-fluid">
     <div class="row">
+
         {% include 'mainapp/apanel/sidebar.html' %}
+
         <div class="col-md-9">
             <div class="container">
                 <div class="row gy-4 text-center justify-content-center">
@@ -81,20 +83,7 @@
 
 {% block extra_js %}
 <script type="text/javascript">
-    function setNavigation() {
-        let current_location = location.pathname.split('/')[-1];
-        console.log(current_location);
-        console.log(location.pathname);
 
-        let menu_items = document.querySelector(".nav-item").getElementsByTagName("a");
-        for (let i = 0, len = menu_items.length; i < len; i++) {
-            let href = menu_items[i].getAttribute("href");
-            if ((!current_location && href === '/') || (current_location && href.indexOf(current_location) !== -1)) {
-                menu_items[i].className = "active";
-            }
-        }
-    }
-    setNavigation();
 </script>
 {% endblock extra_js %}
 

@@ -65,7 +65,7 @@
                     </svg>
                 </div>
 
-                <nav id="sidebar_nav">
+                <nav id="side_nav">
                     <div class="col-md-12 p-0 nav-item">
                         <a class="" href="{% url 'apanel' %}">
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
@@ -98,6 +98,27 @@
 <!--                        </a>-->
 <!--                    </div>-->
                     <!--<div class="col-md-12 p-0 nav-item">
+                        <a class="" href="{% url 'upload_file' %}">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                 class="bi bi-list" viewBox="0 0 16 16">
+                                <path fill-rule="evenodd"
+                                      d="M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5"/>
+                            </svg>
+                            Upload departments
+                        </a>
+                    </div>-->
+                    <!--<div class="col-md-12 p-0 nav-item">
+                        <a class="" href="{% url 'upload_questions' %}">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                 class="bi bi-cloud-upload-fill" viewBox="0 0 16 16">
+                                <path fill-rule="evenodd"
+                                      d="M8 0a5.53 5.53 0 0 0-3.594 1.342c-.766.66-1.321 1.52-1.464 2.383C1.266 4.095 0 5.555 0 7.318 0 9.366 1.708 11 3.781 11H7.5V5.707L5.354 7.854a.5.5 0 1 1-.708-.708l3-3a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1-.708.708L8.5 5.707V11h4.188C14.502 11 16 9.57 16 7.773c0-1.636-1.242-2.969-2.834-3.194C12.923 1.999 10.69 0 8 0m-.5 14.5V11h1v3.5a.5.5 0 0 1-1 0"/>
+                            </svg>
+                            Загрузить вопросы
+                        </a>
+                    </div>-->
+
+                    <div class="col-md-12 p-0">
                         <a class="" href="{% url 'questions_list' %}">
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                                  class="bi bi-list" viewBox="0 0 16 16">
@@ -106,15 +127,16 @@
                             </svg>
                             Вопросы
                         </a>
-                    </div>-->
-                    <div class="col-md-12 p-0 nav-item">
-                        <a class="" href="{% url 'upload_questions' %}">
+                    </div>
+
+                    <div class="col-md-12 p-0">
+                        <a class="" href="{% url 'departments_list' %}">
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                                 class="bi bi-cloud-upload-fill" viewBox="0 0 16 16">
+                                 class="bi bi-list" viewBox="0 0 16 16">
                                 <path fill-rule="evenodd"
-                                      d="M8 0a5.53 5.53 0 0 0-3.594 1.342c-.766.66-1.321 1.52-1.464 2.383C1.266 4.095 0 5.555 0 7.318 0 9.366 1.708 11 3.781 11H7.5V5.707L5.354 7.854a.5.5 0 1 1-.708-.708l3-3a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1-.708.708L8.5 5.707V11h4.188C14.502 11 16 9.57 16 7.773c0-1.636-1.242-2.969-2.834-3.194C12.923 1.999 10.69 0 8 0m-.5 14.5V11h1v3.5a.5.5 0 0 1-1 0"/>
+                                      d="M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5"/>
                             </svg>
-                            Загрузить вопросы
+                            Отделы
                         </a>
                     </div>
                 </nav>
@@ -127,19 +149,19 @@
 
 {% block extra_js %}
 <script type="text/javascript">
-    function setNavigation() {
-        let current_location = location.pathname.split('/')[1];
+function setNavigation() {
+    const currentPath = window.location.pathname;
+    const sidebarLinks = document.querySelectorAll('#side_nav a');
 
-        let menu_items = document.querySelector(".nav-item").getElementsByTagName("a");
-        for (let i = 0, len = menu_items.length; i < len; i++) {
-            let href = menu_items[i].getAttribute("href");
-
-            if ((!current_location && href === '/') || (current_location && href.indexOf(current_location) !== -1)) {
-                menu_items[i].className = "active";
-            }
+    sidebarLinks.forEach(link => {
+        if (link.getAttribute('href') === currentPath) {
+            link.classList.add('active');
+        } else {
+            link.classList.remove('active');
         }
-    }
-    setNavigation();
+    });
+}
+setNavigation();
 </script>
 {% endblock extra_js %}
 

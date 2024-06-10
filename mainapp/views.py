@@ -27,12 +27,10 @@ def home(request):
 
 
 def get_departments(request):
-    departments = Department.objects.all().order_by('name')
-    # question_id = Questions.objects.filter(is_active=True).first().id
+    departments = Department.objects.all().order_by('name').filter(is_active=True)
 
     context = {
         'departments': departments,
-        # 'question_id': question_id
     }
 
     if "/ru/" in request.path:
@@ -205,7 +203,6 @@ def report(request):
 
 
 def report2(request):
-
     departments = Department.objects.all()
     report_data = []
 
@@ -225,17 +222,20 @@ def report2(request):
                 option1_count, option2_count, option3_count, option4_count, option5_count = 0, 0, 0, 0, 0
 
                 if question.option1_ru or question.option1_uz:
-                    option1_count = responses.filter(response=question.option1_ru).count() + responses.filter(response=question.option1_uz).count()
+                    option1_count = responses.filter(response=question.option1_ru).count() + responses.filter(
+                        response=question.option1_uz).count()
                     options.append({'value': question.option1_ru or question.option1_uz, 'count': option1_count})
                     total_count += option1_count
 
                 if question.option2_ru or question.option2_uz:
-                    option2_count = responses.filter(response=question.option2_ru).count() + responses.filter(response=question.option2_uz).count()
+                    option2_count = responses.filter(response=question.option2_ru).count() + responses.filter(
+                        response=question.option2_uz).count()
                     options.append({'value': question.option2_ru or question.option2_uz, 'count': option2_count})
                     total_count += option2_count
 
                 if question.option3_ru or question.option3_uz:
-                    option3_count = responses.filter(response=question.option3_ru).count() + responses.filter(response=question.option3_uz).count()
+                    option3_count = responses.filter(response=question.option3_ru).count() + responses.filter(
+                        response=question.option3_uz).count()
                     options.append({'value': question.option3_ru or question.option3_uz, 'count': option3_count})
                     total_count += option3_count
 
@@ -409,7 +409,6 @@ def a_panel(request):
         template = 'mainapp/apanel/apanel.html'
 
         employee_responses = EmployeeResponse.objects.all().order_by('-pk')
-        print(employee_responses[0])
 
         context = {'employee_responses': employee_responses}
 
@@ -513,10 +512,13 @@ def report_by_department(request):
 
 @login_required(login_url='admin_auth')
 def upload_file(request):
-    template = 'mainapp/upload_file.html'
+    template = 'mainapp/apanel/upload_file.html'
 
     if request.method == 'POST' and request.FILES['excel_file']:
         excel_file = request.FILES['excel_file']
+
+        if not os.path.exists('mainapp/media/'):
+            os.makedirs('mainapp/media/')
 
         # Delete existing file if exists
         if os.path.exists('mainapp/media/'):
@@ -533,7 +535,6 @@ def upload_file(request):
         fs = FileSystemStorage(location=f'mainapp/media/')
         filename = fs.save(excel_file.name, excel_file)
         uploaded_file_url = fs.url(filename)
-        # upload_message = 'Файл успешно загружен'
 
         # Save data to the database
         Employees.objects.all().delete()
@@ -541,12 +542,15 @@ def upload_file(request):
 
         df = pd.read_excel(f'mainapp/media/{filename}')
 
-        for i, row in df.iterrows():
-            employees = Employees(code=row['Код'], name=row['ФИО'], department=row['Отдел'])
-            employees.save()
+        # for i, row in df.iterrows():
+        #     employees = Employees(code=row['Код'], name=row['ФИО'], department=row['Отдел'])
+        #     employees.save()
 
         departments = df['Отдел'].dropna().unique()
         for department in departments:
+            if '.' in department:
+                department = department.replace('.', '')
+
             new_department = Department(name=department)
             new_department.save()
 
@@ -571,22 +575,22 @@ def upload_questions(request):
             return render(request, template, {'upload_message': 'Файл должен быть формата xlsx или xls'})
 
         # Save uploaded file
-        if not os.path.exists('mainapp/media/questions'):
-            os.makedirs('mainapp/media/questions')
+        if not os.path.exists('mainapp/media/'):
+            os.makedirs('mainapp/media/')
 
         # Delete existing file if exists
-        if os.path.exists('mainapp/media/questions'):
-            existing_files = os.listdir('mainapp/media/questions')
+        if os.path.exists('mainapp/media/'):
+            existing_files = os.listdir('mainapp/media/')
             for file in existing_files:
-                os.remove(f'mainapp/media/questions/{file}')
+                os.remove(f'mainapp/media/{file}')
 
-        fs = FileSystemStorage(location=f'mainapp/media/questions')
+        fs = FileSystemStorage(location=f'mainapp/media/')
         filename = fs.save(questions_file.name, questions_file)
         uploaded_file_url = fs.url(filename)
 
         try:
             # Save data to the database
-            df = pd.read_excel(f'mainapp/media/questions/{filename}')
+            df = pd.read_excel(f'mainapp/media/{filename}')
 
             # question has many options
             for i, row in df.iterrows():
@@ -647,6 +651,7 @@ def upload_questions(request):
     return render(request, template)
 
 
+@login_required(login_url='admin_auth')
 def questions_list(request):
     if request.method == 'POST':
         question_id = request.POST.get('question_id')
@@ -669,12 +674,82 @@ def questions_list(request):
         question.save()
         return redirect('questions_list')
 
-    questions = Questions.objects.all()
+    questions = Questions.objects.all().order_by('id')
 
     context = {
         'questions': questions
     }
     return render(request, 'mainapp/apanel/questions_list.html', context)
+
+
+@login_required(login_url='admin_auth')
+def question_create(request):
+    if request.method == "POST":
+        question = Questions()
+        question.question_ru = request.POST.get('question_ru')
+        question.question_uz = request.POST.get('question_uz')
+
+        question.is_active = 'is_active' in request.POST
+        question.has_options = 'has_options' in request.POST
+
+        question.option1_ru = request.POST.get('option1_ru', '')
+        question.option1_uz = request.POST.get('option1_uz', '')
+        question.option2_ru = request.POST.get('option2_ru', '')
+        question.option2_uz = request.POST.get('option2_uz', '')
+        question.option3_ru = request.POST.get('option3_ru', '')
+        question.option3_uz = request.POST.get('option3_uz', '')
+        question.option4_ru = request.POST.get('option4_ru', '')
+        question.option4_uz = request.POST.get('option4_uz', '')
+        question.option5_ru = request.POST.get('option5_ru', '')
+        question.option5_uz = request.POST.get('option5_uz', '')
+        question.save()
+
+        return redirect('questions_list')
+
+    return render(request, 'mainapp/apanel/question_create.html')
+
+
+@login_required(login_url='admin_auth')
+def question_update(request, pk):
+    question = get_object_or_404(Questions, id=pk)
+
+    if request.method == "POST":
+        question.question_ru = request.POST.get('question_ru')
+        question.question_uz = request.POST.get('question_uz')
+        question.is_active = 'is_active' in request.POST
+        question.has_options = 'has_options' in request.POST
+        question.option1_ru = request.POST.get('option1_ru')
+        question.option1_uz = request.POST.get('option1_uz')
+        question.option2_ru = request.POST.get('option2_ru')
+        question.option2_uz = request.POST.get('option2_uz')
+        question.option3_ru = request.POST.get('option3_ru')
+        question.option3_uz = request.POST.get('option3_uz')
+        question.option4_ru = request.POST.get('option4_ru')
+        question.option4_uz = request.POST.get('option4_uz')
+        question.option5_ru = request.POST.get('option5_ru')
+        question.option5_uz = request.POST.get('option5_uz')
+        question.save()
+        return redirect('questions_list')
+
+    context = {
+        'question': question,
+    }
+    return render(request, 'mainapp/apanel/question_update.html', context)
+
+
+@login_required(login_url='admin_auth')
+def question_delete(request, pk):
+    template = 'mainapp/apanel/question_delete.html'
+
+    question = get_object_or_404(Questions, id=pk)
+    if request.method == 'POST':
+        question.delete()
+        return redirect('questions_list')
+
+    context = {
+        'question': question,
+    }
+    return render(request, template, context)
 
 
 def admin_auth(request):
@@ -732,3 +807,64 @@ def admin_auth(request):
 #         'department_name': department_name
 #     }
 #     return render(request, template, context)
+
+
+@login_required(login_url='admin_auth')
+def departments_list(request):
+    departments = Department.objects.all().order_by('name')
+
+    context = {
+        'departments': departments
+    }
+    return render(request, 'mainapp/apanel/departments_list.html', context)
+
+
+@login_required(login_url='admin_auth')
+def department_create(request):
+    template = 'mainapp/apanel/department_create.html'
+    if request.method == "POST":
+        department = Department()
+        department.name = request.POST['department_name_ru']
+        department.name_uz = request.POST['department_name_uz']
+        department.is_active = 'is_active' in request.POST
+        department.save()
+
+        return redirect('departments_list')
+
+    return render(request, template)
+
+
+@login_required(login_url='admin_auth')
+def department_update(request, pk):
+    template = 'mainapp/apanel/department_update.html'
+    department = get_object_or_404(Department, id=pk)
+
+    if request.method == "POST":
+        department = Department.objects.get(pk=request.POST['department_id'])
+        department.name = request.POST['department_name_ru']
+        department.name_uz = request.POST['department_name_uz']
+        department.is_active = 'is_active' in request.POST
+        department.save()
+
+        return redirect('departments_list')
+
+    context = {
+        'department': department,
+    }
+
+    return render(request, template, context)
+
+
+@login_required(login_url='admin_auth')
+def department_delete(request, pk):
+    template = 'mainapp/apanel/department_delete.html'
+    department = get_object_or_404(Department, id=pk)
+
+    if request.method == "POST":
+        department.delete()
+        return redirect('departments_list')
+
+    context = {
+        'department': department,
+    }
+    return render(request, template, context)

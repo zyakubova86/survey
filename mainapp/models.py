@@ -15,7 +15,9 @@ class Employees(models.Model):
 
 
 class Department(models.Model):
-    name = models.CharField(max_length=200, null=True, verbose_name='Отдел')
+    name = models.CharField(max_length=200, null=True, blank=True, verbose_name='Отдел ru')
+    name_uz = models.CharField(max_length=200, null=True, blank=True, verbose_name='Отдел uz')
+    is_active = models.BooleanField(default=True)
 
     class Meta:
         verbose_name = "Отдел"

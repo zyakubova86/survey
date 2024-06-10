@@ -11,56 +11,58 @@
         <div class="col-md-9">
             <div class="container-fluid">
                 <div class="row text-center justify-content-center">
-                    <div class="col-md-12">
-                        <div class="responses_wrapper">
+                    <div class="col-md-12 p-5">
+                        <div class="responses_wrapper p-5">
+                            <div class="pb-3 text-right">
+                                <a href="{% url 'question_create' %}" class="btn btn-outline-primary">Добавить
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                         fill="currentColor" class="bi bi-plus" viewBox="0 0 16 16">
+                                        <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4"/>
+                                    </svg>
+                                </a>
+                            </div>
                             {% if questions %}
-                            <table class="table table-responsive table-hover">
+                            <h3 class="pb-3">Список вопросов: {{ questions.count }} </h3>
+                            <table class="table">
                                 <thead class="thead-light sticky-top">
                                 <tr>
+                                    <th>#</th>
                                     <th>ID</th>
-                                    <th>Вопрос</th>
-                                    <th>Вариант1</th>
-                                    <th>Вариант2</th>
-                                    <th>Вариант3</th>
-                                    <th>Вариант4</th>
-                                    <th>Вариант5</th>
+                                    <th>Вопрос ru</th>
                                     <th>Есть варианты</th>
-                                    <th>Action</th>
+                                    <th>Actions</th>
                                 </tr>
                                 </thead>
                                 <tbody>
                                 {% for question in questions %}
                                 <tr>
-                                    <form method="post">
-                                        {% csrf_token %}
-                                        <td>{{ question.id }}<input type="hidden" name="question_id"
-                                                                    value="{{ question.id }}"></td>
-                                        <td><input type="text" name="question_text"
-                                                   value="{{ question.question_text|default_if_none:'-' }}"></td>
-                                        <td><input type="text" name="option1"
-                                                   value="{{ question.option1|default_if_none:'-' }}"></td>
-                                        <td><input type="text" name="option2"
-                                                   value="{{ question.option2|default_if_none:'-' }}"></td>
-                                        <td><input type="text" name="option3"
-                                                   value="{{ question.option3|default_if_none:'-' }}"></td>
-                                        <td><input type="text" name="option4"
-                                                   value="{{ question.option4|default_if_none:'-' }}"></td>
-                                        <td><input type="text" name="option5"
-                                                   value="{{ question.option5|default_if_none:'-' }}"></td>
-                                        <td><input type="checkbox" name="has_options"
-                                                   {% if question.has_options %}checked{% endif %}>
-                                        </td>
-                                        <td>
-                                            <button type="submit">Save</button>
-                                        </td>
-                                    </form>
+                                    <td>{{ forloop.counter }}</td>
+                                    <td>{{ question.id }}</td>
+                                    <td class="text-left">{{ question.question_ru }}</td>
+                                    <td> {% if question.has_options %}Да{% else %}Нет{% endif %}</td>
+
+                                    <td>
+                                        <a href="{% url 'question_edit' question.pk %}">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+                                                 fill="currentColor" class="bi bi-pen" viewBox="0 0 20 20">
+                                                <path d="m13.498.795.149-.149a1.207 1.207 0 1 1 1.707 1.708l-.149.148a1.5 1.5 0 0 1-.059 2.059L4.854 14.854a.5.5 0 0 1-.233.131l-4 1a.5.5 0 0 1-.606-.606l1-4a.5.5 0 0 1 .131-.232l9.642-9.642a.5.5 0 0 0-.642.056L6.854 4.854a.5.5 0 1 1-.708-.708L9.44.854A1.5 1.5 0 0 1 11.5.796a1.5 1.5 0 0 1 1.998-.001m-.644.766a.5.5 0 0 0-.707 0L1.95 11.756l-.764 3.057 3.057-.764L14.44 3.854a.5.5 0 0 0 0-.708z"/>
+                                            </svg>
+                                        </a>
+                                        <a href="{% url 'question_delete' question.pk %}">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                                 fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
+                                                <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0z"/>
+                                                <path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4zM2.5 3h11V2h-11z"/>
+                                            </svg>
+                                        </a>
+                                    </td>
                                 </tr>
                                 {% endfor %}
 
                                 </tbody>
                             </table>
                             {% else %}
-                            <h2>Список вопросов пока пуст</h2>
+                            <h2 class="text-center p-3">Список вопросов пока пуст</h2>
                             {% endif %}
                         </div>
                     </div>
@@ -73,19 +75,7 @@
 
 {% block extra_js %}
 <script type="text/javascript">
-    function setNavigation() {
-        let current_location = location.pathname.split('/')[1];
 
-        let menu_items = document.querySelector(".nav-item").getElementsByTagName("a");
-        for (let i = 0, len = menu_items.length; i < len; i++) {
-            let href = menu_items[i].getAttribute("href");
-
-            if ((!current_location && href === '/') || (current_location && href.indexOf(current_location) !== -1)) {
-                menu_items[i].className = "active";
-            }
-        }
-    }
-    setNavigation();
 </script>
 {% endblock extra_js %}
 
