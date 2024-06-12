@@ -16,6 +16,7 @@ urlpatterns = [
 
     # Admin panel urls
     path('apanel/', a_panel, name='apanel'),
+    path('apanel/suggestions/', get_suggestions, name='suggestions'),
     path('apanel/auth/', admin_auth, name='admin_auth'),
 
     path('apanel/upload/', upload_file, name='upload_file'),
@@ -37,5 +38,6 @@ urlpatterns = [
 
     path('apanel/statistics/', statistics_by_department, name='statistics'),
     path('apanel/report2/', report2, name='report2'),
+    path('apanel/statistics-by-date/', statistics_by_date, name='statistics_by_date'),
 
 ]

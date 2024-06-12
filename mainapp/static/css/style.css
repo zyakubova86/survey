@@ -33,6 +33,7 @@ body {
   color: #212529;
   text-align: left;
   overflow-x: hidden;
+  /*overflow-y: scroll;*/
 }
 
 
@@ -288,6 +289,10 @@ section, .section {
     overflow: clip;
 }
 
+section.padding-bottom-230 {
+    padding-bottom: 230px;
+}
+
 .hero {
     background: url("../images/blue_naqsh.jpg") fixed no-repeat;
     background-size: cover;
@@ -435,7 +440,8 @@ nav {
 }
 
 .sidebar_nav a:hover {
-    background: var(--grey-light);
+    /*background: var(--grey-light);*/
+    background: #86bcf6;
     transition: 0.3s;
 }
 
@@ -465,6 +471,29 @@ nav {
 }
 .vote_textarea {
     width: 100%;
+}
+
+.admin_logo {
+    width: 100%;
+    padding: 0 65px 20px 65px;
+}
+
+.back {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+}
+
+.back a {
+    color: var(--blue-light);
+    background: #fff;
+    padding: 6px 15px;
+    transition: 0.3s;
+    border: none;
+}
+.back a:hover {
+    color: #000;
+    background: #fff;
 }
 
 

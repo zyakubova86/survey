@@ -13,33 +13,39 @@
                 <div class="row text-center justify-content-center">
                     <div class="col-md-12">
                         <div class="responses_wrapper">
+
+                            <div class="pb-3 text-right">
+                                <a href="{% url 'suggestions' %}" class="btn btn-outline-primary">Предложения
+                                </a>
+                            </div>
+
                             {% if employee_responses %}
-                                <table class="table">
+                            <table class="table">
                                 <thead class="thead-light sticky-top">
-                                    <tr>
-                                        <th scope="col">#</th>
-                                        <th scope="col">Вопрос</th>
-                                        <th scope="col">Ответ</th>
-                                        <th scope="col">Отдел</th>
-                                        <th scope="col">Дата и время</th>
-                                    </tr>
+                                <tr>
+                                    <th scope="col">#</th>
+                                    <th scope="col">Вопрос</th>
+                                    <th scope="col">Ответ</th>
+                                    <th scope="col">Отдел</th>
+                                    <th scope="col">Дата и время</th>
+                                </tr>
                                 </thead>
 
-                                    {% for response in employee_responses %}
-                                    <tbody>
-                                    <tr>
-                                        <td scope="row">{{ forloop.counter }}</td>
-                                        <td class="text-left">{{ response.question_text }}</td>
-                                        <td>{{ response.response }}</td>
-                                        <td>{{ response.department.name }}</td>
-                                        <td>{{ response.created_at | date:"Y-m-d H:i:s" }}</td>
-                                    </tr>
-                                    </tbody>
-                                    {% endfor %}
+                                {% for response in employee_responses %}
+                                <tbody>
+                                <tr>
+                                    <td scope="row">{{ forloop.counter }}</td>
+                                    <td class="text-left">{{ response.question_text }}</td>
+                                    <td>{{ response.response }}</td>
+                                    <td>{{ response.department.name }}</td>
+                                    <td>{{ response.created_at | date:"Y-m-d H:i:s" }}</td>
+                                </tr>
+                                </tbody>
+                                {% endfor %}
 
                             </table>
                             {% else %}
-                                <h2>Ответов пока нет</h2>
+                            <h2>Ответов пока нет</h2>
                             {% endif %}
                         </div>
                     </div>

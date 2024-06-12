@@ -1,20 +1,18 @@
 import mimetypes
 import os
+from datetime import timedelta
 from pprint import pprint
 
-import requests
-from django.core.exceptions import ValidationError
-from django.db import transaction
-from django.db.models import Count, Q
-from django.http import HttpResponse, JsonResponse
-from django.shortcuts import render, redirect, get_object_or_404
-
-from .forms import *
-from .models import *
-from django.contrib.auth import authenticate, login, logout
-from django.core.files.storage import FileSystemStorage
 import pandas as pd
-from django.contrib.auth.decorators import login_required, permission_required
+from django.contrib.auth import authenticate, login
+from django.contrib.auth.decorators import login_required
+from django.core.exceptions import ValidationError
+from django.core.files.storage import FileSystemStorage
+from django.db.models import Count, ExpressionWrapper, IntegerField, F, FloatField
+from django.shortcuts import render, redirect, get_object_or_404
+from django.utils.timezone import now
+
+from .models import *
 
 
 def home(request):
@@ -202,6 +200,7 @@ def report(request):
     return render(request, 'mainapp/report.html', context)
 
 
+@login_required(login_url='admin_auth')
 def report2(request):
     departments = Department.objects.all()
     report_data = []
@@ -292,6 +291,7 @@ def report2(request):
     return render(request, 'mainapp/apanel/report2.html', context)
 
 
+@login_required(login_url='admin_auth')
 def statistics_by_department(request):
     responses = EmployeeResponse.objects.select_related('question', 'department')
 
@@ -766,48 +766,6 @@ def admin_auth(request):
             login(request, user)
             return redirect('apanel')
 
-# def login_view(request):
-#     if request.method == 'GET':
-#         template = "login.html"
-#         # if request.user.is_authenticated:
-#         #     return redirect('/')
-#         return render(request, template)
-#     elif request.method == "POST":
-#         username = request.POST.get('username')
-#         password = request.POST.get('password')
-#         user = authenticate(username=username, password=password)
-#         if user:
-#             login(request, user)
-#             return redirect('/')
-#         context = {
-#             'login_error': 'username/password is incorrect'
-#         }
-#         return render(request, 'login.html', context)
-
-
-# def logout_view(request):
-#     if request.method == "GET":
-#         logout(request)
-#         return redirect('login')
-
-
-# def index(request):
-#     if "/ru/" in request.path:
-#         template = 'mainapp/index_ru.html'
-#     else:
-#         template = 'mainapp/index_uz.html'
-#
-#     return render(request, template)
-
-# def department_detail(request, department_name):
-#     template = 'mainapp/department_detail.html'
-#     employees = Employees.objects.filter(department=department_name)
-#     context = {
-#         'employees': employees,
-#         'department_name': department_name
-#     }
-#     return render(request, template, context)
-
 
 @login_required(login_url='admin_auth')
 def departments_list(request):
@@ -867,4 +825,99 @@ def department_delete(request, pk):
     context = {
         'department': department,
     }
+    return render(request, template, context)
+
+
+@login_required(login_url='admin_auth')
+def get_suggestions(request):
+    text_responses = EmployeeResponse.objects.filter(response_option='text').order_by('-created_at')
+
+    context = {
+        'text_responses': text_responses
+    }
+    return render(request, 'mainapp/apanel/suggestions.html', context)
+
+
+@login_required(login_url='admin_auth')
+def statistics_by_date(request):
+    template = 'mainapp/apanel/statistics_by_date.html'
+    questions_count = Questions.objects.all().filter(is_active=True).count()
+
+    total_responses_today = 0
+    total_responses_this_week = 0
+    total_responses_this_month = 0
+    total_responses_yesterday = 0
+
+    today = now().date()
+    yesterday = today - timedelta(days=1)
+    start_of_week = today - timedelta(days=today.weekday())
+    start_of_month = today.replace(day=1)
+
+    # Query to get responses for today
+    responses_today = EmployeeResponse.objects.filter(
+        created_at__date=today
+    ).values('department__name').annotate(count=Count('id'))
+
+    # Divide responses for today by count of active questions
+    responses_today = responses_today.annotate(
+        count_per_question=ExpressionWrapper(
+            F('count') / questions_count, output_field=IntegerField()
+        )
+    )
+    for res in responses_today:
+        total_responses_today += res['count_per_question']
+
+    # Query to get responses for yesterday
+    responses_yesterday = EmployeeResponse.objects.filter(
+        created_at__date=yesterday
+    ).values('department__name').annotate(count=Count('id'))
+
+    # Divide responses for yesterday by count of active questions
+    responses_yesterday = responses_yesterday.annotate(
+        count_per_question=ExpressionWrapper(
+            F('count') / questions_count, output_field=IntegerField()
+        )
+    )
+    for res in responses_yesterday:
+        total_responses_yesterday += res['count_per_question']
+
+    responses_this_week = EmployeeResponse.objects.filter(
+        created_at__date__gte=start_of_week
+    ).values('department__name').annotate(
+        count=Count('id'),
+        count_per_question=ExpressionWrapper(
+            Count('id') / questions_count,
+            output_field=FloatField()
+        )
+    )
+
+    for res in responses_this_week:
+        total_responses_this_week += res['count_per_question']
+
+    responses_this_month = EmployeeResponse.objects.filter(
+        created_at__date__gte=start_of_month
+    ).values('department__name').annotate(
+        count=Count('id'),
+        count_per_question=ExpressionWrapper(
+            Count('id') / questions_count,
+            output_field=FloatField()
+        )
+    )
+
+    for res in responses_this_month:
+        total_responses_this_month += res['count_per_question']
+
+    context = {
+        'responses_today': responses_today,
+        'responses_yesterday': responses_yesterday,
+        'responses_this_week': responses_this_week,
+        'responses_this_month': responses_this_month,
+        'questions_count': questions_count,
+        'total_responses_today': int(total_responses_today),
+        'total_responses_this_week': int(total_responses_this_week),
+        'total_responses_this_month': int(total_responses_this_month),
+        'total_responses_yesterday': int(total_responses_yesterday),
+
+    }
+
     return render(request, template, context)

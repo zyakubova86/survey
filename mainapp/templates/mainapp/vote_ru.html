@@ -5,7 +5,96 @@
 
 {% block content %}
 
-<section class="questions_list section">
+<style>
+.keyboard {
+    position: fixed;
+    left: 0;
+    bottom: 0px;
+    width: 100%;
+    padding: 15px 0;
+    background: #0ea2e0;
+    box-shadow: 0 0 50px rgba(0, 0, 0, 0.5);
+    user-select: none;
+    transition: bottom 0.4s;
+    display: block;
+    z-index: 1;
+}
+
+.keyboard--hidden {
+    display: none;
+}
+
+.keyboard__close {
+    position: absolute;
+    top: -9px;
+    right: 3px;
+    background: transparent;
+    border: none;
+    color: #fff;
+    font-size: 30px;
+    cursor: pointer;
+    outline: none;
+}
+
+.keyboard__keys {
+    text-align: center;
+}
+
+.keyboard__key {
+    height: 45px;
+    width: 6%;
+    max-width: 90px;
+    margin: 3px;
+    border-radius: 4px;
+    border: none;
+    background: rgba(255, 255, 255, 0.2);
+    color: #ffffff;
+    font-size: 1.05rem;
+    outline: none;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    vertical-align: top;
+    padding: 0;
+    -webkit-tap-highlight-color: transparent;
+    position: relative;
+}
+
+.keyboard__key:active {
+    background: rgba(255, 255, 255, 0.12);
+}
+
+.keyboard__key--wide {
+    width: 12%;
+}
+
+.keyboard__key--extra-wide {
+    width: 36%;
+    max-width: 500px;
+}
+
+.keyboard__key--activatable::after {
+    content: '';
+    top: 4px;
+    right: 3px;
+    position: absolute;
+    width: 8px;
+    height: 8px;
+    background: rgba(0, 0, 0, 0.4);
+    border-radius: 50%;
+}
+
+.keyboard__key--active::after {
+    background: #08ff00;
+}
+
+.keyboard__key--dark {
+    background: rgba(0, 0, 0, 0.25);
+}
+</style>
+
+<section class="questions_list section padding-bottom-230">
     <div class="container">
         {% if questions %}
         <form method="POST" action="#">
@@ -24,7 +113,7 @@
                             <input type="hidden" name="department_name" value="{{ department_name }}"/>
 
                             <div class="form-group mt-2">
-                                <div class="question_block text-left d-flex">
+                                <div class="question_block text-left d-flex justify-content-center">
                                     {% if question.has_options %}
                                     {% if question.option1_ru %}
                                     <div class="form-check m-2">
@@ -67,8 +156,8 @@
                                     </div>
                                     {% endif %}
                                     {% else %}
-                                    <div data-mdb-input-init class="form-outline p-3 w-100">
-                                        <textarea inputmode="text" name="response_{{ question.id }}" class="form-control" rows="2" required></textarea>
+                                    <div data-mdb-input-init class="form-outline textarea_wrapper">
+                                        <textarea name="response_{{ question.id }}" class="use-keyboard-input vote_textarea" rows="2" required></textarea>
                                     </div>
                                     {% endif %}
                                 </div>
@@ -84,6 +173,9 @@
                 </div>
             </div>
         </form>
+
+        <div class="mb-5"></div>
+
         {% else %}
         <div class="row">
             <div class="col-md-12 d-flex justify-content-center">
@@ -93,6 +185,31 @@
         {% endif %}
     </div>
 </section>
+
+
+<div class="back">
+    {% if request.path == "/ru/" %}
+    <a href="{% url 'departments_ru' %}" class="link_lang btn btn-primary">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-backspace"
+             viewBox="0 0 16 16">
+            <path d="M5.83 5.146a.5.5 0 0 0 0 .708L7.975 8l-2.147 2.146a.5.5 0 0 0 .707.708l2.147-2.147 2.146 2.147a.5.5 0 0 0 .707-.708L9.39 8l2.146-2.146a.5.5 0 0 0-.707-.708L8.683 7.293 6.536 5.146a.5.5 0 0 0-.707 0z"/>
+            <path d="M13.683 1a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2h-7.08a2 2 0 0 1-1.519-.698L.241 8.65a1 1 0 0 1 0-1.302L5.084 1.7A2 2 0 0 1 6.603 1zm-7.08 1a1 1 0 0 0-.76.35L1 8l4.844 5.65a1 1 0 0 0 .759.35h7.08a1 1 0 0 0 1-1V3a1 1 0 0 0-1-1z"/>
+        </svg>
+    </a>
+    {% else %}
+    <a href="{% url 'departments_uz' %}" class="link_lang btn btn-primary">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-backspace"
+             viewBox="0 0 16 16">
+            <path d="M5.83 5.146a.5.5 0 0 0 0 .708L7.975 8l-2.147 2.146a.5.5 0 0 0 .707.708l2.147-2.147 2.146 2.147a.5.5 0 0 0 .707-.708L9.39 8l2.146-2.146a.5.5 0 0 0-.707-.708L8.683 7.293 6.536 5.146a.5.5 0 0 0-.707 0z"/>
+            <path d="M13.683 1a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2h-7.08a2 2 0 0 1-1.519-.698L.241 8.65a1 1 0 0 1 0-1.302L5.084 1.7A2 2 0 0 1 6.603 1zm-7.08 1a1 1 0 0 0-.76.35L1 8l4.844 5.65a1 1 0 0 0 .759.35h7.08a1 1 0 0 0 1-1V3a1 1 0 0 0-1-1z"/>
+        </svg>
+    </a>
+    {% endif %}
+</div>
+
+{% block extra_js %}
+<script type="text/javascript" src="{% static 'js/keyboard.js' %}"></script>
+{% endblock extra_js %}
 
 {% endblock %}
 

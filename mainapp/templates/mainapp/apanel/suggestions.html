@@ -1,0 +1,80 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Предложения{% endblock %}
+
+{% block content %}
+
+<div class="container-fluid">
+    <div class="row">
+        {% include 'mainapp/apanel/sidebar.html' %}
+
+        <div class="col-md-9">
+            <div class="container">
+                <div class="row text-center justify-content-center">
+                    <div class="col-md-12">
+                        <div class="responses_wrapper">
+
+                            <div class="pb-3 text-right">
+                                <a href="{% url 'apanel' %}" class="btn btn-outline-primary">Назад</a>
+                            </div>
+                            <h4 class="text-center p-3">Предложения сотрудников</h4>
+
+                            {% if text_responses %}
+                                <table class="table">
+                                <thead class="thead-light sticky-top">
+                                    <tr>
+                                        <th scope="col">#</th>
+                                        <th scope="col">Вопрос</th>
+                                        <th scope="col">Ответ</th>
+                                        <th scope="col">Отдел</th>
+                                        <th scope="col">Дата и время</th>
+                                    </tr>
+                                </thead>
+
+                                    {% for response in text_responses %}
+                                    <tbody>
+                                    <tr>
+                                        <td scope="row">{{ forloop.counter }}</td>
+                                        <td class="text-left">{{ response.question_text }}</td>
+                                        <td>{{ response.response }}</td>
+                                        <td>{{ response.department.name }}</td>
+                                        <td>{{ response.created_at | date:"Y-m-d H:i:s" }}</td>
+                                    </tr>
+                                    </tbody>
+                                    {% endfor %}
+
+                            </table>
+                            {% else %}
+                                <h2>Ответов пока нет</h2>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!--{% block extra_js %}
+<script type="text/javascript">
+    function setNavigation() {
+        let current_location = location.pathname.split('/')[1];
+
+        let menu_items = document.querySelector(".nav-item").getElementsByTagName("a");
+        for (let i = 0, len = menu_items.length; i < len; i++) {
+            let href = menu_items[i].getAttribute("href");
+
+            if ((!current_location && href === '/') || (current_location && href.indexOf(current_location) !== -1)) {
+                menu_items[i].className = "active";
+            }
+        }
+    }
+    setNavigation();
+</script>
+{% endblock extra_js %}-->
+
+
+{% endblock %}
+
+

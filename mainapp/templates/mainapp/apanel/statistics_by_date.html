@@ -1,0 +1,145 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Статистика по дням{% endblock %}
+
+{% block content %}
+
+<style>
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 20px;
+    }
+    table, th, td {
+        border: 1px solid black;
+    }
+    th, td {
+        padding: 10px;
+        text-align: left;
+    }
+    th {
+        background-color: #f2f2f2;
+    }
+</style>
+
+<div class="container-fluid">
+    <div class="row">
+        {% include 'mainapp/apanel/sidebar.html' %}
+
+        <div class="col-md-9">
+            <div class="container">
+                <div class="row gy-4 text-center justify-content-center">
+                    <div class="col-10 order-2 order-lg-1 d-flex flex-column justify-content-center text-center">
+
+                        <div class="responses_wrapper justify-content-center">
+                            <h2>Cегодня</h2>
+                            <table class="text-center">
+                                <thead>
+                                <tr>
+                                    <th>Отдел</th>
+                                    <!--<th>Количество вопросов</th>-->
+                                    <th class="text-center">Ответили</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for response in responses_today %}
+                                <tr>
+                                    <td>{{ response.department__name }}</td>
+                                    <!--<td>{{ response.count }}</td>-->
+                                    <td class="text-center">{{ response.count_per_question }}</td>
+                                </tr>
+                                {% endfor %}
+                                <tr>
+                                    <th>Общее</th>
+                                    <th class="text-center">{{ total_responses_today }}</th>
+                                </tr>
+                                </tbody>
+                            </table>
+
+
+                            <h2>Вчера</h2>
+                            <table>
+                                <thead>
+                                <tr>
+                                    <th>Отдел</th>
+                                    <!--<th>Количество вопросов</th>-->
+                                    <th class="text-center">Ответили</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for response in responses_yesterday %}
+                                <tr>
+                                    <td>{{ response.department__name }}</td>
+                                    <!--<td>{{ response.count }}</td>-->
+                                    <td class="text-center">{{ response.count_per_question }}</td>
+                                </tr>
+                                {% endfor %}
+                                <tr>
+                                    <th>Общее</th>
+                                    <th class="text-center">{{ total_responses_today }}</th>
+
+                                </tr>
+                                </tbody>
+                            </table>
+
+
+                            <h2>На этой неделе</h2>
+                            <table>
+                                <thead>
+                                <tr>
+                                    <th>Отдел</th>
+                                    <!--<th>Количество вопросов</th>-->
+                                    <th class="text-center">Ответили</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for response in responses_this_week %}
+                                <tr>
+                                    <td>{{ response.department__name }}</td>
+                                    <!--<td>{{ response.count }}</td>-->
+                                    <td class="text-center">{{ response.count_per_question|floatformat:0 }}</td>
+                                </tr>
+                                {% endfor %}
+
+                                <tr>
+                                    <th>Общее</th>
+                                    <th class="text-center">{{ total_responses_this_week }}</th>
+                                </tr>
+                                </tbody>
+                            </table>
+
+                            <h2>В этом месяце</h2>
+                            <table>
+                                <thead>
+                                <tr>
+                                    <th>Отдел</th>
+                                    <!--<th>Количество вопросов</th>-->
+                                    <th class="text-center">Ответили</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for response in responses_this_month %}
+                                <tr>
+                                    <td>{{ response.department__name }}</td>
+                                    <!--<td>{{ response.count }}</td>-->
+                                    <td class="text-center">{{ response.count_per_question|floatformat:0 }}</td>
+                                </tr>
+                                {% endfor %}
+
+                                <tr>
+                                    <th>Общее</th>
+                                    <th class="text-center">{{ total_responses_this_month }}</th>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+
