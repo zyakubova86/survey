@@ -53,4 +53,27 @@
     {% endif %}
 </div>
 
+
+{% block extra_js %}
+<script>
+  (function() {
+    let timeout;
+
+    function resetTimer() {
+      clearTimeout(timeout);
+      timeout = setTimeout(() => {
+        window.location.href = '/';
+      }, 20 * 1000);
+    }
+
+    window.onload = resetTimer;
+    document.onmousemove = resetTimer;
+    document.onkeypress = resetTimer;
+    document.ontouchstart = resetTimer;
+    document.onscroll = resetTimer;
+    document.onclick = resetTimer;
+  })();
+</script>
+{% endblock extra_js %}
+
 {% endblock content %}

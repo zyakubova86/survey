@@ -1,0 +1,76 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Статистика по отделам{% endblock %}
+
+{% block content %}
+
+<style>
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 20px;
+    }
+    table, th, td {
+        border: 1px solid black;
+    }
+    th, td {
+        padding: 10px;
+        text-align: left;
+    }
+    th {
+        background-color: #f2f2f2;
+    }
+</style>
+
+<div class="container-fluid">
+    <div class="row">
+        {% include 'mainapp/apanel/sidebar.html' %}
+
+        <div class="col-md-9">
+            <div class="container">
+                <div class="row gy-4 text-center justify-content-center">
+                    <div class="col-10 order-2 order-lg-1 d-flex flex-column justify-content-center text-center">
+
+                        <div class="responses_wrapper vh-100">
+                            <div class="pb-3 text-right">
+                                <a href="{% url 'response_count_by_date' %}" class="btn btn-outline-primary">Статистика по дням</a>
+                            </div>
+
+                            <h2>Статистика по отделам</h2>
+                            {% if response_count_start_datetime %}
+                            <p>Начинается с: {{ response_count_start_datetime|date:"Y-m-d H:i:s" }}</p>
+                            {% endif %}
+                            <table>
+                                <thead>
+                                <tr class="text-center">
+                                    <th>Дата</th>
+                                    <th>Отдел</th>
+                                    <th>Ответили</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+
+                                {% for entry in department_count_per_date %}
+                                {% if entry.count > 0 %}
+                                <tr>
+                                    <td>{{ entry.completed_at__date|date:"Y-m-d" }}</td>
+                                    <td>{{ entry.department__name }}</td>
+                                    <td>{{ entry.count }}</td>
+
+                                </tr>
+
+                                {% endif %}
+
+                                {% endfor %}
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

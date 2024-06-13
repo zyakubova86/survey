@@ -39,5 +39,6 @@ urlpatterns = [
     path('apanel/statistics/', statistics_by_department, name='statistics'),
     path('apanel/report2/', report2, name='report2'),
     path('apanel/statistics-by-date/', statistics_by_date, name='statistics_by_date'),
-
+    path('apanel/response-count-by-date/', get_response_count_by_date, name='response_count_by_date'),
+    path('apanel/response-count-by-department/', get_response_count_by_department, name='response_count_by_department'),
 ]

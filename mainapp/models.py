@@ -28,7 +28,7 @@ class Department(models.Model):
 
 
 class Questions(models.Model):
-    question_ru = models.TextField(max_length=200,  null=True, blank=True, verbose_name='Вопрос ru')
+    question_ru = models.TextField(max_length=200, null=True, blank=True, verbose_name='Вопрос ru')
     question_uz = models.TextField(max_length=200, null=True, blank=True, verbose_name='Вопрос uz')
 
     is_active = models.BooleanField(default=True, verbose_name='Активен')
@@ -75,7 +75,20 @@ class EmployeeResponse(models.Model):
     response_option = models.CharField(max_length=30, null=True, blank=True, verbose_name='Вариант ответа')
     department = models.ForeignKey(Department, on_delete=models.CASCADE, verbose_name='Отдел')
     created_at = models.DateTimeField(auto_now_add=True, verbose_name='Создан')
+    survey_id = models.CharField(max_length=40, null=True, blank=True, verbose_name='ID ответа')
 
     class Meta:
-            verbose_name = "Ответ сотрудника"
-            verbose_name_plural = 'Ответы сотрудников'
+        verbose_name = "Ответ сотрудника"
+        verbose_name_plural = 'Ответы сотрудников'
+
+
+class SurveyCompletion(models.Model):
+    survey_id = models.CharField(max_length=40, null=True, blank=True)
+    department = models.ForeignKey(Department, on_delete=models.CASCADE)
+    completed_at = models.DateTimeField(auto_now_add=True, verbose_name='Создан')
+
+    class Meta:
+        unique_together = ('survey_id', 'department')
+
+    def str(self):
+        return f"{self.survey_id} - {self.department.name}"

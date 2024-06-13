@@ -1,5 +1,6 @@
 import mimetypes
 import os
+import uuid
 from datetime import timedelta
 from pprint import pprint
 
@@ -46,6 +47,10 @@ def vote(request, department_name):
     total_questions = Questions.objects.filter(is_active=True).count()
 
     if request.method == 'POST':
+        survey_id = request.session.get('survey_id')
+        if not survey_id:
+            survey_id = str(uuid.uuid4())
+            request.session['survey_id'] = survey_id
 
         for question in questions:
 
@@ -101,8 +106,16 @@ def vote(request, department_name):
 
             new_employee_response = EmployeeResponse(question=question, question_text=question_text,
                                                      response=option_value, response_option=option,
-                                                     department=department)
+                                                     department=department, survey_id=survey_id)
             new_employee_response.save()
+
+        SurveyCompletion.objects.get_or_create(
+            survey_id=survey_id,
+            department=department,
+        )
+
+        # reset the session
+        request.session['survey_id'] = None
 
         if "/ru/" in request.path:
             return redirect('thank_you_ru')
@@ -918,6 +931,50 @@ def statistics_by_date(request):
         'total_responses_this_month': int(total_responses_this_month),
         'total_responses_yesterday': int(total_responses_yesterday),
 
+    }
+
+    return render(request, template, context)
+
+
+@login_required(login_url='admin_auth')
+def get_response_count_by_date(request):
+    template = 'mainapp/apanel/response_count_by_date.html'
+
+    # today = now().date()
+    # week = today - timedelta(days=today.weekday())
+    # month = today.replace(day=1)
+
+    count_per_date_department = (SurveyCompletion.objects.values('completed_at__date', 'department__name')
+                                 .annotate(count=Count('survey_id', distinct=True)).order_by('-completed_at__date',
+                                                                                             'department__name'))
+
+    total_count_per_date = (SurveyCompletion.objects.values('completed_at__date')
+                            .annotate(total_count=Count('survey_id', distinct=True)).order_by('-completed_at__date'))
+
+    total_count_dict = {item['completed_at__date']: item['total_count'] for item in total_count_per_date}
+    response_count_start_datetime = SurveyCompletion.objects.order_by('completed_at').first().completed_at
+
+    context = {
+        'count_per_date_department': count_per_date_department,
+        'total_count_per_date': total_count_per_date,
+        'total_count_dict': total_count_dict,
+        'response_count_start_datetime': response_count_start_datetime,
+    }
+
+    return render(request, template, context)
+
+
+@login_required(login_url='admin_auth')
+def get_response_count_by_department(request):
+    template = 'mainapp/apanel/response_count_by_department.html'
+    department_count_per_date = (SurveyCompletion.objects.values('completed_at__date', 'department__name')
+                                 .annotate(count=Count('survey_id', distinct=True)).order_by('-completed_at__date',
+                                                                                             'department__name'))
+    response_count_start_datetime = SurveyCompletion.objects.order_by('completed_at').first().completed_at
+
+    context = {
+        'department_count_per_date': department_count_per_date,
+        'response_count_start_datetime': response_count_start_datetime,
     }
 
     return render(request, template, context)
