@@ -869,7 +869,7 @@ def statistics_by_date(request):
     # Query to get responses for today
     responses_today = EmployeeResponse.objects.filter(
         created_at__date=today
-    ).values('department__name').annotate(count=Count('id'))
+    ).values('department__name').annotate(count=Count('id')).order_by('department__name')
 
     # Divide responses for today by count of active questions
     responses_today = responses_today.annotate(
@@ -883,7 +883,7 @@ def statistics_by_date(request):
     # Query to get responses for yesterday
     responses_yesterday = EmployeeResponse.objects.filter(
         created_at__date=yesterday
-    ).values('department__name').annotate(count=Count('id'))
+    ).values('department__name').annotate(count=Count('id')).order_by('department__name')
 
     # Divide responses for yesterday by count of active questions
     responses_yesterday = responses_yesterday.annotate(
@@ -896,7 +896,7 @@ def statistics_by_date(request):
 
     responses_this_week = EmployeeResponse.objects.filter(
         created_at__date__gte=start_of_week
-    ).values('department__name').annotate(
+    ).values('department__name').order_by('department__name').annotate(
         count=Count('id'),
         count_per_question=ExpressionWrapper(
             Count('id') / questions_count,
@@ -909,7 +909,7 @@ def statistics_by_date(request):
 
     responses_this_month = EmployeeResponse.objects.filter(
         created_at__date__gte=start_of_month
-    ).values('department__name').annotate(
+    ).values('department__name').order_by('department__name').annotate(
         count=Count('id'),
         count_per_question=ExpressionWrapper(
             Count('id') / questions_count,
