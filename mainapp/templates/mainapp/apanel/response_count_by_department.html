@@ -31,14 +31,14 @@
                 <div class="row gy-4 text-center justify-content-center">
                     <div class="col-10 order-2 order-lg-1 d-flex flex-column justify-content-center text-center">
 
-                        <div class="responses_wrapper vh-100">
+                        <div class="responses_wrapper">
                             <div class="pb-3 text-right">
                                 <a href="{% url 'response_count_by_date' %}" class="btn btn-outline-primary">Статистика по дням</a>
                             </div>
 
                             <h2>Статистика по отделам</h2>
                             {% if response_count_start_datetime %}
-                            <p>Начинается с: {{ response_count_start_datetime|date:"Y-m-d H:i:s" }}</p>
+                            <p>Начинается с: {{ response_count_start_datetime|date:"Y-m-d" }}</p>
                             {% endif %}
                             <table>
                                 <thead>

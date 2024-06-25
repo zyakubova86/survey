@@ -34,7 +34,7 @@
 </div>
 
 <div class="back">
-    {% if request.path == "/ru/" %}
+    {% if "/ru/" in request.path %}
     <a href="{% url 'home_ru' %}" class="link_lang btn btn-primary">
         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-backspace"
              viewBox="0 0 16 16">

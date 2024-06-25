@@ -24,8 +24,6 @@ article, aside, figcaption, figure, footer, header, hgroup, main, nav, section {
 
 body {
   margin: 0;
-  /*position: relative;
-  overflow: hidden;*/
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
   font-size: 1rem;
   font-weight: 400;
@@ -33,7 +31,6 @@ body {
   color: #212529;
   text-align: left;
   overflow-x: hidden;
-  /*overflow-y: scroll;*/
 }
 
 
@@ -57,15 +54,6 @@ body {
     background: #fff;
 }
 
-/*.title_subtext::before {
-    content: '';
-    display: block;
-    height: 1px;
-    width: 100%;
-    background: white;
-    margin: 15px 0;
-}*/
-
 .body_bg {
 	background: url("../images/design.jpg") fixed no-repeat;
     background-size: cover;
@@ -73,10 +61,6 @@ body {
     width: 100vw;
     height: 100vh;
 }
-
-/*.header .heading-section {
-    padding: 50px 0 10px;
-}*/
 
 /* dep cards */
 .departments_wrapper .card_list {
@@ -97,30 +81,6 @@ body {
   transition: 0.4s;
 }
 
-/*.department_card .card_image {
-  width: inherit;
-  height: inherit;
-  border-radius: 40px;
-}
-
-.department_card .card_image img {
-  width: inherit;
-  height: inherit;
-  border-radius: 40px;
-  object-fit: contain;
-}*/
-
-/*.department_card .card_title {
-  text-align: center;
-  border-radius: 0px 0px 40px 40px;
-  font-family: sans-serif;
-  font-weight: bold;
-  font-size: 25px;
-  margin-top: -119px;
-  height: 40px;
-
-}*/
-
 .department_card .card_title {
     text-align: center;
     border-radius: 0px 0px 40px 40px;
@@ -133,18 +93,6 @@ body {
     justify-content: center;
     align-items: center;
 }
-
-/*.department_card .card_title a {
-  *//* text-decoration: none; *//*
-  color: #918686;
-  text-align: center;
-  *//* border-radius: 0px 0px 40px 40px; *//*
-  font-family: sans-serif;
-  font-weight: bold;
-  font-size: 25px;
-  *//* margin-top: -90px;
-  height: 40px; *//*
-}*/
 
 a.department_card {
  text-decoration: none;
@@ -185,20 +133,16 @@ a.department_card {
     color: #fff;
     background: var(--blue-light);
     border-radius: 30px 30px 0 0;
-
 }
 
-/*.questions_list .card-footer {
-    background: var(--blue-light);
-}*/
-
 .questions_card {
-    height: 200px;
-    width: 520px;
+    /*height: 200px;
+    width: 520px;*/
     border-radius: 30px;
     /*border: 2px solid var(--blue-light);*/
     box-shadow: 0px 0px 20px;
 }
+
 /*.questions_card:hover {
     border: 2px solid var(--blue-light);
     transition: 0.2s;
@@ -307,7 +251,6 @@ section.padding-bottom-230 {
     min-height: 100vh;
 }
 .hero p {
-    /*color: var(--grey-light);*/
     color: #fff;
     margin: 5px 0 30px 0;
     font-size: 20px;
@@ -441,7 +384,6 @@ nav {
 }
 
 .sidebar_nav a:hover {
-    /*background: var(--grey-light);*/
     background: #86bcf6;
     transition: 0.3s;
 }
@@ -497,7 +439,25 @@ nav {
     background: #fff;
 }
 
+/* tooltip */
+.custom-tooltip.bs-tooltip-bottom .arrow::before {
+    border-bottom-color: #efb05b;
+    left: -54px;
+}
+.custom-tooltip .tooltip-inner {
+    background-color: #efb05b;
+    color: #fff;
+    padding: 4px 8px;
+    font-size: 14px;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+}
+/* tooltip */
 
+.sag_box {
+    overflow-y: scroll;
+}
 
 
 @media all and (max-width: 500px) {
@@ -508,7 +468,7 @@ nav {
 }
 
 
-@media only screen and (min-width: 768px) and (max-width: 1024px) {
+/*@media only screen and (min-width: 768px) and (max-width: 1024px) {
     .questions_card {
         height: 200px;
         width: 440px;
@@ -528,7 +488,7 @@ nav {
         top: 7px;
         right: 7px;
     }
-}
+}*/
 
 
 

@@ -940,9 +940,9 @@ def statistics_by_date(request):
 def get_response_count_by_date(request):
     template = 'mainapp/apanel/response_count_by_date.html'
 
-    # today = now().date()
-    # week = today - timedelta(days=today.weekday())
-    # month = today.replace(day=1)
+    today = now().date()
+    week = today - timedelta(days=today.weekday())
+    month = today.replace(day=1)
 
     count_per_date_department = (SurveyCompletion.objects.values('completed_at__date', 'department__name')
                                  .annotate(count=Count('survey_id', distinct=True)).order_by('-completed_at__date',
@@ -954,11 +954,34 @@ def get_response_count_by_date(request):
     total_count_dict = {item['completed_at__date']: item['total_count'] for item in total_count_per_date}
     response_count_start_datetime = SurveyCompletion.objects.order_by('completed_at').first().completed_at
 
+    # get total count all dates
+    total_count = 0
+    for item in total_count_dict.values():
+        total_count += item
+
+    # print(total_count)
+
+    # get total count for this week
+    this_week_count = 0
+    for item in count_per_date_department:
+        if item['completed_at__date'] >= week:
+            this_week_count += item['count']
+    # print("this_week_count", this_week_count)
+
+    # get total count for this month
+    this_month_count = 0
+    for item in count_per_date_department:
+        if item['completed_at__date'] >= month:
+            this_month_count += item['count']
+
     context = {
         'count_per_date_department': count_per_date_department,
         'total_count_per_date': total_count_per_date,
         'total_count_dict': total_count_dict,
         'response_count_start_datetime': response_count_start_datetime,
+        'total_count': total_count,
+        'this_week_count': this_week_count,
+        'this_month_count': this_month_count,
     }
 
     return render(request, template, context)

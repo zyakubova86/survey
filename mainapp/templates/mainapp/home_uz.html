@@ -88,7 +88,7 @@
     </section><!-- /Hero Section -->
 
     <div class="lang">
-        {% if request.path == "/ru/" %}
+        {% if "/ru/" in request.path  %}
             <a href="/" class="link_lang btn btn-primary">uz</a>
         {% else %}
             <a href="/ru" class="link_lang btn btn-primary">ru</a>

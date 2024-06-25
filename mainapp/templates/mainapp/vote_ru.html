@@ -5,99 +5,10 @@
 
 {% block content %}
 
-<style>
-.keyboard {
-    position: fixed;
-    left: 0;
-    bottom: 0px;
-    width: 100%;
-    padding: 15px 0;
-    background: #0ea2e0;
-    box-shadow: 0 0 50px rgba(0, 0, 0, 0.5);
-    user-select: none;
-    transition: bottom 0.4s;
-    display: block;
-    z-index: 1;
-}
-
-.keyboard--hidden {
-    display: none;
-}
-
-.keyboard__close {
-    position: absolute;
-    top: -9px;
-    right: 3px;
-    background: transparent;
-    border: none;
-    color: #fff;
-    font-size: 30px;
-    cursor: pointer;
-    outline: none;
-}
-
-.keyboard__keys {
-    text-align: center;
-}
-
-.keyboard__key {
-    height: 45px;
-    width: 6%;
-    max-width: 90px;
-    margin: 3px;
-    border-radius: 4px;
-    border: none;
-    background: rgba(255, 255, 255, 0.2);
-    color: #ffffff;
-    font-size: 1.05rem;
-    outline: none;
-    cursor: pointer;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    vertical-align: top;
-    padding: 0;
-    -webkit-tap-highlight-color: transparent;
-    position: relative;
-}
-
-.keyboard__key:active {
-    background: rgba(255, 255, 255, 0.12);
-}
-
-.keyboard__key--wide {
-    width: 12%;
-}
-
-.keyboard__key--extra-wide {
-    width: 36%;
-    max-width: 500px;
-}
-
-.keyboard__key--activatable::after {
-    content: '';
-    top: 4px;
-    right: 3px;
-    position: absolute;
-    width: 8px;
-    height: 8px;
-    background: rgba(0, 0, 0, 0.4);
-    border-radius: 50%;
-}
-
-.keyboard__key--active::after {
-    background: #08ff00;
-}
-
-.keyboard__key--dark {
-    background: rgba(0, 0, 0, 0.25);
-}
-</style>
-
 <section class="questions_list section padding-bottom-230">
     <div class="container">
         {% if questions %}
-        <form method="POST" action="#">
+        <form method="POST" action="#" onsubmit="return validateForm()">
             {% csrf_token %}
             <div class="row">
                 {% for question in questions %}
@@ -157,7 +68,7 @@
                                     {% endif %}
                                     {% else %}
                                     <div data-mdb-input-init class="form-outline textarea_wrapper">
-                                        <textarea name="response_{{ question.id }}" class="use-keyboard-input vote_textarea" rows="2" required></textarea>
+                                        <textarea name="response_{{ question.id }}" class="use-keyboard-input vote_textarea responseTextarea" rows="2" required></textarea>
                                     </div>
                                     {% endif %}
                                 </div>
@@ -188,7 +99,7 @@
 
 
 <div class="back">
-    {% if request.path == "/ru/" %}
+    {% if "/ru/" in request.path %}
     <a href="{% url 'departments_ru' %}" class="link_lang btn btn-primary">
         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-backspace"
              viewBox="0 0 16 16">
@@ -209,27 +120,8 @@
 
 {% block extra_js %}
 <script type="text/javascript" src="{% static 'js/keyboard.js' %}"></script>
-
-<script>
-  (function() {
-    let timeout;
-
-    function resetTimer() {
-      clearTimeout(timeout);
-      timeout = setTimeout(() => {
-        window.location.href = '/';
-      }, 20 * 1000);
-    }
-
-    window.onload = resetTimer;
-    document.onmousemove = resetTimer;
-    document.onkeypress = resetTimer;
-    document.ontouchstart = resetTimer;
-    document.onscroll = resetTimer;
-    document.onclick = resetTimer;
-  })();
-</script>
-
+<script type="text/javascript" src="{% static 'js/prevent_space.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/inactive_page.js' %}"></script>
 {% endblock extra_js %}
 
 {% endblock %}
