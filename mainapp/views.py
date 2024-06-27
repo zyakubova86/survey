@@ -12,6 +12,8 @@ from django.core.files.storage import FileSystemStorage
 from django.db.models import Count, ExpressionWrapper, IntegerField, F, FloatField
 from django.shortcuts import render, redirect, get_object_or_404
 from django.utils.timezone import now
+import json
+from django.core.serializers.json import DjangoJSONEncoder
 
 from .models import *
 
@@ -1000,4 +1002,64 @@ def get_response_count_by_department(request):
         'response_count_start_datetime': response_count_start_datetime,
     }
 
+    return render(request, template, context)
+
+
+@login_required(login_url='admin_auth')
+def dashboard(request):
+    template = 'mainapp/apanel/dashboard.html'
+
+    today = now().date()
+    week = today - timedelta(days=today.weekday())
+    month = today.replace(day=1)
+
+    # Query to get total counts per date
+    total_count_per_date = (SurveyCompletion.objects.values('completed_at__date')
+                            .annotate(total_count=Count('survey_id', distinct=True)))
+
+    total_count_dict = {}
+    for item in total_count_per_date:
+        total_count_dict[item['completed_at__date']] = item['total_count']
+
+    # count for today
+    today_count = 0
+    for item in total_count_per_date:
+        if item['completed_at__date'] == today:
+            today_count = item['total_count']
+    # print("today_count", today_count)
+
+    # count for this week
+    this_week_count = 0
+    for item in total_count_per_date:
+        if item['completed_at__date'] >= week:
+            this_week_count += item['total_count']
+    # print("this_week_count", this_week_count)
+
+    # count for this month
+    this_month_count = 0
+    for item in total_count_per_date:
+        if item['completed_at__date'] >= month:
+            this_month_count += item['total_count']
+    # print("this_month_count", this_month_count)
+
+    data = list(total_count_dict.items())
+    labels = [str(item[0]) for item in data]
+    counts = [item[1] for item in data]
+
+    questions_count = Questions.objects.filter(is_active=True).count()
+    departments_count = Department.objects.filter(is_active=True).count()
+    surveys_count = SurveyCompletion.objects.count()
+
+    context = {
+        'labels': json.dumps(labels, cls=DjangoJSONEncoder),
+        'counts': json.dumps(counts, cls=DjangoJSONEncoder),
+
+        'today_count': today_count,
+        'this_week_count': this_week_count,
+        'this_month_count': this_month_count,
+
+        'questions_count': questions_count,
+        'departments_count': departments_count,
+        'surveys_count': surveys_count
+    }
     return render(request, template, context)

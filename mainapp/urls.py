@@ -41,4 +41,5 @@ urlpatterns = [
     path('apanel/statistics-by-date/', statistics_by_date, name='statistics_by_date'),
     path('apanel/response-count-by-date/', get_response_count_by_date, name='response_count_by_date'),
     path('apanel/response-count-by-department/', get_response_count_by_department, name='response_count_by_department'),
+    path('apanel/dashboard/', dashboard, name='dashboard'),
 ]

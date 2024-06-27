@@ -1,0 +1,115 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+
+
+<div class="container-fluid">
+    <div class="row">
+        {% include 'mainapp/apanel/sidebar.html' %}
+
+        <div class="col-md-9">
+            <div class="container-fluid pt-2">
+
+                <div class="row gy-4">
+                    <div class="col-12 order-2 order-lg-1 d-flex flex-column">
+                        <div class="responses_wrapper">
+                            <div class="row pb-3">
+                            <div class="col-12 col-md-4">
+                                <div class="card dashboard-card">
+                                    <div class="card-body">
+                                        <h4 class="card-title">Вопросы</h4>
+                                        <h2 class="text-right">{{ questions_count }}</h2>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12 col-md-4">
+                                <div class="card dashboard-card">
+                                    <div class="card-body">
+                                        <h4 class="card-title">Отделы</h4>
+                                        <h2 class="text-right">{{ departments_count }}</h2>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12 col-md-4">
+                                <div class="card dashboard-card">
+                                    <div class="card-body">
+                                        <h4 class="card-title">Ответили</h4>
+                                        <h2 class="text-right">{{ surveys_count }}</h2>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                            <canvas id="myChart1"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script src="{% static 'js/chart_js/chart-4.4.3.min.js' %}"></script>
+<script src="{% static 'js/chart_js/chartjs-plugin-datalabels-2.2.0.min.js' %}"></script>
+
+<script type="text/javascript">
+    document.addEventListener('DOMContentLoaded', function () {
+        let ctx = document.getElementById('myChart1').getContext('2d');
+        let labels = JSON.parse('{{ labels|safe }}');
+        let counts = JSON.parse('{{ counts|safe }}');
+
+        let myChart1 = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Ответили',
+                    data: counts,
+                    fill: false,
+                    backgroundColor: 'rgba(123, 201, 253, 1)',
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    borderWidth: 1,
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        display: false,
+                    },
+                    datalabels: {
+                        anchor: 'end',
+                        align: 'top',
+                        formatter: (value) => value,
+                        color: '#0776ac',
+                        font: {
+                            weight: 'bold'
+                        }
+                    }
+                },
+                scales: {
+                    x: {
+                        ticks: {
+                            autoSkip: false,
+                            maxRotation: 60,
+                            minRotation: 60,
+                            padding: 10,
+                        }
+                    },
+                    y: {
+                        beginAtZero: true,
+                        callback: function(value) {if (value % 1   === 0) {return value;}},
+                        suggestedMax: Math.max(...counts) + 2,
+                    }
+                }
+            },
+            plugins: [ChartDataLabels]
+        });
+    });
+</script>
+
+
+{% endblock %}

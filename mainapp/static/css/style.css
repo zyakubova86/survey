@@ -459,6 +459,12 @@ nav {
     overflow-y: scroll;
 }
 
+.dashboard-card {
+    background-color: rgba(123, 201, 253, 1);
+    /*box-shadow: 0 0 30px rgba(0, 0, 0, 0.5);*/
+    color: #fff;
+}
+
 
 @media all and (max-width: 500px) {
   .card-list {
