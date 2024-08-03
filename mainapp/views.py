@@ -1005,42 +1005,92 @@ def get_response_count_by_department(request):
     return render(request, template, context)
 
 
+# @login_required(login_url='admin_auth')
+# def dashboard(request):
+#     template = 'mainapp/apanel/dashboard.html'
+#
+#     today = now().date()
+#     week = today - timedelta(days=today.weekday())
+#     month = today.replace(day=1)
+#
+#     # Query to get total counts per date
+#     total_count_per_date = (SurveyCompletion.objects.values('completed_at__date')
+#                             .annotate(total_count=Count('survey_id', distinct=True)))
+#
+#     total_count_dict = {}
+#     for item in total_count_per_date:
+#         total_count_dict[item['completed_at__date']] = item['total_count']
+#
+#     # count for today
+#     today_count = 0
+#     for item in total_count_per_date:
+#         if item['completed_at__date'] == today:
+#             today_count = item['total_count']
+#     # print("today_count", today_count)
+#
+#     # count for this week
+#     this_week_count = 0
+#     for item in total_count_per_date:
+#         if item['completed_at__date'] >= week:
+#             this_week_count += item['total_count']
+#     # print("this_week_count", this_week_count)
+#
+#     # count for this month
+#     this_month_count = 0
+#     for item in total_count_per_date:
+#         if item['completed_at__date'] >= month:
+#             this_month_count += item['total_count']
+#     # print("this_month_count", this_month_count)
+#
+#     data = list(total_count_dict.items())
+#     labels = [str(item[0]) for item in data]
+#     counts = [item[1] for item in data]
+#
+#     questions_count = Questions.objects.filter(is_active=True).count()
+#     departments_count = Department.objects.filter(is_active=True).count()
+#     surveys_count = SurveyCompletion.objects.count()
+#
+#     context = {
+#         'labels': json.dumps(labels, cls=DjangoJSONEncoder),
+#         'counts': json.dumps(counts, cls=DjangoJSONEncoder),
+#
+#         'today_count': today_count,
+#         'this_week_count': this_week_count,
+#         'this_month_count': this_month_count,
+#
+#         'questions_count': questions_count,
+#         'departments_count': departments_count,
+#         'surveys_count': surveys_count
+#     }
+#     return render(request, template, context)
+
+
+# ###################################################### 30 days
 @login_required(login_url='admin_auth')
 def dashboard(request):
     template = 'mainapp/apanel/dashboard.html'
 
     today = now().date()
     week = today - timedelta(days=today.weekday())
+
     month = today.replace(day=1)
 
-    # Query to get total counts per date
-    total_count_per_date = (SurveyCompletion.objects.values('completed_at__date')
-                            .annotate(total_count=Count('survey_id', distinct=True)))
+    last_15_days = today - timedelta(days=30)
 
-    total_count_dict = {}
+    # Generate list of all dates in the last 15 days
+    date_range = [last_15_days + timedelta(days=i) for i in range((today - last_15_days).days + 1)]
+    # print(today - last_15_days)
+
+    # Query to get total counts per date by last 15 days
+    total_count_per_date = (SurveyCompletion.objects.values('completed_at__date')
+                            .annotate(total_count=Count('survey_id', distinct=True))
+                            .filter(completed_at__date__gte=last_15_days))
+
+
+    total_count_dict = {date: 0 for date in date_range}
+    # print(total_count_dict)
     for item in total_count_per_date:
         total_count_dict[item['completed_at__date']] = item['total_count']
-
-    # count for today
-    today_count = 0
-    for item in total_count_per_date:
-        if item['completed_at__date'] == today:
-            today_count = item['total_count']
-    # print("today_count", today_count)
-
-    # count for this week
-    this_week_count = 0
-    for item in total_count_per_date:
-        if item['completed_at__date'] >= week:
-            this_week_count += item['total_count']
-    # print("this_week_count", this_week_count)
-
-    # count for this month
-    this_month_count = 0
-    for item in total_count_per_date:
-        if item['completed_at__date'] >= month:
-            this_month_count += item['total_count']
-    # print("this_month_count", this_month_count)
 
     data = list(total_count_dict.items())
     labels = [str(item[0]) for item in data]
@@ -1054,12 +1104,14 @@ def dashboard(request):
         'labels': json.dumps(labels, cls=DjangoJSONEncoder),
         'counts': json.dumps(counts, cls=DjangoJSONEncoder),
 
-        'today_count': today_count,
-        'this_week_count': this_week_count,
-        'this_month_count': this_month_count,
+        'today_count': total_count_dict[today],
+        'this_week_count': sum(count for date, count in total_count_dict.items() if date >= week),
+        'this_month_count': sum(count for date, count in total_count_dict.items() if date >= month),
 
         'questions_count': questions_count,
         'departments_count': departments_count,
         'surveys_count': surveys_count
     }
     return render(request, template, context)
+
+# #########################################################  30 days
