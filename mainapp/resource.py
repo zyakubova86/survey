@@ -1,5 +1,5 @@
 from import_export import resources
-from .models import Employees, Question
+from .models import Employees, Questions
 
 
 class EmployeesResource(resources.ModelResource):
