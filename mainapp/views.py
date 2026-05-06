@@ -1086,7 +1086,6 @@ def dashboard(request):
                             .annotate(total_count=Count('survey_id', distinct=True))
                             .filter(completed_at__date__gte=last_15_days))
 
-
     total_count_dict = {date: 0 for date in date_range}
     # print(total_count_dict)
     for item in total_count_per_date:
