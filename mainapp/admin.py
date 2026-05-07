@@ -26,9 +26,9 @@ class DepartmentAdmin(admin.ModelAdmin):
 
 
 class QuestionsAdmin(admin.ModelAdmin):
-    list_display = ('pk', 'question_ru', 'question_uz',  'is_active', 'has_options', 'option1_ru', 'option1_uz', 'option2_ru', 'option2_uz', 'option3_ru', 'option3_uz', 'option4_ru', 'option5_ru', 'option4_uz', 'option5_uz', 'created', 'option1_count', 'option2_count', 'option3_count', 'option4_count', 'option5_count')
+    list_display = ('question_uz',  'is_active', 'has_options', 'option1_ru', 'option1_uz', 'option2_ru', 'option2_uz', 'option3_ru', 'option3_uz', 'option4_ru', 'option5_ru', 'option4_uz', 'option5_uz', 'created', 'option1_count', 'option2_count', 'option3_count', 'option4_count', 'option5_count')
     # list_filter = ('question_ru', 'question_uz',  'is_active', 'has_options', 'option1_ru', 'option1_uz', 'option2_ru', 'option2_uz', 'option3_ru', 'option3_uz', 'option4_ru', 'option5_ru', 'option4_uz', 'option5_uz', 'created', 'option1_count', 'option2_count', 'option3_count', 'option4_count', 'option5_count')
-    list_display_links = ('pk','question_ru', 'question_uz')
+    list_display_links = ('question_uz',)
 
     class Meta:
         verbose_name = "Вопрос"
