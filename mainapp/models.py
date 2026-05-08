@@ -12,7 +12,7 @@ class Department(models.Model):
         verbose_name_plural = 'Отделы'
 
     def __str__(self):
-        return self.name_uz
+        return str(self.name_uz)
 
 
 class Question(models.Model):
@@ -67,7 +67,7 @@ class OptionGroup(models.Model):
         verbose_name_plural = "Группы вариантов"
 
     def __str__(self):
-        return self.name_uz
+        return str(self.name_uz)
 
 class QuestionOption(models.Model):
     question = models.ForeignKey(Question, on_delete=models.CASCADE, related_name='options')
@@ -81,7 +81,7 @@ class QuestionOption(models.Model):
     is_active = models.BooleanField(default=True, verbose_name='Активный')
 
     def __str__(self):
-        return self.text_uz
+        return str(self.text_uz)
 
     class Meta:
         ordering = ['question', 'group__order', 'order']
@@ -114,3 +114,17 @@ class Answer(models.Model):
             models.Index(fields=['selected_option']),
             models.Index(fields=['created_at']),
         ]
+
+
+    def __str__(self):
+
+        if self.text_answer:
+            return self.text_answer
+
+        if self.selected_option:
+            return str(self.selected_option)
+
+        if self.department:
+            return str(self.department)
+
+        return f'Answer #{self.id}'

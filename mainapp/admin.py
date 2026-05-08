@@ -27,7 +27,7 @@ class SurveySubmissionAdmin(admin.ModelAdmin):
 
 
 class AnswerAdmin(admin.ModelAdmin):
-    list_display = ('submission', 'question', 'selected_option', 'text_answer', 'created_at')
+    list_display = ('submission', 'question','department', 'selected_option', 'text_answer', 'created_at')
 
 
 admin.site.register(Department, DepartmentAdmin)

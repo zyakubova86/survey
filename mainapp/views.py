@@ -1,24 +1,6 @@
-import json
-import mimetypes
-import os
-from datetime import timedelta
-from pprint import pprint
-
-import pandas as pd
-from django.contrib import messages
-from django.contrib.auth import authenticate, login
-from django.contrib.auth.decorators import login_required
-from django.core.exceptions import ValidationError
-from django.core.files.storage import FileSystemStorage
-from django.db import transaction
-from django.db.models import Count, ExpressionWrapper, IntegerField, FloatField, F
-from django.shortcuts import render, redirect, get_object_or_404
-from django.utils.timezone import now
+from django.shortcuts import render
 
 from .models import *
-from django.core.serializers.json import DjangoJSONEncoder
-
-import datetime
 
 
 def home(request):
@@ -46,3 +28,12 @@ def submit_survey(request):
     }
 
     return render(request, template, context)
+
+
+
+def thank_you(request):
+    if "/ru/" in request.path:
+        template = 'mainapp/thank_you_ru.html'
+    else:
+        template = 'mainapp/thank_you_uz.html'
+    return render(request, template)
