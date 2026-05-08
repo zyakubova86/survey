@@ -148,3 +148,4 @@ mainapp/*_old.py
 notes.txt
 notes
 *.sqlite3
+public
