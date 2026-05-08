@@ -137,3 +137,14 @@ GitHub.sublime-settings
 !.vscode/launch.json
 !.vscode/extensions.json
 .history
+
+
+app_config.py
+config.py
+.idea
+*_old.html
+*_old.py
+mainapp/*_old.py
+notes.txt
+notes
+*.sqlite3

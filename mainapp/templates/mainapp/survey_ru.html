@@ -1,0 +1,179 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Сўровнома{% endblock %}
+
+
+{% block content %}
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <form method="POST">
+
+                {% csrf_token %}
+
+                <div class="card shadow-sm border-0 mb-4">
+                    <div class="card-body p-4 survey_img_border survey_img_h survey_img">
+
+                    </div>
+                </div>
+
+                <div class="card shadow-sm border-0 mb-4">
+
+                    <div class="card-body p-4">
+                        <h3 class="mb-3">
+                            Анонимный опрос о кухонной еде
+                        </h3>
+
+                        <p class="text-muted mb-0">
+                            Пожалуйста, ответьте на вопросы.
+                        </p>
+
+                    </div>
+                </div>
+
+                {% if questions %}
+
+                {% for question in questions %}
+
+                <div class="card shadow-sm border-0 mb-4">
+
+                    <div class="card-body p-4">
+
+                        <h6 class="mb-4" style="padding-bottom: 16px; border-bottom: 1px solid #dadada;">
+
+                            {{ question.order }}.
+                            {{ question.question_ru }}
+
+                            {% if question.is_required %}
+                            <span class="text-danger">*</span>
+                            {% endif %}
+
+                        </h6>
+
+                        <!-- TEXT -->
+                        {% if question.question_type == 'text' %}
+                        <label for="question_{{ question.id }}" class="form-label">{{ question.question_ru }}</label>
+                        <textarea class="form-control" rows="3" id="question_{{ question.id }}" name="question_{{ question.id }}" {% if question.is_required %}required{% endif %}></textarea>
+                        {% endif %}
+
+                        <!-- NUMBER -->
+                        {% if question.question_type == 'number' %}
+                        <input type="number" class="form-control" name="question_{{ question.id }}" {% if question.is_required %}required{% endif %}>
+                        {% endif %}
+
+                        <!-- SINGLE CHOICE -->
+                        {% if question.question_type == 'single' %}
+
+                        <!-- DEPARTMENTS -->
+                        {% if question.option_source == 'department' %}
+                        <div class="row">
+                            {% for department in departments %}
+                            <div class="col-sm-6">
+                                <div class="form-check mb-2 option-item">
+                                    <input type="radio" name="question_{{ question.id }}" value="{{ department.id }}" id="department_{{ department.id }}" {% if question.is_required %}required{% endif %}>
+
+                                    <label class="form-check-label" for="department_{{ department.id }}">
+                                        {{ department.name_ru }}
+                                    </label>
+                                </div>
+                            </div>
+
+                            {% endfor %}
+                        </div>
+
+
+                        {% else %}
+
+                        {% for option in question.options.all %}
+                        <div class="form-check mb-2 option-item">
+                            <input class="form-check-input" type="radio" name="question_{{ question.id }}" value="{{ option.id }}" id="option_{{ option.id }}" {% if question.is_required %}required{% endif %}>
+
+                            <label class="form-check-label" for="option_{{ option.id }}">
+                                {{ option.text_ru }}
+                            </label>
+                        </div>
+                        {% endfor %}
+
+                        {% endif %}
+
+                        {% endif %}
+
+                        <!-- MULTIPLE CHOICE -->
+                        {% if question.question_type == 'multiple' %}
+
+                        {% regroup question.options.all by group as grouped_options %}
+
+                        {% for group in grouped_options %}
+
+                        {% if group.grouper %}
+                        <h6 class="mt-4 mb-3 text-primary">
+                            {{ group.grouper.name_ru }}
+                        </h6>
+                        {% endif %}
+
+                        {% for option in group.list %}
+
+                        <div class="form-check option-item">
+
+                            <input class="form-check-input" type="checkbox" name="question_{{ question.id }}" value="{{ option.id }}" id="option_{{ option.id }}" {% if question.is_required %}required{% endif %}>
+
+                            <label class="form-check-label" for="option_{{ option.id }}">
+                                {{ option.text_ru }}
+                            </label>
+
+                        </div>
+
+                        {% endfor %}
+
+                        {% endfor %}
+
+                        {% endif %}
+                    </div>
+
+                </div>
+
+                {% endfor %}
+
+                <div class="row justify-content-center">
+                    <button class="btn btn-primary btn-lg">
+                        Отправить
+                    </button>
+                </div>
+                {% else %}
+                <div class="row justify-content-center">
+                    <h2 class="mt-5">Пока вопросов нет</h2>
+                </div>
+                {% endif %}
+
+            </form>
+        </div>
+    </div>
+</div>
+
+
+<div class="back">
+    {% if "/ru/" in request.path %}
+    <a href="{% url 'home_ru' %}" class="link_lang btn btn-primary">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+             class="bi bi-backspace"
+             viewBox="0 0 16 16">
+            <path d="M5.83 5.146a.5.5 0 0 0 0 .708L7.975 8l-2.147 2.146a.5.5 0 0 0 .707.708l2.147-2.147 2.146 2.147a.5.5 0 0 0 .707-.708L9.39 8l2.146-2.146a.5.5 0 0 0-.707-.708L8.683 7.293 6.536 5.146a.5.5 0 0 0-.707 0z"/>
+            <path d="M13.683 1a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2h-7.08a2 2 0 0 1-1.519-.698L.241 8.65a1 1 0 0 1 0-1.302L5.084 1.7A2 2 0 0 1 6.603 1zm-7.08 1a1 1 0 0 0-.76.35L1 8l4.844 5.65a1 1 0 0 0 .759.35h7.08a1 1 0 0 0 1-1V3a1 1 0 0 0-1-1z"/>
+        </svg>
+    </a>
+    {% else %}
+    <a href="{% url 'home_uz' %}" class="link_lang btn btn-primary">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+             class="bi bi-backspace"
+             viewBox="0 0 16 16">
+            <path d="M5.83 5.146a.5.5 0 0 0 0 .708L7.975 8l-2.147 2.146a.5.5 0 0 0 .707.708l2.147-2.147 2.146 2.147a.5.5 0 0 0 .707-.708L9.39 8l2.146-2.146a.5.5 0 0 0-.707-.708L8.683 7.293 6.536 5.146a.5.5 0 0 0-.707 0z"/>
+            <path d="M13.683 1a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2h-7.08a2 2 0 0 1-1.519-.698L.241 8.65a1 1 0 0 1 0-1.302L5.084 1.7A2 2 0 0 1 6.603 1zm-7.08 1a1 1 0 0 0-.76.35L1 8l4.844 5.65a1 1 0 0 0 .759.35h7.08a1 1 0 0 0 1-1V3a1 1 0 0 0-1-1z"/>
+        </svg>
+    </a>
+    {% endif %}
+</div>
+
+{% endblock %}
+
+

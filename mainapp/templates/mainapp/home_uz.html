@@ -6,32 +6,24 @@
 {% block content %}
 {% include 'header.html' %}
 
-<main class="main">
 
-    <!-- Hero Section -->
-    <section id="hero" class="hero section">
-        <div class="container">
-            <div class="row justify-content-center">
-                <div class="col-lg-8 text-center">
-                    <h2 class="">Ҳурматли SAG компанияси ходими!</h2>
-                    <p>
-                        Сизни овқатланишни ташкил этиш ва ошхона фаолияти бўйича фикр ва истакларингизни ўрганишга қаратилган аноним сўровномада иштирок этишга таклиф этамиз.<br>
-                        Сизнинг фикрингиз биз учун жуда муҳим — у барча ходимлар учун овқатланиш шароитларини янада қулай, хилма-хил ва комфортли қилишга ёрдам беради.
-                    </p>
-                    <div class="text-center">
-                        <a href="{% url 'departments_uz' %}" class="btn-get-started">Бошлаш</a>
-                        <a href="#" class="align-items-center">
-                            <i class="bi bi-play-circle"></i>
-                        </a>
-                    </div>
+<section id="hero" class="hero section">
+
+    <div class="container">
+
+        <div class="row justify-content-center">
+            <div class="col-lg-8 text-center">
+                <h2 class="">Ҳурматли SAG компанияси ходими!</h2>
+                <p>
+                    Сизни овқатланишни ташкил этиш ва ошхона фаолияти бўйича фикр ва истакларингизни ўрганишга қаратилган аноним сўровномада иштирок этишга таклиф этамиз.<br>
+                    Сизнинг фикрингиз биз учун жуда муҳим — у барча ходимлар учун овқатланиш шароитларини янада қулай, хилма-хил ва комфортли қилишга ёрдам беради.
+                </p>
+                <div class="text-center">
+                    <a href="{% url 'survey_uz' %}" class="btn-get-started">Бошлаш</a>
                 </div>
             </div>
         </div>
-    </section>
-
-</main>
+    </div>
+</section>
 
 {% endblock %}
-
-
-
