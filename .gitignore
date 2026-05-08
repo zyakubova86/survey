@@ -138,14 +138,13 @@ GitHub.sublime-settings
 !.vscode/extensions.json
 .history
 
-
+public
+.idea
 app_config.py
 config.py
-.idea
 *_old.html
 *_old.py
 mainapp/*_old.py
 notes.txt
 notes
 *.sqlite3
-public
