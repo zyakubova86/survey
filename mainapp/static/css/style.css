@@ -307,12 +307,9 @@ svg #file_icon svg {
 }
 
 .hero {
-    background-size: cover;
-    background-position: left-left;
     background-color: var(--new-sag-blue);
     color: #ffffff;
     width: 100%;
-    position: relative;
     display: flex;
     align-items: center;
     min-height: 100vh;
