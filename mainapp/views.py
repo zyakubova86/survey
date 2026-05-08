@@ -24,7 +24,7 @@ def submit_survey(request):
 
     questions = Question.objects.filter(is_active=True).prefetch_related('options').order_by('order')
     departments = Department.objects.filter(is_active=True, name_uz__isnull=False, name_ru__isnull=False).exclude(name_uz='', name_ru='').order_by('name_uz')
-
+    menu_items = MenuItem.objects.filter(is_active=True).select_related('category')
 
     if request.method == 'POST':
         save_answers(request=request, questions=questions, departments=departments)
@@ -33,6 +33,7 @@ def submit_survey(request):
     context = {
         'questions': questions,
         'departments': departments,
+        'menu_items': menu_items,
     }
 
     return render(request, template, context)
@@ -47,9 +48,7 @@ def thank_you(request):
 
 
 def save_answers(request, questions, departments):
-
     submission = SurveySubmission.objects.create()
-
     answers = []
 
     for question in questions:
@@ -60,7 +59,7 @@ def save_answers(request, questions, departments):
             value = request.POST.get(field_name)
 
             if value:
-                answers.append(Answer(submission=submission, question=question, text_answer=value)                )
+                answers.append(Answer(submission=submission, question=question, text_answer=value))
 
 
         # SINGLE CHOICE
@@ -92,9 +91,29 @@ def save_answers(request, questions, departments):
             if not values:
                 continue
 
-            options = question.options.filter(id__in=values, is_active=True)
-            for option in options:
-                answers.append(Answer(submission=submission, question=question, selected_option=option))
+            # MENU ITEMS
+            if question.option_source == 'menu':
+
+                for value in values:
+
+                    item = MenuItem.objects.filter(
+                        id=value,
+                        is_active=True
+                    ).first()
+
+                    if item:
+                        answers.append(Answer(
+                            submission=submission,
+                            question=question,
+                            menu_item=item
+                        )
+                        )
+
+            # NORMAL OPTIONS
+            else:
+                options = question.options.filter(id__in=values, is_active=True)
+                for option in options:
+                    answers.append(Answer(submission=submission, question=question, selected_option=option))
 
     Answer.objects.bulk_create(answers)
 

@@ -71,7 +71,7 @@
                             {% for department in departments %}
                             <div class="col-sm-6">
                                 <div class="form-check mb-2 option-item">
-                                    <input type="radio" name="question_{{ question.id }}" value="{{ department.id }}" id="department_{{ department.id }}" {% if question.is_required %}required{% endif %}>
+                                    <input type="radio" name="question_{{ question.id }}" value="{{ department.id }}" id="department_{{ department.id }}">
 
                                     <label class="form-check-label" for="department_{{ department.id }}">
                                         {{ department.name_ru }}
@@ -86,7 +86,7 @@
                         {% else %}
                         {% for option in question.options.all %}
                         <div class="form-check mb-2 option-item">
-                            <input class="form-check-input" type="radio" name="question_{{ question.id }}" value="{{ option.id }}" id="option_{{ option.id }}" {% if question.is_required %}required{% endif %}>
+                            <input class="form-check-input" type="radio" name="question_{{ question.id }}" value="{{ option.id }}" id="option_{{ option.id }}">
 
                             <label class="form-check-label" for="option_{{ option.id }}">
                                 {{ option.text_ru }}
@@ -139,7 +139,7 @@
                 </div>
                 {% else %}
                 <div class="row justify-content-center">
-                    <h2>Пока вопросов нет</h2>
+                    <h2 class="mt-5">Пока вопросов нет</h2>
                 </div>
                 {% endif %}
 

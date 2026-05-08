@@ -31,6 +31,7 @@ class Question(models.Model):
     OPTION_SOURCE_CHOICES = (
         ('manual', 'Manual'),
         ('department', 'Department'),
+        ('menu', 'Menu'),
     )
 
     question_uz = models.TextField(max_length=200, null=True, blank=True, verbose_name='Вопрос uz')
@@ -71,12 +72,9 @@ class OptionGroup(models.Model):
 
 class QuestionOption(models.Model):
     question = models.ForeignKey(Question, on_delete=models.CASCADE, related_name='options')
-
     group = models.ForeignKey(OptionGroup, on_delete=models.SET_NULL, null=True, blank=True, related_name='options')
-
     text_uz = models.CharField(max_length=255, null=True, blank=True, verbose_name='Текст uz')
     text_ru = models.CharField(max_length=255, null=True, blank=True, verbose_name='Текст ru')
-
     order = models.PositiveIntegerField(default=0)
     is_active = models.BooleanField(default=True, verbose_name='Активный')
 
@@ -104,6 +102,12 @@ class Answer(models.Model):
     text_answer = models.TextField(null=True, blank=True)
     department = models.ForeignKey(Department, on_delete=models.SET_NULL, null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
+    menu_item = models.ForeignKey(
+        "MenuItem",
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True
+    )
 
     class Meta:
         verbose_name = "Ответ"
@@ -128,3 +132,34 @@ class Answer(models.Model):
             return str(self.department)
 
         return f'Answer #{self.id}'
+
+
+class FoodCategory(models.Model):
+    name_uz = models.CharField(max_length=255)
+    name_ru = models.CharField(max_length=255)
+    order = models.PositiveIntegerField(default=0)
+
+    class Meta:
+        ordering = ['order']
+        verbose_name = "Категория блюд"
+        verbose_name_plural = 'Категории блюд'
+
+    def __str__(self):
+        return str(self.name_uz)
+
+
+class MenuItem(models.Model):
+    category = models.ForeignKey(FoodCategory, on_delete=models.CASCADE, related_name='items')
+    name_uz = models.CharField(max_length=255)
+    name_ru = models.CharField(max_length=255)
+    is_active = models.BooleanField(default=True)
+    order = models.PositiveIntegerField(default=0)
+
+    class Meta:
+        ordering = ['category__order', 'order']
+
+        verbose_name = "Название блюд"
+        verbose_name_plural = 'Названия блюд'
+
+    def __str__(self):
+        return str(self.name_uz)

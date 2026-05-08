@@ -73,12 +73,12 @@ body {
     border-radius: 8px;
 }
 
-textarea.form-control,
+/*textarea.form-control,
 input.form-control {
     border: none;
     border-bottom: 2px solid #ddd;
     border-radius: 0;
-}
+}*/
 
 textarea.form-control:focus,
 input.form-control:focus {

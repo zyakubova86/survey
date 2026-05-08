@@ -30,9 +30,19 @@ class AnswerAdmin(admin.ModelAdmin):
     list_display = ('submission', 'question','department', 'selected_option', 'text_answer', 'created_at')
 
 
+class FoodCategoryAdmin(admin.ModelAdmin):
+    list_display = ('name_uz', 'name_ru', 'order')
+
+
+class MenuItemAdmin(admin.ModelAdmin):
+    list_display = ('category', 'name_uz', 'name_ru', 'order', 'is_active')
+
+
 admin.site.register(Department, DepartmentAdmin)
 admin.site.register(Question, QuestionAdmin)
 admin.site.register(OptionGroup, OptionGroupAdmin)
 admin.site.register(QuestionOption, QuestionOptionAdmin)
 admin.site.register(SurveySubmission, SurveySubmissionAdmin)
 admin.site.register(Answer, AnswerAdmin)
+admin.site.register(FoodCategory, FoodCategoryAdmin)
+admin.site.register(MenuItem, MenuItemAdmin)
