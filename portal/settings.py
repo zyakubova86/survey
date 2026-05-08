@@ -13,6 +13,7 @@ from argparse import OPTIONAL
 from pathlib import Path
 import os
 from environs import Env
+from app_config import APP_SECRET_KEY, APP_DEBUG, APP_ALLOWED_HOSTS
 
 env = Env()
 env.read_env()
@@ -24,12 +25,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-l18b-r)=%%_*@obxoa(t*n8v@46gph@c^zv)2reo8jlr41+ss_'
+SECRET_KEY = APP_SECRET_KEY
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = APP_DEBUG
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = APP_ALLOWED_HOSTS
 
 # Application definition
 
