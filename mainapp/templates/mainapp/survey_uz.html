@@ -8,7 +8,7 @@
 <div class="container py-5">
     <div class="row justify-content-center">
         <div class="col-lg-8">
-            <form method="POST">
+            <form method="POST" action="{{ request.path }}">
 
                 {% csrf_token %}
 
@@ -82,7 +82,6 @@
                                     </label>
                                 </div>
                             </div>
-
                             {% endfor %}
                         </div>
 
@@ -109,40 +108,28 @@
                         {% if question.question_type == 'multiple' %}
 
                         {% if question.option_source == 'menu' %}
+                        <div class="row">
+                            {% regroup menu_items by category as grouped_menu %}
 
-                        {% regroup menu_items by category as grouped_menu %}
+                            {% for group in grouped_menu %}
+                            <div class="col-sm-6 col-md-4">
+                                <h6 class="mt-4 mb-3 text-primary">
+                                    {{ group.grouper.name_uz }}
+                                </h6>
 
-                        {% for group in grouped_menu %}
+                                {% for item in group.list %}
+                                <div class="form-check option-item">
+                                    <input class="form-check-input" type="checkbox" name="question_{{ question.id }}" value="{{ item.id }}" id="menu_{{ item.id }}">
 
-                        <h6 class="mt-4 mb-3 text-primary">
-                            {{ group.grouper.name_uz }}
-                        </h6>
-
-                        {% for item in group.list %}
-
-                        <div class="form-check option-item">
-
-                            <input
-                                    class="form-check-input"
-                                    type="checkbox"
-                                    name="question_{{ question.id }}"
-                                    value="menu_{{ item.id }}"
-                                    id="menu_{{ item.id }}"
-                            >
-
-                            <label class="form-check-label"
-                                   for="menu_{{ item.id }}">
-
-                                {{ item.name_uz }}
-
-                            </label>
+                                    <label class="form-check-label" for="menu_{{ item.id }}">
+                                        {{ item.name_uz }}
+                                    </label>
+                                </div>
+                                {% endfor %}
+                            </div>
+                            {% endfor %}
 
                         </div>
-
-                        {% endfor %}
-
-                        {% endfor %}
-
                         {% else %}
                         {% regroup question.options.all by group as grouped_options %}
 

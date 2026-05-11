@@ -8,7 +8,7 @@
 <div class="container py-5">
     <div class="row justify-content-center">
         <div class="col-lg-8">
-            <form method="POST">
+            <form method="POST" action="{{ request.path }}">
 
                 {% csrf_token %}
 
@@ -71,7 +71,8 @@
                             {% for department in departments %}
                             <div class="col-sm-6">
                                 <div class="form-check mb-2 option-item">
-                                    <input type="radio" name="question_{{ question.id }}" value="{{ department.id }}" id="department_{{ department.id }}">
+                                    <input type="radio" name="question_{{ question.id }}" value="{{ department.id }}" id="department_{{ department.id }}"
+                                           {% if question.is_required %}required{% endif %}>
 
                                     <label class="form-check-label" for="department_{{ department.id }}">
                                         {{ department.name_ru }}
@@ -86,7 +87,8 @@
                         {% else %}
                         {% for option in question.options.all %}
                         <div class="form-check mb-2 option-item">
-                            <input class="form-check-input" type="radio" name="question_{{ question.id }}" value="{{ option.id }}" id="option_{{ option.id }}">
+                            <input class="form-check-input" type="radio" name="question_{{ question.id }}" value="{{ option.id }}" id="option_{{ option.id }}"
+                                   {% if question.is_required %}required{% endif %}>
 
                             <label class="form-check-label" for="option_{{ option.id }}">
                                 {{ option.text_ru }}
@@ -100,6 +102,31 @@
 
                         <!-- MULTIPLE CHOICE -->
                         {% if question.question_type == 'multiple' %}
+
+                        {% if question.option_source == 'menu' %}
+                        <div class="row">
+                            {% regroup menu_items by category as grouped_menu %}
+
+                            {% for group in grouped_menu %}
+                            <div class="col-sm-6 col-md-4">
+                                <h6 class="mt-4 mb-3 text-primary">
+                                    {{ group.grouper.name_ru }}
+                                </h6>
+
+                                {% for item in group.list %}
+                                <div class="form-check option-item">
+                                    <input class="form-check-input" type="checkbox" name="question_{{ question.id }}" value="{{ item.id }}" id="menu_{{ item.id }}">
+
+                                    <label class="form-check-label" for="menu_{{ item.id }}">
+                                        {{ item.name_ru }}
+                                    </label>
+                                </div>
+                                {% endfor %}
+                            </div>
+                            {% endfor %}
+
+                        </div>
+                        {% else %}
 
                         {% regroup question.options.all by group as grouped_options %}
 
@@ -124,6 +151,8 @@
                         {% endfor %}
 
                         {% endfor %}
+
+                        {% endif %}
 
                         {% endif %}
                     </div>
