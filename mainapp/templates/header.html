@@ -1,9 +1,9 @@
 {% block header %}
 {% load static %}
 
-<nav class="navbar nav_bg">
-    <div class="container-fluid d-flex">
-        <a class="navbar-brand" href="/">
+<nav class="navbar nav_bg py-0">
+    <div class="container-fluid d-flex align-items-center justify-content-between">
+        <a class="navbar-brand align-items-center gap-2 px-3" href="/">
             <svg width="86" height="29" viewBox="0 0 86 29" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M82.856 13.3417H71.1375L78.7417 17.4769V26.5078H76.11C68.6274 26.5078 65.8886 18.6148 65.577 13.996C65.0077 5.56068 71.733 1.08357 76.0257 1.47531L76.5155 1.49949L85.4912 6.3801V1.94444V0.0078125H75.1088C62.423 0.0078125 57.6253 5.93308 57.7262 14.7733C57.8208 23.0574 64.3244 27.9684 75.6298 27.9684L78.7423 27.9815V27.9849H86.0004V13.3424H82.8574L82.856 13.3417Z"
                       fill="#fff"/>
@@ -15,13 +15,27 @@
             <p class="text-white m-0" style="font-size: 14px; letter-spacing: 2px;">for people</p>
         </a>
 
-        <div class="lang">
-            {% if "/ru/" in request.path %}
-            <a href="/" class="link_lang btn btn-primary">uz</a>
-            {% else %}
-            <a href="/ru" class="link_lang btn btn-primary">ru</a>
+        <div class="d-flex align-items-center gap-4 ms-auto">
+            {% if user.is_authenticated %}
+            <span class="nav-link text-light">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
+                             class="bi bi-person" viewBox="0 0 20 20">
+                          <path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6m2-3a2 2 0 1 1-4 0 2 2 0 0 1 4 0m4 8c0 1-1 1-1 1H3s-1 0-1-1 1-4 6-4 6 3 6 4m-1-.004c-.001-.246-.154-.986-.832-1.664C11.516 10.68 10.289 10 8 10s-3.516.68-4.168 1.332c-.678.678-.83 1.418-.832 1.664z"/>
+                        </svg>
+                        {{ user.username }}
+                    </span>
+            <a href="{% url 'dash_analytics' %}" class="nav-link text-white text-decoration-none">Dashboard</a>
             {% endif %}
+
+            <div class="lang">
+                {% if "/ru/" in request.path %}
+                <a href="/" class="link_lang btn btn-primary">uz</a>
+                {% else %}
+                <a href="/ru" class="link_lang btn btn-primary">ru</a>
+                {% endif %}
+            </div>
         </div>
+
     </div>
 </nav>
 
