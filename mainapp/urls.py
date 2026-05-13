@@ -11,6 +11,7 @@ urlpatterns = [
     path('thank-you/', thank_you, name='thank_you_uz'),
     path('ru/thank-you/', thank_you, name='thank_you_ru'),
 
-    path('answers/', answers_list, name='answers_list'),
+    path('answers/', answers_list_view, name='answers_list'),
+    path('analytics/', analytics_view, name='analytics')
 
 ]

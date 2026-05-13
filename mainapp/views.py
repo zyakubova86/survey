@@ -1,5 +1,7 @@
 from django.contrib.auth.decorators import login_required
 from django.db import transaction
+from django.db.models import Count
+from django.db.models.functions import TruncDate
 from django.shortcuts import render, redirect
 
 from .models import *
@@ -128,7 +130,7 @@ def save_answers(request, questions, departments):
 
 
 @login_required
-def answers_list(request):
+def answers_list_view(request):
     submissions = SurveySubmission.objects.prefetch_related(
         'answers__question',
         'answers__selected_option',
@@ -188,3 +190,50 @@ def answers_list(request):
         'mainapp/answers_list.html',
         context
     )
+
+
+@login_required
+def analytics_view(request):
+
+    # TOTAL SUBMISSIONS BY DATE
+    total_by_date = (
+        SurveySubmission.objects
+        .annotate(date=TruncDate('created_at'))
+        .values('date')
+        .annotate(total=Count('id'))
+        .order_by('-date')
+    )
+
+    # DEPARTMENT TOTALS
+    department_totals = (
+        Answer.objects
+        .filter(department__isnull=False)
+        .values(
+            'department__name_uz',
+            'department__name_ru'
+        )
+        .annotate(total=Count('submission', distinct=True))
+        .order_by('-total')
+    )
+
+    # DEPARTMENT BY DATE
+    department_by_date = (
+        Answer.objects
+        .filter(department__isnull=False)
+        .annotate(date=TruncDate('created_at'))
+        .values(
+            'date',
+            'department__name_uz',
+            'department__name_ru'
+        )
+        .annotate(total=Count('submission', distinct=True))
+        .order_by('-date')
+    )
+
+    context = {
+        # 'total_by_date': total_by_date,
+        # 'department_totals': department_totals,
+        # 'department_by_date': department_by_date,
+    }
+
+    return render(request, 'mainapp/analytics.html', context)
