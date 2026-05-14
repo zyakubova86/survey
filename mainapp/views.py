@@ -1,8 +1,13 @@
+import calendar
+from collections import defaultdict
+from datetime import date, timedelta
+
 from django.contrib.auth.decorators import login_required
 from django.db import transaction
-from django.db.models import Count
-from django.db.models.functions import TruncDate
+from django.db.models import Count, Q
+from django.db.models.functions import TruncDate, TruncMonth
 from django.shortcuts import render, redirect
+from django.utils import timezone
 
 from .models import *
 
@@ -31,7 +36,8 @@ def submit_survey(request):
         redirect_url = 'thank_you_uz'
 
     questions = Question.objects.filter(is_active=True).prefetch_related('options').order_by('order')
-    departments = Department.objects.filter(is_active=True, name_uz__isnull=False, name_ru__isnull=False).exclude(name_uz='', name_ru='').order_by(f'name_{lang}')
+    departments = Department.objects.filter(is_active=True, name_uz__isnull=False, name_ru__isnull=False).exclude(
+        name_uz='', name_ru='').order_by(f'name_{lang}')
     menu_items = MenuItem.objects.filter(is_active=True).select_related('category')
 
     if request.method == 'POST':
@@ -90,7 +96,7 @@ def save_answers(request, questions, departments):
                 option = question.options.filter(id=value, is_active=True).first()
 
                 if option:
-                    answers.append( Answer(submission=submission, question=question, selected_option=option))
+                    answers.append(Answer(submission=submission, question=question, selected_option=option))
 
 
         # MULTIPLE CHOICE
@@ -193,47 +199,154 @@ def answers_list_view(request):
 
 
 @login_required
-def analytics_view(request):
+def dashboard(request):
+    now = timezone.localtime(timezone.now())
 
-    # TOTAL SUBMISSIONS BY DATE
-    total_by_date = (
-        SurveySubmission.objects
-        .annotate(date=TruncDate('created_at'))
-        .values('date')
-        .annotate(total=Count('id'))
-        .order_by('-date')
-    )
+    total_submissions = SurveySubmission.objects.count()
+    today_total = SurveySubmission.objects.filter(created_at__date=now.date()).count()
+    week_total = SurveySubmission.objects.filter(created_at__gte=now - timedelta(days=7)).count()
+    month_total = SurveySubmission.objects.filter(created_at__month=now.month, created_at__year=now.year).count()
 
-    # DEPARTMENT TOTALS
-    department_totals = (
-        Answer.objects
-        .filter(department__isnull=False)
-        .values(
-            'department__name_uz',
-            'department__name_ru'
-        )
-        .annotate(total=Count('submission', distinct=True))
-        .order_by('-total')
-    )
-
-    # DEPARTMENT BY DATE
-    department_by_date = (
-        Answer.objects
-        .filter(department__isnull=False)
-        .annotate(date=TruncDate('created_at'))
-        .values(
-            'date',
-            'department__name_uz',
-            'department__name_ru'
-        )
-        .annotate(total=Count('submission', distinct=True))
-        .order_by('-date')
-    )
-
-    context = {
-        # 'total_by_date': total_by_date,
-        # 'department_totals': department_totals,
-        # 'department_by_date': department_by_date,
+    # DAILY STATS (CURRENT MONTH DAYS)
+    daily_queryset = (SurveySubmission.objects.annotate(day=TruncDate("created_at")).values("day").annotate(
+        total=Count("id")).order_by("day"))
+    daily_map = {
+        item["day"]: item["total"]
+        for item in daily_queryset
     }
 
-    return render(request, 'mainapp/analytics.html', context)
+    daily_stats = []
+    for day_num in range(1, now.day + 1):
+        current_day = date(now.year, now.month, day_num)
+
+        daily_stats.append({
+            "day": current_day.strftime("%d"),
+            "total": daily_map.get(current_day, 0)
+        })
+
+    # WEEKLY STATS (CURRENT MONTH WEEKS)
+    start_month = date(now.year, now.month, 1)
+    end_date = now.date()
+    start_weekday = start_month.weekday()
+    print("start_weekday", start_weekday)
+
+    # create week index manually
+    weekly_map = defaultdict(int)
+
+    # get all submissions for current month
+    qs = SurveySubmission.objects.filter(
+        created_at__date__gte=start_month,
+        created_at__date__lte=end_date
+    )
+
+    for obj in qs:
+        d = obj.created_at.date()
+        # position in month grid
+        day_index = d.day + start_weekday - 1
+        week_index = (day_index // 7) + 1
+        weekly_map[week_index] += 1
+
+    days_in_month = calendar.monthrange(now.year, now.month)[1]
+    total_weeks = ((days_in_month + start_weekday - 1) // 7) + 1
+
+    print("days_in_month", days_in_month)
+    print("weekly_map", weekly_map)
+    print("total_weeks", total_weeks)
+
+    weekly_stats = []
+
+    for w in range(1, total_weeks + 1):
+        weekly_stats.append({
+            "week": f"{w}",
+            "total": weekly_map.get(w, 0)
+        })
+
+    # MONTHLY STATS (CURRENT YEAR MONTHS)
+    monthly_queryset = (SurveySubmission.objects.annotate(month=TruncMonth("created_at")).values("month").annotate(
+        total=Count("id")).order_by("month"))
+    monthly_map = {
+        item["month"].month: item["total"]
+        for item in monthly_queryset
+    }
+    RU_MONTHS = {
+        1: "янв",
+        2: "фев",
+        3: "мар",
+        4: "апр",
+        5: "май",
+        6: "июнь",
+        7: "июль",
+        8: "авг",
+        9: "сент",
+        10: "окт",
+        11: "ноя",
+        12: "дек",
+    }
+    monthly_stats = []
+
+    for month_num in range(1, now.month + 1):
+        current_month = date(now.year, month_num, 1)
+
+        monthly_stats.append({
+            # "month": str(current_month.strftime("%m")), current_month.strftime("%Y-%m")
+            # "month": str(current_month.month),
+            "month": RU_MONTHS[current_month.month],
+            "total": monthly_map.get(month_num, 0)
+        })
+
+    # DEPARTMENT STATS
+    department_stats = (Answer.objects.filter(department__isnull=False).values("department__name_uz").annotate(
+        total=Count("submission", distinct=True)).order_by("-total"))
+
+    department_kpis = (Answer.objects.filter(department__isnull=False).values("department__name_uz").annotate(
+
+        today=Count(
+            "submission",
+            filter=Q(created_at__date=now.date()),
+            distinct=True
+        ),
+
+        week=Count(
+            "submission",
+            filter=Q(created_at__gte=now - timedelta(days=7)),
+            distinct=True
+        ),
+
+        month=Count(
+            "submission",
+            filter=Q(
+                created_at__month=now.month,
+                created_at__year=now.year
+            ),
+            distinct=True
+        ),
+
+        total=Count(
+            "submission",
+            distinct=True
+        )
+
+    )
+                       .order_by("-month")
+                       )
+
+    recent_answers = (
+        Answer.objects.select_related('question', 'selected_option', 'department', 'menu_item').order_by('-created_at'))
+
+    context = {
+        'today_total': today_total,
+        'week_total': week_total,
+        'month_total': month_total,
+        'total_submissions': total_submissions,
+
+        "daily_stats": daily_stats,
+        "weekly_stats": weekly_stats,
+        "monthly_stats": monthly_stats,
+
+        "department_stats": list(department_stats),
+        'department_kpis': list(department_kpis),
+
+        "recent_answers": list(recent_answers),
+    }
+
+    return render(request, 'mainapp/dashboard.html', context)
