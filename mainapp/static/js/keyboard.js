@@ -28,6 +28,7 @@ const Keyboard = {
 
         this.elements.keys = this.elements.keysContainer.querySelectorAll(".keyboard__key");
 
+
         this.elements.closeButton.classList.add("keyboard__close");
         this.elements.closeButton.innerHTML = "&times;"; // X character for close button
         this.elements.closeButton.addEventListener("click", () => {
@@ -53,20 +54,21 @@ const Keyboard = {
         const fragment = document.createDocumentFragment();
         const keyLayout = [
             "1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "backspace",
-            "й", "ц", "у", "к", "е", "н", "г", "ш", "щ", "з", "x", "қ", "ғ", "ъ",
-            "caps", "ф", "ы", "в", "а", "п", "р", "о", "л", "д", "ж", "э", "ҳ", "enter",
-            "done", "я", "ч", "с", "м", "и", "т", "ь", "б", "ю", ".", ",", "ў", "?",
+            "q", "w", "e", "r", "t", "y", "u", "i", "o", "p",
+            "caps", "a", "s", "d", "f", "g", "h", "j", "k", "l", "Enter",
+            "done", "z", "x", "c", "v", "b", "n", "m", ",", ".", "?",
             "space"
         ];
 
         // Creates HTML for an icon
         const createIconHTML = (icon_name) => {
-            return `<i class="material-icons">${icon_name}</i>`;
+            // return `<i class="material-icons">${icon_name}</i>`;
+            return `<span class="material-symbols-outlined">${icon_name}</span>`;
         };
 
         keyLayout.forEach(key => {
             const keyElement = document.createElement("button");
-            const insertLineBreak = ["backspace", "ъ", "enter", "?"].indexOf(key) !== -1;
+            const insertLineBreak = ["backspace", "p", "Enter", "?"].indexOf(key) !== -1;
 
             // Add attributes/classes
             keyElement.setAttribute("type", "button");
@@ -95,12 +97,31 @@ const Keyboard = {
 
                     break;
 
-                case "enter":
+                case "Enter":
                     keyElement.classList.add("keyboard__key--wide");
-                    keyElement.innerHTML = createIconHTML("enter");
+                    keyElement.innerHTML = createIconHTML("Enter");
+
+                    // keyElement.addEventListener("click", () => {
+                    //     this.properties.value += "\n";
+                    //     this._triggerEvent("oninput");
+                    // });
 
                     keyElement.addEventListener("click", () => {
-                        this.properties.value += "\n";
+                        const activeElement = document.activeElement;
+
+                        if (activeElement) {
+                            // Simulate real Enter key press
+                            const enterEvent = new KeyboardEvent("keydown", {
+                                key: "Enter",
+                                code: "Enter",
+                                keyCode: 13,
+                                which: 13,
+                                bubbles: true,
+                            });
+
+                            activeElement.dispatchEvent(enterEvent);
+                        }
+
                         this._triggerEvent("oninput");
                     });
 
@@ -177,7 +198,9 @@ const Keyboard = {
         this.eventHandlers.oninput = oninput;
         this.eventHandlers.onclose = onclose;
         this.elements.main.classList.add("keyboard--hidden");
-    }
+    },
+
+
 };
 
 window.addEventListener("DOMContentLoaded", function () {

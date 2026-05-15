@@ -330,8 +330,8 @@
 <script>
     document.addEventListener("DOMContentLoaded", function () {
 
-        function scrollToNext(currentCard) {
-            let next = currentCard.nextElementSibling;
+        function scrollToNext(card) {
+            let next = card.nextElementSibling;
 
             while (next && !next.classList.contains("question-card")) {
                 next = next.nextElementSibling;
@@ -343,20 +343,53 @@
                     block: "start"
                 });
             }
+            setTimeout(() => {
+                const input = next.querySelector(
+                    "input, textarea, select"
+                );
+
+                if (input) {
+                    input.focus();
+                }
+            }, 200);
+        }
+
+        function isAutoNextAllowed(input) {
+            const card = input.closest(".question-card");
+
+            if (input.matches("textarea, input[type='number']")) {
+                return input.value.trim() !== "";
+            }
+
+            if (input.type === "radio") {
+                return true;
+            }
+
+            if (input.type === "checkbox") {
+                return false;
+            }
+
+            return false;
         }
 
         document.querySelectorAll(".question-input").forEach(input => {
+
             input.addEventListener("change", function () {
 
-                const currentCard = this.closest(".question-card");
+                const card = this.closest(".question-card");
+                if (isAutoNextAllowed(this)) {
+                    setTimeout(() => {
+                        scrollToNext(card);
+                    }, 200);
+                }
 
-                setTimeout(() => {
-                    scrollToNext(currentCard);
-                }, 200);
             });
+
         });
 
     });
+
+
 </script>
 
 {% endblock %}
