@@ -139,7 +139,7 @@ const Keyboard = {
                     break;
 
                 case "done":
-                    keyElement.classList.add("keyboard__key--wide", "keyboard__key--dark");
+                    keyElement.classList.add("keyboard__key--wide");
                     keyElement.innerHTML = createIconHTML("exit");
 
                     keyElement.addEventListener("click", () => {
