@@ -53,10 +53,7 @@
 
                         <!-- TEXT -->
                         {% if question.question_type == 'text' %}
-
-                        <textarea class="form-control" rows="3" id="question_{{ question.id }}" name="question_{{ question.id }}"
-                                  {% if question.is_required %}required{% endif %}>
-                        </textarea>
+                        <textarea class="form-control" rows="3" id="question_{{ question.id }}" name="question_{{ question.id }}" {% if question.is_required %}required{% endif %}></textarea>
                         {% endif %}
 
                         <!-- NUMBER -->
@@ -71,8 +68,8 @@
                         {% if question.option_source == 'department' %}
                         <div class="row">
                             {% for department in departments %}
-                            <div class="col-sm-4">
-                                <div class="form-check option-item departments">
+                            <div class="col-sm-6">
+                                <div class="form-check mb-2 option-item departments">
                                     <input type="radio" name="question_{{ question.id }}" value="{{ department.id }}" id="department_{{ department.id }}"
                                            {% if question.is_required %}required{% endif %}>
 
@@ -107,33 +104,17 @@
 
                         {% if question.option_source == 'menu' %}
                         <div class="row">
-                            {% regroup menu_items by category as grouped_menu %}
-
-                            {% for group in grouped_menu %}
-                            <!--<div class="col-sm-6 col-md-4">
-                                <h6 class="mt-4 mb-3 text-primary">
-                                    {{ group.grouper.name_ru }}
-                                </h6>
-
-                                {% for item in group.list %}
-                                <div class="form-check option-item">
-                                    <input class="form-check-input" type="checkbox" name="question_{{ question.id }}" value="{{ item.id }}" id="menu_{{ item.id }}">
-
-                                    <label class="form-check-label" for="menu_{{ item.id }}">
-                                        {{ item.name_ru }}
-                                    </label>
-                                </div>
-                                {% endfor %}
-                            </div>-->
-                            {% if group.id == 1 or group.id == 2 %}
+                            {% for category in question.allowed_categories.all %}
                             <div class="col-sm-6 col-md-6">
-                                <h6 class="mt-4 mb-3 text-primary">
-                                    {{ group.grouper.name_ru }}
+                                <h6 class="my-3 text-primary">
+                                    {{ category.name_ru }}
                                 </h6>
 
-                                {% for item in group.list %}
+                                {% for item in category.items.all %}
                                 <div class="form-check option-item">
-                                    <input class="form-check-input" type="checkbox" name="question_{{ question.id }}" value="{{ item.id }}" id="menu_{{ item.id }}">
+                                    <input class="form-check-input" type="checkbox"
+                                           name="question_{{ question.id }}"
+                                           value="{{ item.id }}" id="menu_{{ item.id }}">
 
                                     <label class="form-check-label" for="menu_{{ item.id }}">
                                         {{ item.name_ru }}
@@ -141,52 +122,17 @@
                                 </div>
                                 {% endfor %}
                             </div>
-                            {% else %}
-                            <div class="col-sm-6 col-md-4">
-                                <h6 class="mt-4 mb-3 text-primary">
-                                    {{ group.grouper.name_ru }}
-                                </h6>
-
-                                {% for item in group.list %}
-                                <div class="form-check option-item">
-                                    <input class="form-check-input" type="checkbox" name="question_{{ question.id }}" value="{{ item.id }}" id="menu_{{ item.id }}">
-
-                                    <label class="form-check-label" for="menu_{{ item.id }}">
-                                        {{ item.name_ru }}
-                                    </label>
-                                </div>
-                                {% endfor %}
-                            </div>
-                            {% endif %}
                             {% endfor %}
-
                         </div>
                         {% else %}
-
-                        {% regroup question.options.all by group as grouped_options %}
-
-                        {% for group in grouped_options %}
-
-                        {% if group.grouper %}
-                        <h6 class="mt-4 mb-3 text-primary">
-                            {{ group.grouper.name_ru }}
-                        </h6>
-                        {% endif %}
-
-                        {% for option in group.list %}
-
+                        {% for option in question.options.all %}
                         <div class="form-check option-item">
                             <input class="form-check-input" type="checkbox" name="question_{{ question.id }}" value="{{ option.id }}" id="option_{{ option.id }}">
                             <label class="form-check-label" for="option_{{ option.id }}">
                                 {{ option.text_ru }}
                             </label>
-
                         </div>
-
                         {% endfor %}
-
-                        {% endfor %}
-
                         {% endif %}
 
                         {% endif %}

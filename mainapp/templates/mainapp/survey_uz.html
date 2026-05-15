@@ -5,21 +5,150 @@
 
 {% block content %}
 
-<div class="container py-5">
+
+{% comment %}<style>
+
+    .food-grid {
+        column-gap: 20px;
+        column-count: 4;
+    }
+
+    .food-card {
+        border-radius: 14px;
+        border: 1px solid #e9ecef;
+        background: #fff;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, .04);
+
+    }
+    .food-card {
+        width: 100%;
+        margin-bottom: 20px;
+        border-radius: 14px;
+        border: 1px solid #e9ecef;
+        padding: 14px;
+        background: #fff;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, .04);
+
+        break-inside: avoid;
+        -webkit-column-break-inside: avoid;
+    }
+
+    .food-card:hover {
+        background-color: #fafafa;
+        cursor: pointer;
+    }
+
+    .category-title {
+        text-align: center;
+        margin-bottom: 18px;
+    }
+
+    .option-item {
+        margin-bottom: 5px;
+    }
+
+    .option-item label {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+
+        width: 100%;
+        margin: 0;
+
+        padding: 3px 10px;
+
+        border-radius: 10px;
+        cursor: pointer;
+
+        transition: .2s;
+    }
+
+    .option-item label:hover {
+        background: #f5f7fa;
+    }
+
+    .option-item input {
+        margin: 0;
+        flex-shrink: 0;
+    }
+
+</style>{% endcomment %}
+<style>
+    .food-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    {#grid-template-columns: repeat(5, 1fr);#} gap: 14px;
+        align-items: start;
+    }
+
+    .food-card {
+        padding: 10px 12px;
+        border: 1px solid #e9ecef;
+        border-radius: 12px;
+        background: #fff;
+        height: auto;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, .04);
+        margin-bottom: 20px;
+    }
+
+    .food-card:hover {
+        background: #fafafa;
+    }
+
+    .category-title {
+        text-align: center;
+        margin-bottom: 10px;
+    }
+
+    .category-title h6 {
+        font-size: 14px;
+    }
+
+    .option-item {
+        margin-bottom: 2px;
+    }
+
+    .option-item label {
+        display: flex;
+        align-items: center;
+
+        gap: 10px;
+        width: 100%;
+
+        margin: 0;
+        padding: 3px 10px;
+
+        font-size: 14px;
+        line-height: 1.2;
+
+        border-radius: 6px;
+
+        cursor: pointer;
+    }
+
+    .option-item label:hover {
+        background: #f5f7fa;
+    }
+
+    .option-item input {
+        margin-top: 2px;
+        flex-shrink: 0;
+    }
+</style>
+<div class="container-flex p-5">
     <div class="row justify-content-center">
-        <div class="col-lg-8">
+        <div class="col-lg-12">
             <form method="POST" action="{{ request.path }}">
 
                 {% csrf_token %}
 
                 <div class="card shadow-sm border-0 mb-4">
-
                     <div class="card-body p-4 survey_img_border survey_img_h survey_img">
 
                     </div>
                 </div>
 
-                <div class="card shadow-sm border-0 mb-4">
+                <div class="card shadow-sm border-0 mb-4 description">
 
                     <div class="card-body p-4">
                         <h3 class="mb-3">
@@ -36,27 +165,32 @@
                 {% if questions %}
                 {% for question in questions %}
 
-                <div class="card shadow-sm border-0 mb-4">
+                <div class="card shadow-sm border-0 mb-4 question-card">
+
                     <div class="card-body p-4">
                         <h6 class="mb-4" style="padding-bottom: 16px; border-bottom: 1px solid #dadada;">
+
                             {{ question.order }}.
                             {{ question.question_uz }}
 
                             {% if question.is_required %}
-                            <span class="text-danger" style="position: absolute; padding-left: 5px;">*</span>
+                            <span class="text-danger"
+                                  style="position: absolute; padding-left: 5px;">*</span>
                             {% endif %}
+
                         </h6>
 
                         <!-- TEXT -->
                         {% if question.question_type == 'text' %}
                         <textarea class="form-control" rows="3" name="question_{{ question.id }}"
                                   {% if question.is_required %}required{% endif %}>
-                        </textarea>
+                                        </textarea>
                         {% endif %}
 
                         <!-- NUMBER -->
                         {% if question.question_type == 'number' %}
-                        <input type="number" class="form-control" name="question_{{ question.id }}"
+                        <input type="number" class="form-control question-input"
+                               name="question_{{ question.id }}"
                                {% if question.is_required %}required{% endif %}>
                         {% endif %}
 
@@ -67,91 +201,84 @@
                         {% if question.option_source == 'department' %}
                         <div class="row">
                             {% for department in departments %}
-                            <div class="col-sm-4">
-                                <div class="form-check option-item departments">
-                                    <input type="radio" name="question_{{ question.id }}"
-                                           value="{{ department.id }}"
-                                           id="department_{{ department.id }}"
-                                           {% if question.is_required %}required{% endif %}>
-                                    <label class="form-check-label" for="department_{{ department.id }}">
-                                        {{ department.name_uz }}
+                            <div class="col-sm-6 col-md-3">
+                                <div class="option-item">
+                                    <label for="question_{{ question.id }}_department_{{ department.id }}">
+                                        <input class="question-input" type="radio"
+                                               name="question_{{ question.id }}"
+                                               value="{{ department.id }}"
+                                               id="question_{{ question.id }}_department_{{ department.id }}"
+                                               {% if question.is_required %}required{% endif %}>
+                                        <span>{{ department.name_uz }}</span>
                                     </label>
                                 </div>
                             </div>
                             {% endfor %}
                         </div>
-
-
                         {% else %}
+                        <div class="row">
+                            <div class="col-sm-12">
+                                {% for option in question.options.all %}
+                                <div class="option-item">
+                                    <label for="question_{{ question.id }}_option_{{ option.id }}">
+                                        <input class="question-input" type="radio"
+                                               name="question_{{ question.id }}"
+                                               value="{{ option.id }}"
+                                               id="question_{{ question.id }}_option_{{ option.id }}"
+                                               {% if question.is_required %}required{% endif %}>
+                                        <span>{{ option.text_uz }}</span>
+                                    </label>
 
-                        {% for option in question.options.all %}
-                        <div class="form-check mb-2 option-item">
-                            <input class="form-check-input" type="radio"
-                                   name="question_{{ question.id }}" value="{{ option.id }}"
-                                   id="option_{{ option.id }}"
-                                   {% if question.is_required %}required{% endif %}>
-                            <label class="form-check-label" for="option_{{ option.id }}">
-                                {{ option.text_uz }}
-                            </label>
+                                </div>
+                                {% endfor %}
+                            </div>
                         </div>
-                        {% endfor %}
-
                         {% endif %}
 
                         {% endif %}
 
                         <!-- MULTIPLE CHOICE -->
                         {% if question.question_type == 'multiple' %}
-
                         {% if question.option_source == 'menu' %}
-                        <div class="row">
-                            {% regroup menu_items by category as grouped_menu %}
-
-                            {% for group in grouped_menu %}
-                            <div class="col-sm-6 col-md-4">
-                                <h6 class="mt-4 mb-3 text-primary">
-                                    {{ group.grouper.name_uz }}
-                                </h6>
-
-                                {% for item in group.list %}
-                                <div class="form-check option-item">
-                                    <input class="form-check-input" type="checkbox" name="question_{{ question.id }}" value="{{ item.id }}" id="menu_{{ item.id }}">
-                                    <label class="form-check-label" for="menu_{{ item.id }}">
-                                        {{ item.name_uz }}
+                        <div class="food-grid">
+                            {% for category in question.allowed_categories.all %}
+                            <div class="food-card">
+                                <div class="category-title">
+                                    <h6 class="mb-0 text-primary fw-bold">
+                                        {{ category.name_uz }}
+                                    </h6>
+                                </div>
+                                {% for item in category.items.all %}
+                                <div class="option-item">
+                                    <label for="question_{{ question.id }}_menu_{{ item.id }}">
+                                        <input class="question-input" type="checkbox"
+                                               name="question_{{ question.id }}"
+                                               value="{{ item.id }}"
+                                               id="question_{{ question.id }}_menu_{{ item.id }}">
+                                        <span>{{ item.name_uz }}</span>
                                     </label>
                                 </div>
                                 {% endfor %}
                             </div>
                             {% endfor %}
-
                         </div>
                         {% else %}
-                        {% regroup question.options.all by group as grouped_options %}
-
-                        {% for group in grouped_options %}
-
-                        {% if group.grouper %}
-                        <h6 class="mt-4 mb-3 text-primary">
-                            {{ group.grouper.name_uz }}
-                        </h6>
-                        {% endif %}
-
-                        {% for option in group.list %}
-                        <div class="form-check option-item">
-                            <input class="form-check-input" type="checkbox"
-                                   name="question_{{ question.id }}" value="{{ option.id }}"
-                                   id="option_{{ option.id }}">
-                            <label class="form-check-label" for="option_{{ option.id }}">
-                                {{ option.text_uz }}
-                            </label>
-
+                        <div class="row">
+                            {% for option in question.options.all %}
+                            <div class="col-sm-12">
+                                <div class="option-item">
+                                    <label for="question_{{ question.id }}_option_{{ option.id }}">
+                                        <input class="question-input" type="checkbox"
+                                               name="question_{{ question.id }}"
+                                               value="{{ option.id }}"
+                                               id="question_{{ question.id }}_option_{{ option.id }}">
+                                        <span>{{ option.text_uz }}</span>
+                                    </label>
+                                </div>
+                            </div>
+                            {% endfor %}
                         </div>
-                        {% endfor %}
-
-                        {% endfor %}
-
                         {% endif %}
-
 
                         {% endif %}
                     </div>
@@ -161,6 +288,7 @@
                 {% endfor %}
 
                 <div class="row justify-content-center">
+
                     <button class="btn btn-primary btn-lg">
                         Юбориш
                     </button>
@@ -199,6 +327,36 @@
     {% endif %}
 </div>
 
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+
+        function scrollToNext(currentCard) {
+            let next = currentCard.nextElementSibling;
+
+            while (next && !next.classList.contains("question-card")) {
+                next = next.nextElementSibling;
+            }
+
+            if (next) {
+                next.scrollIntoView({
+                    behavior: "smooth",
+                    block: "start"
+                });
+            }
+        }
+
+        document.querySelectorAll(".question-input").forEach(input => {
+            input.addEventListener("change", function () {
+
+                const currentCard = this.closest(".question-card");
+
+                setTimeout(() => {
+                    scrollToNext(currentCard);
+                }, 200);
+            });
+        });
+
+    });
+</script>
+
 {% endblock %}
-
-

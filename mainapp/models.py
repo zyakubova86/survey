@@ -29,23 +29,23 @@ class Question(models.Model):
     )
 
     OPTION_SOURCE_CHOICES = (
-        ('manual', 'Manual'),
-        ('department', 'Department'),
-        ('menu', 'Menu'),
+        ('manual', 'Вручную'),
+        ('department', 'Отделы'),
+        ('menu', 'Меню'),
     )
 
     question_uz = models.TextField(max_length=200, null=True, blank=True, verbose_name='Вопрос uz')
     question_ru = models.TextField(max_length=200,  null=True, blank=True, verbose_name='Вопрос ru')
-
-    option_source = models.CharField(max_length=50, choices=OPTION_SOURCE_CHOICES, default='manual')
-    question_type = models.CharField(max_length=50, choices=QUESTION_TYPES, null=True, blank=True, verbose_name='Выбрать тип')
     order = models.PositiveIntegerField(default=0, verbose_name='Номер')
 
-    is_active = models.BooleanField(default=True, verbose_name='Активен')
-    created_at = models.DateTimeField(auto_now_add=True, null=True, blank=True, verbose_name='Создан')
+    question_type = models.CharField(max_length=50, choices=QUESTION_TYPES, null=True, blank=True, verbose_name='Тип вопроса')
+    option_source = models.CharField(max_length=50, choices=OPTION_SOURCE_CHOICES, default='manual', verbose_name='Тип варианта')
+    allowed_categories = models.ManyToManyField('FoodCategory', blank=True, related_name='questions', verbose_name='Разрешенные категории')
 
+    is_active = models.BooleanField(default=True, verbose_name='Активен')
     is_required = models.BooleanField(default=True, null=True, blank=True, verbose_name='Обязательный')
 
+    created_at = models.DateTimeField(auto_now_add=True, null=True, blank=True, verbose_name='Создан')
 
     class Meta:
         verbose_name = "Вопрос"

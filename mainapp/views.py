@@ -35,7 +35,8 @@ def submit_survey(request):
         template = 'mainapp/survey_uz.html'
         redirect_url = 'thank_you_uz'
 
-    questions = Question.objects.filter(is_active=True).prefetch_related('options').order_by('order')
+    # questions = Question.objects.filter(is_active=True).prefetch_related('options').order_by('order')
+    questions = Question.objects.filter(is_active=True).prefetch_related('options', 'allowed_categories__items').order_by('order')
     departments = Department.objects.filter(is_active=True, name_uz__isnull=False, name_ru__isnull=False).exclude(
         name_uz='', name_ru='').order_by(f'name_{lang}')
     menu_items = MenuItem.objects.filter(is_active=True).select_related('category')

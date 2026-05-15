@@ -12,8 +12,9 @@ class DepartmentAdmin(admin.ModelAdmin):
 
 
 class QuestionAdmin(admin.ModelAdmin):
-    list_display = ('order', 'question_uz',  'is_active', 'created_at')
+    list_display = ('order', 'question_uz', 'question_ru', 'is_active', 'created_at')
     list_display_links = ('question_uz',)
+    filter_horizontal = ('allowed_categories',)
 
 class OptionGroupAdmin(admin.ModelAdmin):
     list_display = ('name_uz', 'name_ru', 'order')
