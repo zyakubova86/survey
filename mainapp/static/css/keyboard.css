@@ -9,7 +9,7 @@
     width: 100%;
     max-width: 750px;
     padding: 10px;
-    background: #9cc0f7;
+    background: oklch(51.1% .262 276.966);
     user-select: none;
     transition: bottom 0.4s;
     display: block;
