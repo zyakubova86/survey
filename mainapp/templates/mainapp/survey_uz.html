@@ -6,7 +6,8 @@
 {% block content %}
 
 
-{% comment %}<style>
+{% comment %}
+<style>
 
     .food-grid {
         column-gap: 20px;
@@ -20,6 +21,7 @@
         box-shadow: 0 2px 8px rgba(0, 0, 0, .04);
 
     }
+
     .food-card {
         width: 100%;
         margin-bottom: 20px;
@@ -134,8 +136,21 @@
         margin-top: 2px;
         flex-shrink: 0;
     }
+
     .survey_form {
         margin-bottom: 300px;
+    }
+
+    /* Chrome, Safari, Edge, Opera */
+    input::-webkit-outer-spin-button,
+    input::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
+
+    /* Firefox */
+    input[type=number] {
+        -moz-appearance: textfield;
     }
 </style>
 <div class="container-flex p-5">
@@ -184,14 +199,18 @@
 
                         <!-- TEXT -->
                         {% if question.question_type == 'text' %}
-                        <textarea class="form-control use-keyboard-input" rows="3" name="question_{{ question.id }}"
+                        <textarea id="question_{{ question.id }}_textarea"
+                                  class="form-control use-keyboard-input" rows="3"
+                                  name="question_{{ question.id }}"
+                                  placeholder="Жавобингизни киритинг..."
                                   {% if question.is_required %}required{% endif %}>
                                         </textarea>
                         {% endif %}
 
                         <!-- NUMBER -->
                         {% if question.question_type == 'number' %}
-                        <input type="number" class="form-control question-input use-keyboard-input"
+                        <input id="question_{{ question.id }}_number" type="number"
+                               class="form-control question-input use-keyboard-input"
                                name="question_{{ question.id }}"
                                {% if question.is_required %}required{% endif %}>
                         {% endif %}
@@ -385,6 +404,15 @@
                     }, 200);
                 }
 
+            });
+
+        });
+
+        document.querySelectorAll("textarea").forEach(textarea => {
+            textarea.addEventListener("focus", function () {
+                if (this.value.trim() === "") {
+                    this.value = "";
+                }
             });
 
         });
