@@ -5,37 +5,160 @@
 {% block content %}
 
 <style>
-    #particles-js {
-        position: absolute;
-        height: 100vh;
-        z-index: -1;
-        width: 100%;
+    body {
+        margin: 0;
+        overflow: hidden;
     }
 
     .thank-you {
-        background-color: var(--new-sag-blue);
-        color: #ffffff;
+        position: relative;
+        z-index: 2;
         width: 100%;
+        height: 100vh;
         display: flex;
         align-items: center;
-        min-height: 100vh;
+        justify-content: center;
+        color: #fff;
+        text-align: center;
+
+        background: linear-gradient(-45deg, #0d6efd, #2563eb, #1e40af, #3b82f6);
+        background-size: 400% 400%;
+        animation: gradientMove 10s ease infinite;
+    }
+
+    .thank-title {
+        font-weight: 700;
+        animation: bounce 2s infinite;
+    }
+
+    @keyframes gradientMove {
+        0% {
+            background-position: 0% 50%;
+        }
+        50% {
+            background-position: 100% 50%;
+        }
+        100% {
+            background-position: 0% 50%;
+        }
+    }
+
+    .thank-card {
+        opacity: 0;
+        transform: translateY(15px);
+        animation: fadeIn 0.7s ease forwards;
+    }
+
+    @keyframes fadeIn {
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @keyframes bounce {
+        0%, 100% {
+            transform: translateY(0);
+        }
+
+        50% {
+            transform: translateY(-12px);
+        }
     }
 </style>
-<div id="particles-js"></div>
+
 <main class="thank-you">
-    <div class="container">
-        <div class="row gy-4 text-center">
-            <div class="col-12 order-2 order-lg-1 d-flex flex-column justify-content-center text-center">
-                <h1 class="mb-5">Иштирокингиз учун раҳмат!</h1>
-            </div>
-        </div>
+    <div class="thank-card">
+        <h1 class="thank-title">Иштирокингиз учун раҳмат!</h1>
     </div>
 </main>
 
-<script>
-    window.addEventListener("load", () => {
+
+{% comment %} <script>
+    document.addEventListener("DOMContentLoaded", function () {
+
+        // soft center burst
+        function burst() {
+            const defaults = {
+                spread: 70,
+                ticks: 120,
+                gravity: 0.9,
+                decay: 0.94,
+                startVelocity: 25,
+                colors: ["#34A853", "#4285F4", "#FBBC05", "#EA4335"]
+            };
+
+            confetti({
+                ...defaults,
+                particleCount: 300,
+                origin: {x: 0.5, y: 0.6}
+            });
+
+            // subtle side sparkles
+            setTimeout(() => {
+                confetti({
+                    ...defaults,
+                    particleCount: 100,
+                    origin: {x: 0.2, y: 0.7}
+                });
+
+                confetti({
+                    ...defaults,
+                    particleCount: 100,
+                    origin: {x: 0.8, y: 0.7}
+                });
+            }, 300);
+        }
+
+        burst();
+
         setTimeout(() => {
             window.location = "/";
-        }, 1000)
+        }, 2000)
+
     });
+</script>{% endcomment %}
+
+
+
+<script>
+    window.addEventListener("load", () => {
+
+        // Confetti effect
+        const duration = 3000;
+        const end = Date.now() + duration;
+
+        (function frame() {
+
+            confetti({
+                particleCount: 6,
+                angle: 60,
+                spread: 55,
+                origin: {x: 0}
+            });
+
+            confetti({
+                particleCount: 6,
+                angle: 120,
+                spread: 55,
+                origin: {x: 1}
+            });
+
+            if (Date.now() < end) {
+                requestAnimationFrame(frame);
+            }
+
+        })();
+
+        // Auto redirect home
+        setTimeout(() => {
+            window.location.href = "/";
+        }, duration);
+
+    });
+
 </script>
+
+
+
+{% endblock %}
