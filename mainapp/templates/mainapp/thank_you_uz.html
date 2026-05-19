@@ -1,71 +1,8 @@
 {% extends 'base.html' %}
 {% load static %}
-{% block title %}Раҳмат!{% endblock %}
+{% block title %}Thank you{% endblock %}
 
 {% block content %}
-
-<style>
-    body {
-        margin: 0;
-        overflow: hidden;
-    }
-
-    .thank-you {
-        position: relative;
-        z-index: 2;
-        width: 100%;
-        height: 100vh;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        color: #fff;
-        text-align: center;
-
-        background: linear-gradient(-45deg, #0d6efd, #2563eb, #1e40af, #3b82f6);
-        background-size: 400% 400%;
-        animation: gradientMove 10s ease infinite;
-    }
-
-    .thank-title {
-        font-weight: 700;
-        animation: bounce 2s infinite;
-    }
-
-    @keyframes gradientMove {
-        0% {
-            background-position: 0% 50%;
-        }
-        50% {
-            background-position: 100% 50%;
-        }
-        100% {
-            background-position: 0% 50%;
-        }
-    }
-
-    .thank-card {
-        opacity: 0;
-        transform: translateY(15px);
-        animation: fadeIn 0.7s ease forwards;
-    }
-
-    @keyframes fadeIn {
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
-    }
-
-    @keyframes bounce {
-        0%, 100% {
-            transform: translateY(0);
-        }
-
-        50% {
-            transform: translateY(-12px);
-        }
-    }
-</style>
 
 <main class="thank-you">
     <div class="thank-card">
@@ -74,74 +11,45 @@
 </main>
 
 
-{% comment %} <script>
-    document.addEventListener("DOMContentLoaded", function () {
-
-        // soft center burst
-        function burst() {
-            const defaults = {
-                spread: 70,
-                ticks: 120,
-                gravity: 0.9,
-                decay: 0.94,
-                startVelocity: 25,
-                colors: ["#34A853", "#4285F4", "#FBBC05", "#EA4335"]
-            };
-
-            confetti({
-                ...defaults,
-                particleCount: 300,
-                origin: {x: 0.5, y: 0.6}
-            });
-
-            // subtle side sparkles
-            setTimeout(() => {
-                confetti({
-                    ...defaults,
-                    particleCount: 100,
-                    origin: {x: 0.2, y: 0.7}
-                });
-
-                confetti({
-                    ...defaults,
-                    particleCount: 100,
-                    origin: {x: 0.8, y: 0.7}
-                });
-            }, 300);
-        }
-
-        burst();
-
-        setTimeout(() => {
-            window.location = "/";
-        }, 2000)
-
-    });
-</script>{% endcomment %}
-
-
-
-<script>
+<!--<script>
     window.addEventListener("load", () => {
 
-        // Confetti effect
-        const duration = 3000;
+        const duration = 4000;
         const end = Date.now() + duration;
+        const colors = ["#ff004c", "#ffd166", "#06d6a0", "#118ab2", "#ffffff"];
 
         (function frame() {
-
             confetti({
-                particleCount: 6,
+                particleCount: 4,
                 angle: 60,
-                spread: 55,
-                origin: {x: 0}
+                spread: 85,
+                startVelocity: 60,
+                scalar: 1.5,
+                gravity: 1,
+                ticks: 200,
+                decay: 0.94,
+                origin: {
+                    x: 0,
+                    y: 0.7
+                },
+                colors: colors,
+
             });
 
             confetti({
-                particleCount: 6,
+                particleCount: 4,
                 angle: 120,
-                spread: 55,
-                origin: {x: 1}
+                spread: 85,
+                startVelocity: 60,
+                scalar: 1.5,
+                gravity: 1,
+                ticks: 200,
+                decay: 0.94,
+                origin: {
+                    x: 1,
+                    y: 0.7
+                },
+                colors: colors,
             });
 
             if (Date.now() < end) {
@@ -150,15 +58,66 @@
 
         })();
 
-        // Auto redirect home
         setTimeout(() => {
             window.location.href = "/";
         }, duration);
 
     });
 
+</script>-->
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+
+        const duration = 3 * 1000;
+
+        const animationEnd = Date.now() + duration;
+
+        const defaults = {
+            startVelocity: 30,
+            spread: 360,
+            ticks: 60,
+            zIndex: 999
+        };
+
+        function randomInRange(min, max) {
+            return Math.random() * (max - min) + min;
+        }
+
+        const interval = setInterval(function () {
+
+            const timeLeft = animationEnd - Date.now();
+
+            if (timeLeft <= 0) {
+                clearInterval(interval);
+                return;
+            }
+
+            const particleCount = 200 * (timeLeft / duration);
+
+            confetti(Object.assign({}, defaults, {
+                particleCount: particleCount,
+                origin: {
+                    x: randomInRange(0.1, 0.3),
+                    y: Math.random() - 0.2
+                }
+            }));
+
+            confetti(Object.assign({}, defaults, {
+                particleCount: particleCount,
+                origin: {
+                    x: randomInRange(0.7, 0.9),
+                    y: Math.random() - 0.2
+                }
+            }));
+
+        }, 250);
+
+        setTimeout(() => {
+            window.location.href = "/";
+        }, duration);
+
+    });
 </script>
-
-
 
 {% endblock %}
