@@ -36,7 +36,8 @@ def submit_survey(request):
         redirect_url = 'thank_you_uz'
 
     # questions = Question.objects.filter(is_active=True).prefetch_related('options').order_by('order')
-    questions = Question.objects.filter(is_active=True).prefetch_related('options', 'allowed_categories__items').order_by('order')
+    questions = Question.objects.filter(is_active=True).prefetch_related('options',
+                                                                         'allowed_categories__items').order_by('order')
     departments = Department.objects.filter(is_active=True, name_uz__isnull=False, name_ru__isnull=False).exclude(
         name_uz='', name_ru='').order_by(f'name_{lang}')
     menu_items = MenuItem.objects.filter(is_active=True).select_related('category')
@@ -134,69 +135,6 @@ def save_answers(request, questions, departments):
     Answer.objects.bulk_create(answers)
 
     return submission
-
-
-@login_required
-def answers_list_view(request):
-    submissions = SurveySubmission.objects.prefetch_related(
-        'answers__question',
-        'answers__selected_option',
-        'answers__department',
-        'answers__menu_item',
-    ).order_by('-created_at')
-
-    questions = Question.objects.filter(
-        is_active=True
-    ).order_by('order')
-
-    rows = []
-
-    for submission in submissions:
-
-        row = {
-            'submission': submission,
-            'answers': {}
-        }
-
-        for answer in submission.answers.all():
-
-            value = ''
-
-            # TEXT ANSWER
-            if answer.text_answer:
-                value = answer.text_answer
-
-            # NORMAL OPTION
-            elif answer.selected_option:
-                value = answer.selected_option.text_uz
-
-            # DEPARTMENT
-            elif answer.department:
-                value = answer.department.name_uz
-
-            # MENU ITEM
-            elif answer.menu_item:
-                value = answer.menu_item.name_uz
-
-            question_id = answer.question.id
-
-            if question_id not in row['answers']:
-                row['answers'][question_id] = []
-
-            row['answers'][question_id].append(value)
-
-        rows.append(row)
-
-    context = {
-        'questions': questions,
-        'rows': rows,
-    }
-
-    return render(
-        request,
-        'mainapp/answers_list.html',
-        context
-    )
 
 
 @login_required
@@ -351,3 +289,66 @@ def dashboard(request):
     }
 
     return render(request, 'mainapp/dashboard.html', context)
+
+
+@login_required
+def dash_answers(request):
+    submissions = SurveySubmission.objects.prefetch_related(
+        'answers__question',
+        'answers__selected_option',
+        'answers__department',
+        'answers__menu_item',
+    ).order_by('-created_at')
+
+    questions = Question.objects.filter(
+        is_active=True
+    ).order_by('order')
+
+    rows = []
+
+    for submission in submissions:
+
+        row = {
+            'submission': submission,
+            'answers': {}
+        }
+
+        for answer in submission.answers.all():
+
+            value = ''
+
+            # TEXT ANSWER
+            if answer.text_answer:
+                value = answer.text_answer
+
+            # NORMAL OPTION
+            elif answer.selected_option:
+                value = answer.selected_option.text_uz
+
+            # DEPARTMENT
+            elif answer.department:
+                value = answer.department.name_uz
+
+            # MENU ITEM
+            elif answer.menu_item:
+                value = answer.menu_item.name_uz
+
+            question_id = answer.question.id
+
+            if question_id not in row['answers']:
+                row['answers'][question_id] = []
+
+            row['answers'][question_id].append(value)
+
+        rows.append(row)
+
+    context = {
+        'questions': questions,
+        'rows': rows,
+    }
+
+    return render(
+        request,
+        'mainapp/dash_answers.html',
+        context
+    )

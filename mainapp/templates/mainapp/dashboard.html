@@ -6,33 +6,10 @@
 
 {% block content %}
 <!-- HEADER -->
-<nav class="navbar nav_bg p-0">
-    <div class="container-fluid d-flex">
-        <a class="navbar-brand" href="/">
-            <svg width="86" height="29" viewBox="0 0 86 29" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M82.856 13.3417H71.1375L78.7417 17.4769V26.5078H76.11C68.6274 26.5078 65.8886 18.6148 65.577 13.996C65.0077 5.56068 71.733 1.08357 76.0257 1.47531L76.5155 1.49949L85.4912 6.3801V1.94444V0.0078125H75.1088C62.423 0.0078125 57.6253 5.93308 57.7262 14.7733C57.8208 23.0574 64.3244 27.9684 75.6298 27.9684L78.7423 27.9815V27.9849H86.0004V13.3424H82.8574L82.856 13.3417Z"
-                      fill="#fff"/>
-                <path d="M23.8628 15.1121C20.6244 12.1114 12.6672 11.0212 9.17394 8.91319C6.45244 7.27089 7.11433 4.05399 9.90078 2.4946C11.3952 1.65791 12.4399 1.47689 14.6936 1.47689L15.1835 1.50107L24.1592 6.38168V0.00939078H13.7768C13.7768 0.00939078 10.2518 -0.126719 7.2608 0.63743C0.412475 2.38751 -0.719932 7.12579 0.906477 10.5769C4.06257 17.2739 18.978 15.3373 18.1593 22.3273C17.9603 24.0248 16.8251 24.9776 15.102 25.5759C13.1343 26.2592 11.38 26.4527 9.03645 26.4976L0 21.6073V27.9796H2.41405L2.41267 27.9755C4.65468 27.9748 6.92364 27.9617 9.18223 27.9596L11.7752 27.9803L11.7421 27.9623C11.8402 27.9623 11.9383 27.9623 12.0357 27.963C15.8585 27.9796 19.9335 28.2304 22.646 26.5985C24.7326 25.3431 25.7158 23.5702 25.8899 21.3109C26.0592 19.1152 25.6011 16.7233 23.8628 15.1127V15.1121Z"
-                      fill="#fff"/>
-                <path d="M55.6898 10.6161C55.6898 5.85293 54.5304 4.15122 52.8646 2.66092C50.1383 0.221995 45.0041 0.0105746 42.1396 0.0105746H41.3685L41.3727 0.0078125L29.6541 0.0105746V6.3801L38.674 1.47531H42.1693C42.5686 1.47807 48.3668 1.21898 48.478 8.11222C40.6293 10.1974 28.0989 11.9192 27.7707 19.8246C27.448 27.5953 34.3689 28.0658 37.1581 28.0658C42.483 28.0658 46.8233 24.8537 48.4808 23.4353V27.978H55.6905L58.4479 27.9677L55.6905 24.7915V10.6154L55.6898 10.6161ZM36.4147 21.6064C33.4693 16.0301 41.3727 12.3289 46.4716 10.5049L48.4801 9.82361V21.1435C45.5879 23.1658 38.6774 25.8908 36.4147 21.6064Z"
-                      fill="#fff"/>
-            </svg>
-            <p class="text-white m-0" style="font-size: 14px; letter-spacing: 2px;">for people</p>
-        </a>
-
-        {% if user.is_authenticated %}
-        <ul class="navbar-nav gap-2">
-            <li class="nav-item">
-                <h5 class="text-white m-0 px-3">Dashboard</h5>
-            </li>
-        </ul>
-        {% endif %}
-    </div>
-</nav>
+{% include 'dash_header.html' %}
 <!-- END HEADER -->
 
 <div class="container-fluid">
-
     <!-- KPI -->
     <div class="row g-4 my-4">
         <div class="col-xl-3 col-md-6">
@@ -121,8 +98,7 @@
         </div>
     </div>
 
-
-    <div class="row g-4 mb-4">
+    <div class="row g-4 mb-5">
         <!-- WEEKLY -->
         <div class="col-lg-6">
             <div class="card chart-card">
@@ -160,80 +136,57 @@
     </div>
 
     <!-- DEPARTMENT KPI TABLE -->
-    <div class="card chart-card mb-4">
+    <div class="row g-4 mb-5">
+        <div class="col-sm-12">
+            <div class="card chart-card mb-5">
+                <div class="card-body">
+                    <h5 class="fw-bold mb-4"> Статистика по отделам</h5>
 
-        <div class="card-body">
+                    <div class="table-responsive dash_department_stats_table_wrapper">
+                        <table class="table table-hover align-middle">
+                            <thead class="table-light">
+                            <tr>
+                                <th>Отдел</th>
+                                <th class="text-center">Сегодня</th>
+                                <th class="text-center">Неделя</th>
+                                <th class="text-center">Месяц</th>
+                                <th class="text-center">Общее</th>
+                            </tr>
+                            </thead>
 
-            <h5 class="fw-bold mb-4">
-                Статистика по отделам
-            </h5>
+                            <tbody>
+                            {% for item in department_kpis %}
+                            <tr>
+                                <td>{{ item.department__name_uz }}</td>
+                                <td class="text-center">
+                                    <span class="">{{ item.today }}</span>
+                                </td>
+                                <td class="text-center">
+                                    <span class="text-center">
+                                        {{ item.week }}
+                                    </span>
+                                </td>
+                                <td class="text-center">
+                                    <span class="text-center">
+                                        {{ item.month }}
+                                    </span>
+                                </td>
+                                <td class="text-center">
+                                    <span class="badge bg-success text-white">
+                                        {{ item.total }}
+                                    </span>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
 
-            <div class="table-responsive">
-
-                <table class="table table-hover align-middle">
-
-                    <thead class="table-light">
-
-                    <tr>
-
-                        <th>Отдел</th>
-                        <th class="text-center">Сегодня</th>
-                        <th class="text-center">Неделя</th>
-                        <th class="text-center">Месяц</th>
-                        <th class="text-center">Общее</th>
-
-                    </tr>
-
-                    </thead>
-
-                    <tbody>
-
-                    {% for item in department_kpis %}
-
-                    <tr>
-
-                        <td>
-                            {{ item.department__name_uz }}
-                        </td>
-
-                        <td class="text-center">
-                                <span class="">
-                                    {{ item.today }}
-                                </span>
-                        </td>
-
-                        <td class="text-center">
-                                <span class="text-center">
-                                    {{ item.week }}
-                                </span>
-                        </td>
-
-                        <td class="text-center">
-                                <span class="text-center">
-                                    {{ item.month }}
-                                </span>
-                        </td>
-
-                        <td class="text-center">
-                                <span class="badge bg-success text-white">
-                                    {{ item.total }}
-                                </span>
-                        </td>
-
-                    </tr>
-
-                    {% endfor %}
-
-                    </tbody>
-
-                </table>
+                    </div>
+                </div>
 
             </div>
-
         </div>
-
     </div>
-
 </div>
 
 <!-- JSON -->
@@ -246,7 +199,6 @@
 
 <!-- ECHARTS -->
 <script>
-
     const daily = JSON.parse(
         document.getElementById('daily-data').textContent
     );
@@ -276,33 +228,30 @@
             trigger: 'item',
         },
 
-    series: [
-        {
-            name: 'Отделы',
-            type: 'pie',
-            radius: '70%',
-            data: departments.map(i => ({
-                value: i.total,
-                name: i.department__name_uz
-            })),
-        label:
+        series: [
             {
-                formatter: '{b}: {c}'
-            }
-            ,
-            emphasis: {
-                itemStyle: {
-                    shadowBlur: 10,
-                        shadowOffsetX
-                :
-                    0
+                name: 'Отделы',
+                type: 'pie',
+                radius: '70%',
+                data: departments.map(i => ({
+                    value: i.total,
+                    name: i.department__name_uz
+                })),
+                label:
+                    {
+                        formatter: '{b}: {c}'
+                    },
+                emphasis: {
+                    itemStyle: {
+                        shadowBlur: 10,
+                        shadowOffsetX:
+                            0
+                    }
                 }
             }
-        }
-    ]
+        ]
 
-    })
-    ;
+    });
 
     // DAILY
     const dailyChart = echarts.init(
@@ -312,27 +261,23 @@
         title: {
             text: 'Ежедневный',
 
-    left: 'center'
-    },
-    tooltip: {
-        trigger: 'axis'
-    }
-    ,
-    xAxis: {
-        type: 'category',
-            data
-    :
-        daily.map(i => i.day)
-    }
-    ,
-    yAxis: {
-        type: 'value'
-    }
-    ,
-    series: [{
-        data: daily.map(i => i.total),
-        type: 'line',
-    }]
+            left: 'center'
+        },
+        tooltip: {
+            trigger: 'axis'
+        },
+        xAxis: {
+            type: 'category',
+            data:
+                daily.map(i => i.day)
+        },
+        yAxis: {
+            type: 'value'
+        },
+        series: [{
+            data: daily.map(i => i.total),
+            type: 'line',
+        }]
     });
 
     // WEEKLY
@@ -342,29 +287,25 @@
     weeklyChart.setOption({
         title: {
             text: 'Еженедельный',
-        left: 'center'
+            left: 'center'
         },
-    tooltip: {
-        trigger: 'axis'
+        tooltip: {
+            trigger: 'axis'
         },
         xAxis: {
             type: 'category',
-                data
-        :
-            weekly.map(i => i.week)
-        }
-        ,
+            data:
+                weekly.map(i => i.week)
+        },
         yAxis: {
             type: 'value'
-        }
-        ,
+        },
         series: [{
             data: weekly.map(i => i.total),
             type: 'bar',
             barWidth: 50
         }]
-        })
-        ;
+    });
 
     // MONTHLY
     const monthlyChart = echarts.init(
@@ -373,24 +314,24 @@
     monthlyChart.setOption({
         title: {
             text: 'Ежемесячный',
-        left: 'center'
+            left: 'center'
         },
         tooltip: {
             trigger: 'axis'
-            },
-            xAxis: {
-                type: 'category',
-                    data: monthly.map(i => i.month)
-            },
-            yAxis: {
-                type: 'value'
-            },
-            series: [{
-                data: monthly.map(i => i.total),
-                type: 'line',
-                smooth: true
-            }]
-        });
+        },
+        xAxis: {
+            type: 'category',
+            data: monthly.map(i => i.month)
+        },
+        yAxis: {
+            type: 'value'
+        },
+        series: [{
+            data: monthly.map(i => i.total),
+            type: 'line',
+            smooth: true
+        }]
+    });
 
     // RESPONSIVE
     window.addEventListener('resize', function () {

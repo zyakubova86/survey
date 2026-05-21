@@ -20,7 +20,7 @@
                 <div class="card shadow-sm border-0 mb-4 description">
                     <div class="card-body p-4">
                         <h3 class="mb-3">
-                            Ошхона таомлари буйича аноним суровнома
+                            Ошхона таомлари бўйича аноним сўровнома
                         </h3>
 
                         <p class="text-muted mb-0">
@@ -30,31 +30,13 @@
                     </div>
                 </div>
 
-                {% comment %}<div class="progress-wrapper">
-                <div class="card shadow-sm border-0 mb-4 progress-card">
-                    <div class="card-body p-2">
-                        <div class="d-flex justify-content-between mb-1">
-                            <span><strong>Progress</strong></span>
-                            <span id="progress-text">0 / {{ questions|length }}</span>
-                        </div>
-
-                        <div class="progress" style="height: 5px;">
-
-                            <div id="progress-bar" class="progress-bar" role="progressbar" style="width: 0%;">
-                            </div>
-                        </div>
-
-                    </div>
-                </div>
-            </div>{% endcomment %}
-
                 {% if questions %}
                 {% for question in questions %}
-                <div class="card shadow-sm border-0 mb-4 question-card"
+                <div class="card shadow-sm border-0 mt-5 mb-5 question-card"
                      id="question-card-{{ question.id }}">
 
-                    <div class="card-body p-4">
-                        <h6 class="mb-4" style="padding-bottom: 16px; border-bottom: 1px solid #dadada;">
+                    <div class="card-body p-4 pt-5">
+                        <h5 class="mb-4" style="padding-bottom: 16px; border-bottom: 1px solid #dadada;">
 
                             {{ question.order }}.
                             {{ question.question_uz }}
@@ -64,7 +46,7 @@
                                   style="position: absolute; padding-left: 5px;">*</span>
                             {% endif %}
 
-                        </h6>
+                        </h5>
 
                         <!-- TEXT -->
                         {% if question.question_type == 'text' %}

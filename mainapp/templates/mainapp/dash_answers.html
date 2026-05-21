@@ -1,0 +1,119 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load custom_tags %}
+{% block title %}Ответы{% endblock %}
+
+
+{% block content %}
+<!-- HEADER -->
+{% include 'dash_header.html' %}
+<!-- END HEADER -->
+
+<style>
+    .table#dash-answers {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 0.7rem;
+    }
+
+    .table#dash-answers.table thead {
+        background-color: #ccc;
+
+    }
+
+    .table#dash-answers.table thead th {
+        vertical-align: top;
+    }
+
+    .table#dash-answers.table td,
+    .table#dash-answers.table th {
+        padding: .5rem;
+    }
+
+    .answers-table-wrapper {
+        max-height: calc(100vh - 160px);
+        overflow-y: auto;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        border: 1px solid #ddd;
+    }
+
+    .answers-table-wrapper table thead th {
+        position: sticky;
+        top: 0;
+        background-color: #d8e4ff;
+        z-index: 5;
+        border-bottom: 2px solid #dee2e6;
+    }
+
+    .answer-item {
+        display: inline-block;
+        background: #c7c7ca;
+    {
+        #color: #1d4ed8;
+        #
+    } border-radius: 10px;
+        padding: 6px 10px;
+        margin-bottom: 6px;
+        font-size: 0.7rem;
+        font-weight: 500;
+        line-height: 1.4;
+    }
+</style>
+
+<div class="container-fluid py-4">
+    <div class="card shadow-sm border-0 answers-card">
+
+        <div class="card-body">
+            <div class="table-responsive answers-table-wrapper">
+
+                <table id="dash-answers" class="table table-bordered dash-answers">
+                    <thead class="table-light">
+                    <tr>
+                        <th class="text-center text-dark">№</th>
+                        <th class="text-center text-dark ">Дата</th>
+                        {% for question in questions %}
+                        <th class="text-dark">
+                            {{ question.order }}.{{ question.question_uz }}
+                        </th>
+                        {% endfor %}
+                    </tr>
+                    </thead>
+
+                    <tbody>
+                    {% for row in rows %}
+                    <tr>
+                        <td>
+                            <span class="row-number">
+                                {{ forloop.counter }}
+                            </span>
+                        </td>
+                        <td class="text-center" style="white-space: nowrap; text-align: center;">
+                            {{ row.submission.created_at|date:"Y-m-d H:i" }}
+                        </td>
+                        {% for question in questions %}
+                        <td class="text-center">
+                            {% with row.answers|get_item:question.id as values %}
+                            {% if values %}
+                            {% for value in values %}
+                                <div class="">
+                                    {{ value }}
+                                </div>
+                            {% endfor %}
+                            {% else %}
+                                <span class="empty-answer"> — </span>
+                            {% endif %}
+                            {% endwith %}
+                        </td>
+                        {% endfor %}
+                    </tr>
+                    {% endfor %}
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
