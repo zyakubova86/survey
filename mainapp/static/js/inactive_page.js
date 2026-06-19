@@ -8,10 +8,9 @@
     }, 2 * 60 * 1000);
   }
 
-  window.onload = resetTimer;
-  document.onmousemove = resetTimer;
-  document.onkeypress = resetTimer;
-  document.ontouchstart = resetTimer;
-  document.onscroll = resetTimer;
-  document.onclick = resetTimer;
+  window.addEventListener("load", resetTimer);
+  document.addEventListener("keydown", resetTimer);
+  document.addEventListener("touchstart", resetTimer, { passive: true });
+  document.addEventListener("scroll", resetTimer, { passive: true });
+  document.addEventListener("click", resetTimer);
 })();
