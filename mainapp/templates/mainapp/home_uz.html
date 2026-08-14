@@ -12,7 +12,7 @@
 <section id="hero" class="hero section">
     <div class="container">
 
-        <div id="surveyCarousel" class="carousel slide carousel-fade" data-bs-ride="carousel">
+        <div id="surveyCarousel" class="carousel slide carousel-fade"> {% comment %}data-bs-ride="carousel"{% endcomment %}
             <div class="carousel-inner">
                 {% for survey in surveys %}
                 <div class="carousel-item {% if forloop.first %}active{% endif %}"
