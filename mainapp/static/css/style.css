@@ -534,7 +534,8 @@ svg #file_icon svg {
 
 .product-question {
     flex: 0 0 auto;
-    color: #212529;
+    /*color: #212529;*/
+    color: #0741a0;
 
     /*font-size: 18px;*/
     font-size: clamp(13px, 1.7vw, 18px); /**/
@@ -608,6 +609,8 @@ svg #file_icon svg {
 
     font-size: clamp(13px, 1.5vw, 16px); /**/
     padding: clamp(6px, .8vw, 9px) clamp(10px, 1.2vw, 16px); /**/
+
+    background: #0741a0;
 }
 
 /****************** HOME CAROUSEL *******************/
