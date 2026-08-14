@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Бош саҳифа{% endblock %}
+
+
+{% block content %}
+{% include 'header.html' %}
+
+
+<section id="hero" class="hero section">
+
+    <div class="container">
+
+        <div class="row justify-content-center">
+            <div class="col-lg-10 text-center">
+                <h1 class="">Аноним сўровнома</h1>
+                <p>
+                    Ушбу ошхонага оид сўровнома тез ва осон.
+                    Айнан сизнинг иштирокингиз ҳамда қолдирган таклифларингиз ошхона менюсини янада яхшилашга ёрдам беради.
+                    Сизнинг фикрингиз барчамиз учун муҳим. Ҳозироқ бошланг!
+                    <!--Сизни ошхона фаолиятини янада яхшилашга қаратилган аноним сўровномада иштирок этишга таклиф этамиз.<br>
+                    Айнан сизнинг фикрингиз барча ходимлар овқатланиш шароитларини янада қулай, хилма-хил этишга ёрдам беради.-->
+                </p>
+                <div class="text-center">
+                    <a href="{% url 'survey_uz' %}" class="btn-get-started">Бошлаш</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+{% endblock %}

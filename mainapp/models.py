@@ -15,6 +15,36 @@ class Department(models.Model):
         return str(self.name_uz)
 
 
+class Survey(models.Model):
+    GENERAL = 'general'
+    PRODUCT = 'product'
+
+    SURVEY_TYPES = (
+        (GENERAL, 'Умумий'),
+        (PRODUCT, 'Янги маҳсулот'),
+    )
+
+    title_uz = models.CharField(max_length=255, verbose_name="Название_uz")
+    title_ru = models.CharField(max_length=255, verbose_name="Название_ru")
+
+    survey_type = models.CharField(max_length=30, choices=SURVEY_TYPES, default=GENERAL, verbose_name="Тип опроса")
+
+    image = models.ImageField(upload_to="surveys/", null=True, blank=True, verbose_name="Картинка")
+    description_uz = models.TextField(blank=True, verbose_name="Описание_uz")
+    description_ru = models.TextField(blank=True, verbose_name="Описание_ru")
+    order = models.PositiveIntegerField(default=0, verbose_name='№ номер')
+    is_active = models.BooleanField(default=True, verbose_name='Активен')
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name='Создан')
+
+    class Meta:
+        verbose_name = "Опрос"
+        verbose_name_plural = 'Опросники'
+
+
+    def __str__(self):
+        return self.title_uz
+
+
 class Question(models.Model):
     TEXT = 'text'
     SINGLE = 'single'
@@ -36,7 +66,10 @@ class Question(models.Model):
 
     question_uz = models.TextField(max_length=200, null=True, blank=True, verbose_name='Вопрос uz')
     question_ru = models.TextField(max_length=200,  null=True, blank=True, verbose_name='Вопрос ru')
-    order = models.PositiveIntegerField(default=0, verbose_name='Номер')
+
+    survey = models.ForeignKey(Survey, on_delete=models.CASCADE, related_name="questions", verbose_name="Сўровнома", null=True, blank=True)
+
+    order = models.PositiveIntegerField(default=0, verbose_name='№ номер')
 
     question_type = models.CharField(max_length=50, choices=QUESTION_TYPES, null=True, blank=True, verbose_name='Тип вопроса')
     option_source = models.CharField(max_length=50, choices=OPTION_SOURCE_CHOICES, default='manual', verbose_name='Тип варианта')
@@ -72,7 +105,6 @@ class OptionGroup(models.Model):
 
 class QuestionOption(models.Model):
     question = models.ForeignKey(Question, on_delete=models.CASCADE, related_name='options')
-    group = models.ForeignKey(OptionGroup, on_delete=models.SET_NULL, null=True, blank=True, related_name='options')
     text_uz = models.CharField(max_length=255, null=True, blank=True, verbose_name='Текст uz')
     text_ru = models.CharField(max_length=255, null=True, blank=True, verbose_name='Текст ru')
     order = models.PositiveIntegerField(default=0)
@@ -82,13 +114,14 @@ class QuestionOption(models.Model):
         return str(self.text_uz)
 
     class Meta:
-        ordering = ['question', 'group__order', 'order']
+        ordering = ['question', 'order']
         verbose_name = "Вариант"
         verbose_name_plural = 'Варианты'
 
 
 class SurveySubmission(models.Model):
     uuid = models.UUIDField(default=uuid.uuid4,editable=False,unique=True)
+    survey = models.ForeignKey(Survey, on_delete=models.PROTECT, related_name="submissions", null=True, blank=True, verbose_name="Опрос тип")
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):

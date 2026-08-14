@@ -1,9 +1,6 @@
-import pandas as pd
 from django.contrib import admin
-from django.http import HttpResponse
-from django.urls import path
+
 from .models import *
-from io import BytesIO
 
 
 class DepartmentAdmin(admin.ModelAdmin):
@@ -11,24 +8,34 @@ class DepartmentAdmin(admin.ModelAdmin):
     list_display = ('name_uz', 'name_ru')
 
 
+class SurveyAdmin(admin.ModelAdmin):
+    ordering = ('-id',)
+    list_display = ('id', 'title_uz', 'title_ru', 'survey_type', 'order', 'is_active', 'created_at')
+    list_display_links = ('id', 'title_uz', 'title_ru')
+
+
 class QuestionAdmin(admin.ModelAdmin):
-    list_display = ('order', 'question_uz', 'question_ru', 'is_active', 'created_at')
+    list_display = ('id', 'survey', 'question_uz', 'order', 'is_active')
     list_display_links = ('question_uz',)
     filter_horizontal = ('allowed_categories',)
+
+    ordering = ('survey', 'order',)
+
 
 class OptionGroupAdmin(admin.ModelAdmin):
     list_display = ('name_uz', 'name_ru', 'order')
 
+
 class QuestionOptionAdmin(admin.ModelAdmin):
-    list_display = ('question', 'order', 'text_uz', 'group')
+    list_display = ('question', 'order', 'text_uz', 'text_ru')
 
 
 class SurveySubmissionAdmin(admin.ModelAdmin):
-    list_display = ('uuid', 'created_at')
+    list_display = ('uuid', 'survey', 'created_at')
 
 
 class AnswerAdmin(admin.ModelAdmin):
-    list_display = ('submission', 'question','department', 'menu_item', 'selected_option', 'text_answer', 'created_at')
+    list_display = ('submission', 'question', 'selected_option', 'menu_item', 'department', 'text_answer', 'created_at')
 
 
 class FoodCategoryAdmin(admin.ModelAdmin):
@@ -40,8 +47,9 @@ class MenuItemAdmin(admin.ModelAdmin):
 
 
 admin.site.register(Department, DepartmentAdmin)
+admin.site.register(Survey, SurveyAdmin)
 admin.site.register(Question, QuestionAdmin)
-admin.site.register(OptionGroup, OptionGroupAdmin)
+# admin.site.register(OptionGroup, OptionGroupAdmin)
 admin.site.register(QuestionOption, QuestionOptionAdmin)
 admin.site.register(SurveySubmission, SurveySubmissionAdmin)
 admin.site.register(Answer, AnswerAdmin)

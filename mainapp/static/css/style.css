@@ -420,7 +420,6 @@ svg #file_icon svg {
     width: 100%;
     display: flex;
     align-items: center;
-    /*min-height: 100vh;*/
     min-height: calc(100vh - 70px);
 
 }
@@ -454,6 +453,165 @@ svg #file_icon svg {
     text-decoration: none;
     margin: 5px 0;
 }
+
+
+/****************** HOME CAROUSEL *******************/
+#surveyCarousel {
+    width: 100%;
+}
+
+#surveyCarousel .carousel-inner {
+    overflow: hidden;
+}
+
+#surveyCarousel .carousel-item {
+    width: 100%;
+}
+
+.carousel-control-next, .carousel-control-prev {
+    opacity: 100;
+    width: 5%;
+}
+
+.survey-slide-wrapper {
+    width: 100%;
+    min-height: calc(100vh - 80px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.survey-carousel-card {
+    position: relative;
+    width: 100%;
+    max-height: calc(100vh - 80px);
+    border-radius: 16px;
+    overflow: hidden;
+    min-height: 0;
+}
+
+
+.product-survey-image {
+    display: block;
+    width: 100%;
+    height: auto;
+}
+
+#hero {
+    overflow: hidden;
+}
+
+.product-survey-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+            to bottom,
+            rgba(0, 0, 0, 0) 45%,
+            rgba(255, 255, 255, 0.15) 60%,
+            rgba(131 131 131 / 0.85) 100%
+    );
+    pointer-events: none;
+}
+
+.product-survey-content {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 2;
+    padding: 25px 30px 25px;
+}
+
+.product-survey-row {
+    display: flex;
+    align-items: center;
+
+    /*gap: 10px;*/
+    gap: clamp(6px, 1vw, 20px); /**/
+
+    width: 100%;
+}
+
+.product-question {
+    flex: 0 0 auto;
+    color: #212529;
+
+    /*font-size: 18px;*/
+    font-size: clamp(13px, 1.7vw, 18px); /**/
+
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.product-options {
+    display: flex;
+    align-items: center;
+    /*gap: 15px;*/
+    flex: 1 1 auto;
+    min-width: 0;
+
+    justify-content: flex-start; /**/
+    gap: clamp(5px, 1vw, 15px); /**/
+    /*overflow: hidden; !**!*/
+}
+
+.product-option {
+    display: flex;
+    align-items: center;
+    /*gap: 8px;*/
+    /*padding: 9px 14px;*/
+
+    gap: clamp(4px, .7vw, 8px); /**/
+    padding: clamp(6px, .8vw, 9px) clamp(8px, 1vw, 14px);/**/
+    font-size: clamp(12px, 1.4vw, 16px); /**/
+
+    margin: 0;
+    border: 1px solid rgba(255, 255, 255, 0.45);
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.90);
+    color: #212529;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: all .2s ease;
+}
+
+.product-option:hover {
+    background: #fff;
+    transform: translateY(-1px);
+}
+
+.product-option input {
+    /*margin: 0;*/
+    /*width: 16px;*/
+    /*height: 16px;*/
+    accent-color: #0d6efd;
+
+    flex: 0 0 auto; /**/
+    margin: 0; /**/
+    width: clamp(13px, 1.5vw, 16px); /**/
+    height: clamp(13px, 1.5vw, 16px); /**/
+}
+
+
+.product-option:has(input:checked) {
+    background: #0d6efd;
+    border-color: #0d6efd;
+    color: #fff;
+}
+
+.product-submit {
+    flex: 0 0 auto;
+}
+
+.product-submit .btn {
+    white-space: nowrap;
+
+    font-size: clamp(13px, 1.5vw, 16px); /**/
+    padding: clamp(6px, .8vw, 9px) clamp(10px, 1.2vw, 16px); /**/
+}
+
+/****************** HOME CAROUSEL *******************/
+
 
 /****************** HEADER *******************/
 .header {
@@ -632,7 +790,34 @@ nav {
     display: none;
 }
 
-/* media queries */
+/*@media screen and (width: 1024px) and (height: 820px) {*/
+@media only screen and (min-width: 1020px) and (max-width: 1028px) and (min-height: 816px) and (max-height: 824px) and (orientation: landscape) {
+    .keyboard {
+        display: block;
+    }
+
+    .option-item label {
+        font-size: 0.8rem;
+    }
+
+    .food-grid {
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    }
+
+
+    /* carousel */
+    /*.product-survey-row {
+        font-size: 16px;
+    }
+
+    .product-option {
+        gap: 5px;
+        padding: 9px 11px;
+    }*/
+}
+
+
+/*!* media queries *!
 @media only screen and (min-width: 800px) and (max-width: 1413px) and (min-height: 600px) and (max-height: 1024px) {
 
     .keyboard {
@@ -646,4 +831,20 @@ nav {
     .food-grid {
         grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
     }
-}
+
+    !* carousel *!
+    .product-survey-row {
+        !*gap: 10px;*!
+    }
+
+    .product-question {
+        font-size: 15px;
+    }
+
+    .product-option {
+        gap: 5px;
+        padding: 10px 11px;
+    }
+
+}*/
+

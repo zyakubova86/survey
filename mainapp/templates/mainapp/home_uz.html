@@ -4,29 +4,114 @@
 
 
 {% block content %}
+
 {% include 'header.html' %}
 
+{% if surveys %}
 
 <section id="hero" class="hero section">
-
     <div class="container">
 
-        <div class="row justify-content-center">
-            <div class="col-lg-10 text-center">
-                <h1 class="">Аноним сўровнома</h1>
-                <p>
-                    Ушбу ошхонага оид сўровнома тез ва осон.
-                    Айнан сизнинг иштирокингиз ҳамда қолдирган таклифларингиз ошхона менюсини янада яхшилашга ёрдам беради.
-                    Сизнинг фикрингиз барчамиз учун муҳим. Ҳозироқ бошланг!
-                    <!--Сизни ошхона фаолиятини янада яхшилашга қаратилган аноним сўровномада иштирок этишга таклиф этамиз.<br>
-                    Айнан сизнинг фикрингиз барча ходимлар овқатланиш шароитларини янада қулай, хилма-хил этишга ёрдам беради.-->
-                </p>
-                <div class="text-center">
-                    <a href="{% url 'survey_uz' %}" class="btn-get-started">Бошлаш</a>
+        <div id="surveyCarousel" class="carousel slide carousel-fade" data-bs-ride="carousel">
+            <div class="carousel-inner">
+                {% for survey in surveys %}
+                <div class="carousel-item {% if forloop.first %}active{% endif %}"
+                     data-bs-interval="10000">
+                    {% if survey.survey_type == 'general' %}
+                        <div class="survey-slide-wrapper">
+                            <div class="row justify-content-center">
+                                <div class="col-md-10 text-center">
+                                    <div class="survey-carousel-card">
+                                        <h1>{{ survey.title_uz }}</h1>
+                                        {% if survey.description_uz %}
+                                        <p>{{ survey.description_uz }}</p>
+                                        {% endif %}
+                                        <a href="{% url 'survey_uz' survey.id %}"
+                                           class="btn-get-started">
+                                            Бошлаш
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% elif survey.survey_type == 'product' %}
+                        <div class="survey-slide-wrapper">
+                            <div class="row justify-content-center">
+                            <div class="col-md-12">
+                                <div class="survey-carousel-card">
+                                    {% if survey.image %}
+                                    <img src="{{ survey.image.url }}" class="product-survey-image"
+                                         alt="{{ survey.title_uz }}">
+                                    {% endif %}
+
+                                    <!-- Gradient -->
+                                    <div class="product-survey-overlay"></div>
+
+                                    <!-- Question + options -->
+                                    <form method="POST" action="{% url 'submit_product_survey_uz' survey.id %}"
+                                          class="product-survey-content justify-content-center">
+                                        {% csrf_token %}
+
+                                        {% for question in survey.questions.all %}
+                                        <div class="product-survey-row">
+                                            <!-- QUESTION -->
+                                            <div class="product-question">
+                                                <span>{{ question.question_uz }}</span>
+
+                                            </div>
+
+                                            <!-- OPTIONS -->
+                                            <div class="product-options">
+                                                {% for option in question.options.all %}
+                                                <label class="product-option">
+                                                    <input type="radio"
+                                                           name="survey_{{ survey.id }}_question_{{ question.id }}"
+                                                           value="{{ option.id }}"
+                                                           id="survey_{{ survey.id }}_option_{{ option.id }}"
+                                                           {% if question.is_required %}required{% endif %}>
+
+                                                    <span>{{ option.text_uz }}</span>
+                                                </label>
+                                                {% endfor %}
+
+                                                <!-- SUBMIT -->
+                                                <div class="product-submit">
+                                                    <button type="submit" class="btn btn-primary btn-lg">
+                                                        Юбориш
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        {% endfor %}
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                        </div>
+                    {% endif %}
                 </div>
+                {% endfor %}
             </div>
+
+            {% if surveys|length > 1 %}
+            <button class="carousel-control-prev" type="button" data-bs-target="#surveyCarousel" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            </button>
+
+            <button class="carousel-control-next" type="button" data-bs-target="#surveyCarousel" data-bs-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            </button>
+            {% endif %}
         </div>
     </div>
 </section>
 
+{% endif %}
+
+
 {% endblock %}
+
+
+
+
+

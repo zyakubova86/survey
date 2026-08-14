@@ -1,0 +1,346 @@
+{#{% extends 'mainapp/dashboard/base_dashboard.html' %}#}
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+<!-- HEADER -->
+{% include 'dash_header.html' %}
+<!-- END HEADER -->
+
+<div class="container-fluid">
+    <!-- KPI -->
+    <div class="row g-4 my-4">
+        <div class="col-xl-3 col-md-6">
+
+            <div class="card stat-card border-start border-primary border-3">
+                <div class="card-body">
+                    <div class="text-muted mb-2">
+                        Общее
+                    </div>
+                    <h2 class="fw-bold">
+                        {{ total_submissions }}
+                    </h2>
+                </div>
+            </div>
+
+        </div>
+        <div class="col-xl-3 col-md-6">
+
+            <div class="card stat-card border-start border-primary border-3">
+                <div class="card-body">
+                    <div class="text-muted mb-2">
+                        Сегодня
+                    </div>
+
+                    <h2 class="fw-bold">
+                        {{ today_total }}
+                    </h2>
+                </div>
+            </div>
+
+        </div>
+        <div class="col-xl-3 col-md-6">
+            <div class="card stat-card border-start border-primary border-3">
+                <div class="card-body">
+                    <div class="text-muted mb-2">
+                        Неделя
+                    </div>
+                    <h2 class="fw-bold">
+                        {{ week_total }}
+                    </h2>
+                </div>
+            </div>
+
+        </div>
+        <div class="col-xl-3 col-md-6">
+            <div class="card stat-card border-start border-primary border-3">
+                <div class="card-body">
+                    <div class="text-muted mb-2">
+                        Месяц
+                    </div>
+                    <h2 class="fw-bold">
+                        {{ month_total }}
+                    </h2>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- DAILY -->
+    <div class="row g-4 mb-4">
+        <div class="col-6">
+            <div class="card chart-card mb-4">
+                <div class="card-body">
+                    {% comment %}<h5 class="fw-bold mb-4">
+                    Ежедневный
+                </h5>{% endcomment %}
+
+                    <div id="dailyChart"
+                         style="height: 400px;">
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="col-lg-6">
+            <div class="card chart-card bg-white">
+                <div class="card-body">
+                    {% comment %}<h5 class="fw-bold mb-4">
+                    Отделы
+                </h5>{% endcomment %}
+                    <div id="departmentChart" style="height: 400px;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-4 mb-5">
+        <!-- WEEKLY -->
+        <div class="col-lg-6">
+            <div class="card chart-card">
+                <div class="card-body">
+                    {% comment %}<h5 class="fw-bold mb-4">
+                    Weekly
+                </h5>{% endcomment %}
+
+                    <div id="weeklyChart"
+                         style="height: 350px;">
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- MONTHLY -->
+        <div class="col-lg-6">
+
+            <div class="card chart-card">
+                <div class="card-body">
+                    {% comment %}<h5 class="fw-bold mb-4">
+                    Monthly
+                </h5>{% endcomment %}
+
+                    <div id="monthlyChart"
+                         style="height: 350px;">
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+
+    <!-- DEPARTMENT KPI TABLE -->
+    <div class="row g-4 mb-5">
+        <div class="col-sm-12">
+            <div class="card chart-card mb-5">
+                <div class="card-body">
+                    <h5 class="fw-bold mb-4"> Статистика по отделам</h5>
+
+                    <div class="table-responsive dash_department_stats_table_wrapper">
+                        <table class="table table-hover align-middle">
+                            <thead class="table-light">
+                            <tr>
+                                <th>Отдел</th>
+                                <th class="text-center">Сегодня</th>
+                                <th class="text-center">Неделя</th>
+                                <th class="text-center">Месяц</th>
+                                <th class="text-center">Общее</th>
+                            </tr>
+                            </thead>
+
+                            <tbody>
+                            {% for item in department_kpis %}
+                            <tr>
+                                <td>{{ item.department__name_uz }}</td>
+                                <td class="text-center">
+                                    <span class="">{{ item.today }}</span>
+                                </td>
+                                <td class="text-center">
+                                    <span class="text-center">
+                                        {{ item.week }}
+                                    </span>
+                                </td>
+                                <td class="text-center">
+                                    <span class="text-center">
+                                        {{ item.month }}
+                                    </span>
+                                </td>
+                                <td class="text-center">
+                                    <span class="badge bg-success text-white">
+                                        {{ item.total }}
+                                    </span>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- JSON -->
+{{ daily_stats|json_script:"daily-data" }}
+{{ weekly_stats|json_script:"weekly-data" }}
+{{ monthly_stats|json_script:"monthly-data" }}
+{{ department_stats|json_script:"department-stats" }}
+{{ department_kpis|json_script:"department-data" }}
+
+
+<!-- ECHARTS -->
+<script>
+    const daily = JSON.parse(
+        document.getElementById('daily-data').textContent
+    );
+
+    const weekly = JSON.parse(
+        document.getElementById('weekly-data').textContent
+    );
+
+    const monthly = JSON.parse(
+        document.getElementById('monthly-data').textContent
+    );
+
+    const departments = JSON.parse(
+        document.getElementById('department-data').textContent
+    );
+
+    // DEPARTMENT PIE
+    const departmentChart = echarts.init(
+        document.getElementById('departmentChart')
+    );
+    departmentChart.setOption({
+        title: {
+            text: 'Отделы общее',
+            left: 'center'
+        },
+        tooltip: {
+            trigger: 'item',
+        },
+
+        series: [
+            {
+                name: 'Отделы',
+                type: 'pie',
+                radius: '70%',
+                data: departments.map(i => ({
+                    value: i.total,
+                    name: i.department__name_uz
+                })),
+                label:
+                    {
+                        formatter: '{b}: {c}'
+                    },
+                emphasis: {
+                    itemStyle: {
+                        shadowBlur: 10,
+                        shadowOffsetX:
+                            0
+                    }
+                }
+            }
+        ]
+
+    });
+
+    // DAILY
+    const dailyChart = echarts.init(
+        document.getElementById('dailyChart')
+    );
+    dailyChart.setOption({
+        title: {
+            text: 'Ежедневный',
+
+            left: 'center'
+        },
+        tooltip: {
+            trigger: 'axis'
+        },
+        xAxis: {
+            type: 'category',
+            data:
+                daily.map(i => i.day)
+        },
+        yAxis: {
+            type: 'value'
+        },
+        series: [{
+            data: daily.map(i => i.total),
+            type: 'line',
+        }]
+    });
+
+    // WEEKLY
+    const weeklyChart = echarts.init(
+        document.getElementById('weeklyChart')
+    );
+    weeklyChart.setOption({
+        title: {
+            text: 'Еженедельный',
+            left: 'center'
+        },
+        tooltip: {
+            trigger: 'axis'
+        },
+        xAxis: {
+            type: 'category',
+            data:
+                weekly.map(i => i.week)
+        },
+        yAxis: {
+            type: 'value'
+        },
+        series: [{
+            data: weekly.map(i => i.total),
+            type: 'bar',
+            barWidth: 50
+        }]
+    });
+
+    // MONTHLY
+    const monthlyChart = echarts.init(
+        document.getElementById('monthlyChart')
+    );
+    monthlyChart.setOption({
+        title: {
+            text: 'Ежемесячный',
+            left: 'center'
+        },
+        tooltip: {
+            trigger: 'axis'
+        },
+        xAxis: {
+            type: 'category',
+            data: monthly.map(i => i.month)
+        },
+        yAxis: {
+            type: 'value'
+        },
+        series: [{
+            data: monthly.map(i => i.total),
+            type: 'line',
+            smooth: true
+        }]
+    });
+
+    // RESPONSIVE
+    window.addEventListener('resize', function () {
+        dailyChart.resize();
+        weeklyChart.resize();
+        monthlyChart.resize();
+        departmentChart.resize();
+    });
+
+</script>
+
+{% endblock %}
