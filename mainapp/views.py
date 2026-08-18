@@ -53,6 +53,7 @@ def submit_survey(request, survey_id):
         Department.objects.filter(is_active=True, name_uz__isnull=False, name_ru__isnull=False)
         .exclude(name_uz='', name_ru='')
         .order_by(f'name_{lang}'))
+
     menu_items = MenuItem.objects.filter(is_active=True).select_related(f'category')
 
     if request.method == 'POST':
@@ -120,7 +121,6 @@ def save_answers(request, questions, departments, survey):
 
             if value:
                 answers.append(Answer(submission=submission, question=question, text_answer=value))
-                # Answer.objects.create(submission=submission, question=question, text_answer=value)
 
         # SINGLE CHOICE
         elif question.question_type == 'single':
@@ -135,7 +135,6 @@ def save_answers(request, questions, departments, survey):
 
                 if department:
                     answers.append(Answer(submission=submission, question=question, department=department))
-                    # Answer.objects.create(submission=submission, question=question, department=department)
 
             # Normal option
             else:
@@ -143,7 +142,6 @@ def save_answers(request, questions, departments, survey):
 
                 if option:
                     answers.append(Answer(submission=submission, question=question, selected_option=option))
-                    # Answer.objects.create(submission=submission, question=question, selected_option=option)
 
 
         # MULTIPLE CHOICE
@@ -160,14 +158,12 @@ def save_answers(request, questions, departments, survey):
 
                     if item:
                         answers.append(Answer(submission=submission, question=question, menu_item=item))
-                        # Answer.objects.create(submission=submission, question=question, menu_item=item)
 
             # NORMAL OPTIONS
             else:
                 options = question.options.filter(id__in=values, is_active=True)
                 for option in options:
                     answers.append(Answer(submission=submission, question=question, selected_option=option))
-                    # Answer.objects.create(submission=submission, question=question, selected_option=option)
 
     Answer.objects.bulk_create(answers)
 
@@ -194,21 +190,13 @@ def dashboard(request):
     if selected_survey:
         submissions = submissions.filter(survey=selected_survey)
 
-    # KPI
-    # total_submissions = SurveySubmission.objects.filter(survey=selected_survey).count()
-    # today_total = SurveySubmission.objects.filter(created_at__date=now.date()).count()
-    # week_total = SurveySubmission.objects.filter(created_at__gte=now - timedelta(days=7)).count()
-    # month_total = SurveySubmission.objects.filter(created_at__month=now.month, created_at__year=now.year).count()
-
     total_submissions = submissions.count()
     today_total = submissions.filter(created_at__date=now.date()).count()
     week_total = submissions.filter(created_at__gte=now - timedelta(days=7)).count()
     month_total = submissions.filter(created_at__month=now.month, created_at__year=now.year).count()
 
     # DAILY STATS (CURRENT MONTH DAYS)
-    # daily_queryset = (SurveySubmission.objects.annotate(day=TruncDate("created_at")).values("day").annotate(total=Count("id")).order_by("day"))
-    daily_queryset = (
-        submissions.annotate(day=TruncDate("created_at")).values("day").annotate(total=Count("id")).order_by("day"))
+    daily_queryset = (submissions.annotate(day=TruncDate("created_at")).values("day").annotate(total=Count("id")).order_by("day"))
     daily_map = {
         item["day"]: item["total"]
         for item in daily_queryset
@@ -231,12 +219,10 @@ def dashboard(request):
     weekly_map = defaultdict(int)
 
     # get all submissions for current month
-    # qs = SurveySubmission.objects.filter(created_at__date__gte=start_month, created_at__date__lte=end_date)
     qs = submissions.filter(created_at__date__gte=start_month, created_at__date__lte=end_date)
 
     for obj in qs:
         d = obj.created_at.date()
-        # position in month grid
         day_index = d.day + start_weekday - 1
         week_index = (day_index // 7) + 1
         weekly_map[week_index] += 1
@@ -253,10 +239,7 @@ def dashboard(request):
         })
 
     # MONTHLY STATS (CURRENT YEAR MONTHS)
-    # monthly_queryset = (SurveySubmission.objects.annotate(month=TruncMonth("created_at")).values("month").annotate(total=Count("id")).order_by("month"))
-    monthly_queryset = (
-        submissions.annotate(month=TruncMonth("created_at")).values("month").annotate(total=Count("id")).order_by(
-            "month"))
+    monthly_queryset = (submissions.annotate(month=TruncMonth("created_at")).values("month").annotate(total=Count("id")).order_by("month"))
     monthly_map = {
         item["month"].month: item["total"]
         for item in monthly_queryset
@@ -290,21 +273,15 @@ def dashboard(request):
         "submission__in": submissions
     }
 
-    # department_stats = (Answer.objects.filter(department__isnull=False).values("department__name_uz").annotate(total=Count("submission", distinct=True)).order_by("-total"))
-    department_stats = (
-        Answer.objects.filter(department__isnull=False, **answer_filter).values("department__name_uz").annotate(
-            total=Count("submission", distinct=True)).order_by("-total"))
+    department_stats = (Answer.objects.filter(department__isnull=False, **answer_filter).values("department__name_uz").annotate(total=Count("submission", distinct=True)).order_by("-total"))
 
-    department_kpis = (
-        Answer.objects.filter(department__isnull=False, **answer_filter).values("department__name_uz").annotate(
-            today=Count("submission", filter=Q(created_at__date=now.date()), distinct=True),
-            week=Count("submission", filter=Q(created_at__gte=now - timedelta(days=7)), distinct=True),
-            month=Count("submission", filter=Q(created_at__month=now.month, created_at__year=now.year), distinct=True),
-            total=Count("submission", distinct=True)
-        ).order_by("-month")
-        )
-    recent_answers = (
-        Answer.objects.select_related('question', 'selected_option', 'department', 'menu_item').order_by('-created_at'))
+    department_kpis = (Answer.objects.filter(department__isnull=False, **answer_filter).values("department__name_uz").annotate(
+        today=Count("submission", filter=Q(created_at__date=now.date()), distinct=True),
+        week=Count("submission", filter=Q(created_at__gte=now - timedelta(days=7)), distinct=True),
+        month=Count("submission", filter=Q(created_at__month=now.month, created_at__year=now.year), distinct=True),
+        total=Count("submission", distinct=True)
+    ).order_by("-month")                       )
+    recent_answers = (Answer.objects.select_related('question', 'selected_option', 'department', 'menu_item').order_by('-created_at'))
 
     # PRODUCT
     product_question_stats = []

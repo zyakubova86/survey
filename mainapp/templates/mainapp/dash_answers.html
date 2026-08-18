@@ -45,6 +45,18 @@
         z-index: 5;
         border-bottom: 2px solid #dee2e6;
     }
+
+    .answer-item {
+        display: inline-block;
+        background: #c7c7ca;
+        color: #1d4ed8;
+        border-radius: 10px;
+        padding: 6px 10px;
+        margin-bottom: 6px;
+        font-size: 0.7rem;
+        font-weight: 500;
+        line-height: 1.4;
+    }
 </style>
 
 <div class="container-fluid ">
@@ -81,7 +93,7 @@
                         {% for question in questions %}
                         {% if selected_survey.survey_type == 'general' %}
                         <th class="text-dark">
-                            {{ question.order }}. {{ question.question_uz }}
+                            {{ question.order }}.{{ question.question_uz }}
                         </th>
                         {% elif selected_survey.survey_type == 'product' %}
                         <th class="text-dark">
