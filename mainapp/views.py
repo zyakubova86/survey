@@ -289,23 +289,32 @@ def dashboard(request):
         questions = (selected_survey.questions.filter(is_active=True).prefetch_related("options").order_by("order"))
 
         for question in questions:
+
             option_stats = (
                 Answer.objects.filter(submission__in=submissions, question=question, selected_option__isnull=False)
-                .values("selected_option", "selected_option__text_uz")
-                .annotate(total=Count("id")).order_by("-total")
+                .values("selected_option")
+                .annotate(total=Count("id"))
             )
+
+            # {option_id: count}
+            option_counts = {
+                item["selected_option"]: item["total"]
+                for item in option_stats
+            }
+
+            options = []
+            for option in question.options.filter(is_active=True).order_by("order"):
+                options.append({
+                    "id": option.id,
+                    "name": option.text_uz,
+                    "total": option_counts.get(option.id, 0),
+                })
 
             product_question_stats.append({
                 "survey_title": selected_survey.title_uz,
                 "question_id": question.id,
                 "question": question.question_uz,
-                "options": [
-                    {
-                        "name": item["selected_option__text_uz"],
-                        "total": item["total"],
-                    }
-                    for item in option_stats
-                ]
+                "options": options,
             })
 
     context = {

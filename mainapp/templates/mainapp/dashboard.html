@@ -187,9 +187,21 @@
     </div>
 
     {% elif selected_survey.survey_type == 'product' %}
-    <!-- PRODUCT PIE -->
+    <!-- PRODUCT SURVEY -->
     <div class="row g-4 mb-5">
-        <div class="col-lg-12 justify-content-center">
+        <!-- PRODUCT PIE -->
+        <div class="col-lg-7 justify-content-center">
+            <div class="card chart-card bg-white mb-4">
+                <div class="card-body">
+                    {% for question in product_question_stats %}
+                    <div id="productQuestionBar{{ question.question_id }}" style="height: 400px;"></div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        <!-- PRODUCT BAR -->
+        <div class="col-lg-5 justify-content-center">
             <div class="card chart-card bg-white mb-4">
                 <div class="card-body">
                     {% for question in product_question_stats %}
@@ -260,15 +272,15 @@
             },
 
             legend: {
-                orient: 'vertical',
-                left: 'right'
+                orient: 'horizontal',
+                left: 'center'
             },
 
             series: [
                 {
                     name: 'Ответы',
                     type: 'pie',
-                    radius: '70%',
+                    radius: '60%',
                     data: question.options.map(function (option) {
                         return {
                             value: option.total,
@@ -296,9 +308,72 @@
 
     });
 
+    // PRODUCT BAR
+    productQuestions.forEach(function (question) {
+        const productBar = document.getElementById('productQuestionBar' + question.question_id);
+        if (!productBar) {
+            return;
+        }
+        const bar = echarts.init(productBar);
+
+        const names = question.options.map(function (option) {
+            return option.name;
+        });
+
+        const totals = question.options.map(function (option) {
+            return option.total;
+        });
+
+        bar.setOption({
+
+            title: {
+                text: question.survey_title,
+                left: 'center'
+            },
+
+            tooltip: {
+                trigger: 'axis',
+                axisPointer: {
+                    type: 'shadow'
+                }
+            },
+
+            xAxis: {
+                type: 'category',
+                data: names,
+            },
+
+            yAxis: {
+                type: 'value',
+                //minInterval: 1
+            },
+
+            series: [
+                {
+                    name: 'Ответы',
+                    type: 'bar',
+                    data: totals,
+                    barMaxWidth: 80,
+
+                    label: {
+                        show: true,
+                        position: 'top'
+                    },
+                    emphasis: {
+                        focus: 'series'
+                    }
+                }
+            ]
+        });
+
+        window.addEventListener('resize', function () {
+            bar.resize();
+        });
+
+    });
+
     // DEPARTMENT PIE
     const departmentElement = document.getElementById('departmentChart');
-
     if (departmentElement) {
         const departmentChart = echarts.init(departmentElement);
         departmentChart.setOption({
