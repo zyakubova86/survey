@@ -793,7 +793,7 @@ nav {
     display: none;
 }
 
-/*@media screen and (width: 1024px) and (height: 820px) {*/
+/* kiosk 1024X820 */
 @media only screen and (min-width: 1020px) and (max-width: 1028px) and (min-height: 816px) and (max-height: 824px) and (orientation: landscape) {
     .keyboard {
         display: block;
@@ -807,16 +807,10 @@ nav {
         grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
     }
 
-
-    /* carousel */
-    /*.product-survey-row {
-        font-size: 16px;
+    .product-survey-content {
+        bottom: 20px;
     }
 
-    .product-option {
-        gap: 5px;
-        padding: 9px 11px;
-    }*/
 }
 
 

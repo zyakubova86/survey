@@ -4,6 +4,43 @@
 
 
 {% block content %}
+<style>
+
+    .product-option, .product-submit .btn {
+        animation-delay: 0.10s;
+        animation: border-blink 3s ease-in-out infinite;
+    }
+    .product-question {
+        padding: 0 15px;
+        animation: Pulse 3s ease-in-out infinite;
+        animation-delay: 0.02s;
+    }
+
+    @keyframes Pulse {
+        0%, 100% {
+            transform: scale(1);
+        }
+
+        50% {
+            transform: scale(1.50);
+        }
+    }
+
+    @keyframes border-blink {
+        0% {
+            border-color: #f8d5b2;
+            box-shadow: 0 0 10px #f8ddc3;
+        }
+        50% {
+            border-color: #f67642;
+            box-shadow: 0 0 20px #ca6d06;
+        }
+        100% {
+            border-color: #f8d5b2;
+            box-shadow: 0 0 10px #f8ddc3;
+        }
+    }
+</style>
 
 {% include 'header.html' %}
 
