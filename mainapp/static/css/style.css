@@ -69,6 +69,12 @@ a, a:hover {
     background-color: #e2eee0;
 }
 
+/************ DASH GRAPHS ************/
+.card-body .productQuestionBar, .card-body .productQuestionChart {
+    height: calc(100vh - 330px);
+}
+
+
 /************ THANK-YOU ************/
 .thank-you {
     position: relative;
