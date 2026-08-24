@@ -135,6 +135,25 @@ a, a:hover {
 /********** END THANK-YOU **************/
 
 /************** SURVEY *****************/
+.general-survey-questions {
+    padding: 3rem;
+}
+
+.survey-sent-btn .btn {
+    width: 25%;
+}
+
+@media (max-width: 576px) {
+    .general-survey-questions {
+        padding: 3rem 1rem;
+    }
+
+    .survey-sent-btn .btn {
+        width: 100%;
+    }
+}
+
+
 .food-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -161,10 +180,6 @@ a, a:hover {
     text-align: center;
     margin-bottom: 10px;
 }
-
-/*.category-title h6 {
-    font-size: 14px;
-}*/
 
 .option-item {
     margin-bottom: 2px;
@@ -204,7 +219,6 @@ a, a:hover {
     width: 100%;
     margin: 0;
     padding: 3px 10px;
-    /*font-size: 14px;*/
     line-height: 1.2;
     border-radius: 6px;
     cursor: pointer;
@@ -226,14 +240,6 @@ a, a:hover {
     z-index: 999;
     background: #f8f9fa;
 }
-
-/*.progress-wrapper {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    z-index: 9999;
-}*/
 
 .progress-card {
     border-radius: 0;
@@ -361,7 +367,6 @@ a.department_card {
     font-size: 40px;
     letter-spacing: 1px;
     display: inline-block;
-    /*padding: 10px 28px 12px 28px;*/
     border-radius: 5px;
     transition: 0.5s;
     text-decoration: none;
@@ -531,21 +536,14 @@ svg #file_icon svg {
 .product-survey-row {
     display: flex;
     align-items: center;
-
-    /*gap: 10px;*/
-    gap: clamp(6px, 1vw, 20px); /**/
-
+    gap: clamp(6px, 1vw, 20px);
     width: 100%;
 }
 
 .product-question {
     flex: 0 0 auto;
-    /*color: #212529;*/
     color: #0741a0;
-
-    /*font-size: 18px;*/
-    font-size: clamp(13px, 1.7vw, 18px); /**/
-
+    font-size: clamp(13px, 1.7vw, 18px);
     font-weight: 600;
     white-space: nowrap;
 }
@@ -553,25 +551,18 @@ svg #file_icon svg {
 .product-options {
     display: flex;
     align-items: center;
-    /*gap: 15px;*/
     flex: 1 1 auto;
     min-width: 0;
-
-    justify-content: flex-start; /**/
-    gap: clamp(5px, 1vw, 15px); /**/
-    /*overflow: hidden; !**!*/
+    justify-content: flex-start;
+    gap: clamp(5px, 1vw, 15px);
 }
 
 .product-option {
     display: flex;
     align-items: center;
-    /*gap: 8px;*/
-    /*padding: 9px 14px;*/
-
-    gap: clamp(4px, .7vw, 8px); /**/
-    padding: clamp(6px, .8vw, 9px) clamp(8px, 1vw, 14px);/**/
-    font-size: clamp(12px, 1.4vw, 16px); /**/
-
+    gap: clamp(4px, .7vw, 8px);
+    padding: clamp(6px, .8vw, 9px) clamp(8px, 1vw, 14px);
+    font-size: clamp(12px, 1.4vw, 16px);
     margin: 0;
     border: 1px solid rgba(255, 255, 255, 0.45);
     border-radius: 8px;
@@ -588,17 +579,13 @@ svg #file_icon svg {
 }
 
 .product-option input {
-    /*margin: 0;*/
-    /*width: 16px;*/
-    /*height: 16px;*/
     accent-color: #0d6efd;
 
-    flex: 0 0 auto; /**/
-    margin: 0; /**/
-    width: clamp(13px, 1.5vw, 16px); /**/
-    height: clamp(13px, 1.5vw, 16px); /**/
+    flex: 0 0 auto;
+    margin: 0;
+    width: clamp(13px, 1.5vw, 16px);
+    height: clamp(13px, 1.5vw, 16px);
 }
-
 
 .product-option:has(input:checked) {
     background: #0d6efd;
@@ -613,8 +600,8 @@ svg #file_icon svg {
 .product-submit .btn {
     white-space: nowrap;
 
-    font-size: clamp(13px, 1.5vw, 16px); /**/
-    padding: clamp(6px, .8vw, 9px) clamp(10px, 1.2vw, 16px); /**/
+    font-size: clamp(13px, 1.5vw, 16px);
+    padding: clamp(6px, .8vw, 9px) clamp(10px, 1.2vw, 16px);
 
     background: #0741a0;
 }
