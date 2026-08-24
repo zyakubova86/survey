@@ -697,7 +697,7 @@ svg #file_icon svg {
     display: flex;
     align-items: center;
     min-width: 0;
-    justify-content: center;
+    /*justify-content: center;*/
     gap: clamp(5px, 1vw, 15px);
 }
 
@@ -908,7 +908,6 @@ width: clamp(13px, 1.5vw, 16px);
         font-size: 20px;
     }
 }
-
 /****************** HOME CAROUSEL *******************/
 
 
@@ -1015,8 +1014,8 @@ nav {
     color: #fff;
 }
 
-#topnav .close-btn {
-    display: none;
+#topnav a.active {
+    color: #c89b71;
 }
 
 @media (max-width: 576px) {
@@ -1029,7 +1028,6 @@ nav {
         opacity: 1;
         z-index: 9999;
     }
-
 
     #topnav {
         display: none;
@@ -1044,6 +1042,7 @@ nav {
         transition: right 2s ease-in-out;
         padding: 30px;
         opacity: 0;
+        z-index: -1;
     }
 
     #topnav {
@@ -1062,9 +1061,6 @@ nav {
 
 
 /***************** DASH TABLE ***********************/
-
-
-/* --------------------------------------- */
 .dash_department_stats_table_wrapper {
     max-height: 80vh;
     overflow-y: auto;
@@ -1122,6 +1118,7 @@ nav {
     border: none;
     border-radius: 16px;
     box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+    margin: 5px 0;
 }
 
 .chart-card {
