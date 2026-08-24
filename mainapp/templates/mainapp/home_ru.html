@@ -22,15 +22,17 @@
                         <div class="row justify-content-center">
                             <div class="col-md-10 text-center">
                                 <div class="survey-carousel-card">
-                                    <h1>{{ survey.title_ru }}</h1>
+                                    <div class="general-survey-content justify-content-center">
+                                        <h1>{{ survey.title_ru }}</h1>
+                                        {% if survey.description_ru %}
+                                        <p>{{ survey.description_ru }}</p>
+                                        {% endif %}
 
-                                    {% if survey.description_ru %}
-                                    <p>{{ survey.description_ru }}</p>
-                                    {% endif %}
-
-                                    <a href="{% url 'survey_ru' survey.id %}" class="btn-get-started">
-                                        Начинать
-                                    </a>
+                                        <a href="{% url 'survey_ru' survey.id %}"
+                                           class="btn-get-started">
+                                            Начинать
+                                        </a>
+                                    </div>
                                 </div>
                             </div>
                         </div>

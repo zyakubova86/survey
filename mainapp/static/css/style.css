@@ -606,6 +606,309 @@ svg #file_icon svg {
     background: #0741a0;
 }
 
+#surveyCarousel {
+    width: 100%;
+}
+
+#surveyCarousel .carousel-inner {
+    overflow: hidden;
+
+}
+
+#surveyCarousel .carousel-item {
+    width: 100%;
+
+}
+
+.survey-slide-wrapper {
+    width: 100%;
+    min-height: calc(100vh - 80px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.survey-carousel-card {
+    position: relative;
+    width: 100%;
+    max-height: calc(100vh - 80px);
+    border-radius: 16px;
+    overflow: hidden;
+    min-height: 0;
+}
+
+.product-survey-image {
+    display: block;
+    width: 100%;
+    height: auto;
+}
+
+#hero {
+    overflow: hidden;
+}
+
+.carousel-control-next, .carousel-control-prev {
+    opacity: 100;
+    width: 5%;
+}
+
+.product-survey-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+            to bottom,
+            rgba(0, 0, 0, 0) 45%,
+            rgba(255, 255, 255, 0.15) 60%,
+            rgba(131 131 131 / 0.85) 100%
+    );
+    pointer-events: none;
+}
+
+.product-survey-content {
+    position: absolute;
+    bottom: 0;
+    z-index: 2;
+    padding: 25px 30px 25px;
+    width: 100%;
+    justify-content: center;
+}
+
+.general-survey-content {
+    padding: 25px 30px 25px;
+}
+
+.product-survey-row {
+    display: flex;
+    align-items: center;
+    gap: clamp(6px, 1vw, 20px);
+    width: 100%;
+    justify-content: center;
+}
+
+.product-question {
+    flex: 0 0 auto;
+    color: #0741a0;
+    font-size: clamp(13px, 1.7vw, 18px);
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.product-options {
+    display: flex;
+    align-items: center;
+    min-width: 0;
+    justify-content: center;
+    gap: clamp(5px, 1vw, 15px);
+}
+
+.product-option {
+    display: flex;
+    align-items: center;
+    gap: clamp(4px, .7vw, 8px);
+    padding: clamp(6px, .8vw, 9px) clamp(8px, 1vw, 14px);
+    font-size: clamp(12px, 1.4vw, 16px);
+    margin: 0;
+    border: 1px solid rgba(255, 255, 255, 0.45);
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.90);
+    color: #212529;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: all .2s ease;
+}
+
+.product-option:hover {
+    background: #fff;
+    transform: translateY(-1px);
+}
+
+.product-option input {
+    accent-color: #0d6efd;
+
+    flex: 0 0 auto;
+    margin: 0; /
+width: clamp(13px, 1.5vw, 16px);
+    height: clamp(13px, 1.5vw, 16px);
+}
+
+
+.product-option:has(input:checked) {
+    background: #0d6efd;
+    border-color: #0d6efd;
+    color: #fff;
+}
+
+.product-submit {
+    flex: 0 0 auto;
+}
+
+.product-submit .btn {
+    white-space: nowrap;
+
+    font-size: clamp(13px, 1.5vw, 16px);
+    padding: clamp(6px, .8vw, 9px) clamp(10px, 1.2vw, 16px);
+    background: #0741a0;
+}
+
+.product-option, .product-submit .btn {
+    animation-delay: 0.10s;
+    animation: border-blink 3s ease-in-out infinite;
+
+}
+
+.product-question {
+    padding: 0 15px;
+    animation-delay: 0.02s;
+    animation: Pulse 3s ease-in-out infinite;
+}
+
+@keyframes Pulse {
+    0%, 100% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.50);
+    }
+}
+
+@keyframes border-blink {
+    0% {
+        border-color: #f8d5b2;
+        box-shadow: 0 0 10px #f8ddc3;
+    }
+    50% {
+        border-color: #f67642;
+        box-shadow: 0 0 20px #ca6d06;
+    }
+    100% {
+        border-color: #f8d5b2;
+        box-shadow: 0 0 10px #f8ddc3;
+    }
+}
+
+/*********** 360X 740 ***********/
+@media (max-width: 768px) {
+
+    .survey-carousel-card {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+        border-radius: 12px;
+        /*background: #fff;*/
+        opacity: 0.95;
+    }
+
+    .product-survey-overlay {
+        display: none;
+    }
+
+    .product-survey-content {
+        position: static;
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        padding: 20px 15px;
+        background: #fff;
+    }
+
+    .general-survey-content {
+        position: static;
+        display: block;
+        flex-direction: column;
+        width: 100%;
+        padding: 20px 15px;
+        background: #fff;
+    }
+
+    .product-survey-row {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        gap: 15px;
+    }
+
+    /* SAVOL */
+    .product-question {
+        width: 100%;
+        padding: 0;
+        text-align: center;
+        transform: none !important;
+        animation: none;
+    }
+
+    .product-question span {
+        display: block;
+        font-size: 20px;
+        font-weight: 600;
+        line-height: 1.4;
+        transform: none !important;
+        animation: none;
+    }
+
+    /* VARIANTLAR */
+    .product-options {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .product-option {
+        width: 100%;
+        margin: 0;
+        border: 2px solid #f8d5b2;
+        border-radius: 10px;
+        background: #fff;
+        text-align: center;
+        animation: none;
+    }
+
+    .product-option span {
+        font-size: 16px;
+        color: #222;
+    }
+
+    /* SUBMIT */
+    .product-submit {
+        width: 100%;
+        margin-top: 10px;
+    }
+
+    .product-submit .btn {
+        width: 100%;
+        animation: none;
+        font-size: 18px;
+        background: #f2791f;
+    }
+
+    /* Carousel arrows */
+    .carousel-control-prev,
+    .carousel-control-next {
+        width: 10%;
+    }
+
+    .hero h1 {
+        color: #000;
+        font-size: 30px;
+
+    }
+
+    .hero p {
+        color: #000;
+        font-size: 22px;
+        line-height: 1.5;
+    }
+
+    .hero .btn-get-started {
+        width: 100%;
+        color: #fff;
+        background: #8e8e8e;
+        font-size: 20px;
+    }
+}
+
 /****************** HOME CAROUSEL *******************/
 
 

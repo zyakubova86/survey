@@ -4,7 +4,7 @@
 
 
 {% block content %}
-<style>
+<!--<style>
 
     .product-option, .product-submit .btn {
         animation-delay: 0.10s;
@@ -40,7 +40,7 @@
             box-shadow: 0 0 10px #f8ddc3;
         }
     }
-</style>
+</style>-->
 
 {% include 'header.html' %}
 
@@ -58,14 +58,16 @@
                             <div class="row justify-content-center">
                                 <div class="col-md-10 text-center">
                                     <div class="survey-carousel-card">
-                                        <h1>{{ survey.title_uz }}</h1>
-                                        {% if survey.description_uz %}
-                                        <p>{{ survey.description_uz }}</p>
-                                        {% endif %}
-                                        <a href="{% url 'survey_uz' survey.id %}"
-                                           class="btn-get-started">
-                                            Бошлаш
-                                        </a>
+                                        <div class="general-survey-content justify-content-center">
+                                            <h1>{{ survey.title_uz }}</h1>
+                                            {% if survey.description_uz %}
+                                            <p>{{ survey.description_uz }}</p>
+                                            {% endif %}
+                                            <a href="{% url 'survey_uz' survey.id %}"
+                                               class="btn-get-started">
+                                                Бошлаш
+                                            </a>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
