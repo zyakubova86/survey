@@ -1095,6 +1095,14 @@ nav {
         bottom: 20px;
     }
 
+    .product-survey-row {
+        justify-content: center;
+    }
+
+    .product-survey-overlay {
+        display: none;
+    }
+
 }
 
 
