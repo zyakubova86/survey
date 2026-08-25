@@ -588,8 +588,8 @@ svg #file_icon svg {
 }
 
 .product-option:has(input:checked) {
-    background: #0d6efd;
-    border-color: #0d6efd;
+    /*background: #0d6efd;*/
+    border: #0d6efd;
     color: #fff;
 }
 
@@ -724,10 +724,9 @@ svg #file_icon svg {
 
 .product-option input {
     accent-color: #0d6efd;
-
     flex: 0 0 auto;
     margin: 0; /
-width: clamp(13px, 1.5vw, 16px);
+    width: clamp(13px, 1.5vw, 16px);
     height: clamp(13px, 1.5vw, 16px);
 }
 
@@ -818,8 +817,8 @@ width: clamp(13px, 1.5vw, 16px);
         display: block;
         flex-direction: column;
         width: 100%;
-        padding: 20px 15px;
-        background: #fff;
+        /*padding: 20px 15px;*/
+        /*background: #fff;*/
     }
 
     .product-survey-row {
@@ -890,22 +889,31 @@ width: clamp(13px, 1.5vw, 16px);
     }
 
     .hero h1 {
-        color: #000;
         font-size: 30px;
 
     }
 
     .hero p {
-        color: #000;
         font-size: 22px;
         line-height: 1.5;
     }
 
     .hero .btn-get-started {
-        width: 100%;
-        color: #fff;
-        background: #8e8e8e;
+        width: 80%;
         font-size: 20px;
+    }
+    .survey-filter {
+        padding-top: 2.5rem;
+    }
+
+    .product-option input {
+        accent-color: #e57536;
+    }
+
+    .product-option:has(input:checked) {
+        background: #f8d5b2;
+        border-color: #e57536;
+        color: #fff;
     }
 }
 /****************** HOME CAROUSEL *******************/
@@ -1017,6 +1025,12 @@ nav {
 #topnav a.active {
     color: #c89b71;
 }
+
+.survey-filter {
+    padding-top: 1.5rem;
+    padding-bottom: 1.5rem;
+}
+
 
 @media (max-width: 576px) {
     #hamburger-btn {
