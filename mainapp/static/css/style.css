@@ -473,145 +473,6 @@ svg #file_icon svg {
 
 #surveyCarousel .carousel-inner {
     overflow: hidden;
-}
-
-#surveyCarousel .carousel-item {
-    width: 100%;
-}
-
-.carousel-control-next, .carousel-control-prev {
-    opacity: 100;
-    width: 5%;
-}
-
-.survey-slide-wrapper {
-    width: 100%;
-    min-height: calc(100vh - 80px);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.survey-carousel-card {
-    position: relative;
-    width: 100%;
-    max-height: calc(100vh - 80px);
-    border-radius: 16px;
-    overflow: hidden;
-    min-height: 0;
-}
-
-
-.product-survey-image {
-    display: block;
-    width: 100%;
-    height: auto;
-}
-
-#hero {
-    overflow: hidden;
-}
-
-.product-survey-overlay {
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(
-            to bottom,
-            rgba(0, 0, 0, 0) 45%,
-            rgba(255, 255, 255, 0.15) 60%,
-            rgba(131 131 131 / 0.85) 100%
-    );
-    pointer-events: none;
-}
-
-.product-survey-content {
-    position: absolute;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    z-index: 2;
-    padding: 25px 30px 25px;
-}
-
-.product-survey-row {
-    display: flex;
-    align-items: center;
-    gap: clamp(6px, 1vw, 20px);
-    width: 100%;
-}
-
-.product-question {
-    flex: 0 0 auto;
-    color: #0741a0;
-    font-size: clamp(13px, 1.7vw, 18px);
-    font-weight: 600;
-    white-space: nowrap;
-}
-
-.product-options {
-    display: flex;
-    align-items: center;
-    flex: 1 1 auto;
-    min-width: 0;
-    justify-content: flex-start;
-    gap: clamp(5px, 1vw, 15px);
-}
-
-.product-option {
-    display: flex;
-    align-items: center;
-    gap: clamp(4px, .7vw, 8px);
-    padding: clamp(6px, .8vw, 9px) clamp(8px, 1vw, 14px);
-    font-size: clamp(12px, 1.4vw, 16px);
-    margin: 0;
-    border: 1px solid rgba(255, 255, 255, 0.45);
-    border-radius: 8px;
-    background: rgba(255, 255, 255, 0.90);
-    color: #212529;
-    cursor: pointer;
-    white-space: nowrap;
-    transition: all .2s ease;
-}
-
-.product-option:hover {
-    background: #fff;
-    transform: translateY(-1px);
-}
-
-.product-option input {
-    accent-color: #0d6efd;
-
-    flex: 0 0 auto;
-    margin: 0;
-    width: clamp(13px, 1.5vw, 16px);
-    height: clamp(13px, 1.5vw, 16px);
-}
-
-.product-option:has(input:checked) {
-    /*background: #0d6efd;*/
-    border: #0d6efd;
-    color: #fff;
-}
-
-.product-submit {
-    flex: 0 0 auto;
-}
-
-.product-submit .btn {
-    white-space: nowrap;
-
-    font-size: clamp(13px, 1.5vw, 16px);
-    padding: clamp(6px, .8vw, 9px) clamp(10px, 1.2vw, 16px);
-
-    background: #0741a0;
-}
-
-#surveyCarousel {
-    width: 100%;
-}
-
-#surveyCarousel .carousel-inner {
-    overflow: hidden;
 
 }
 
@@ -682,7 +543,7 @@ svg #file_icon svg {
     align-items: center;
     gap: clamp(6px, 1vw, 20px);
     width: 100%;
-    justify-content: center;
+    /*justify-content: center;*/
 }
 
 .product-question {
@@ -723,7 +584,7 @@ svg #file_icon svg {
 }
 
 .product-option input {
-    accent-color: #0d6efd;
+    accent-color: #0741a0;
     flex: 0 0 auto;
     margin: 0; /
     width: clamp(13px, 1.5vw, 16px);
@@ -732,8 +593,8 @@ svg #file_icon svg {
 
 
 .product-option:has(input:checked) {
-    background: #0d6efd;
-    border-color: #0d6efd;
+    background: #0741a0;
+    border-color: #0741a0;
     color: #fff;
 }
 
@@ -817,7 +678,7 @@ svg #file_icon svg {
         display: block;
         flex-direction: column;
         width: 100%;
-        /*padding: 20px 15px;*/
+        padding: 20px 15px;
         /*background: #fff;*/
     }
 
@@ -857,7 +718,7 @@ svg #file_icon svg {
     .product-option {
         width: 100%;
         margin: 0;
-        border: 2px solid #f8d5b2;
+        border: 1px solid #f8d5b2;
         border-radius: 10px;
         background: #fff;
         text-align: center;
@@ -1067,6 +928,34 @@ nav {
         background: #0942c3;
         color: #fff;
         margin: 0;
+    }
+
+    .carousel-control-next {
+        right: -24px;
+    }
+
+    .carousel-control-prev {
+        left: -24px;
+    }
+}
+
+@media (max-width: 400px) {
+    .hero h1 {
+        font-size: 26px;
+
+    }
+    .hero p {
+        font-size: 18px;
+    }
+    .hero .btn-get-started {
+        font-size: 20px;
+    }
+
+    .carousel-control-next {
+        right: -19px;
+    }
+    .carousel-control-prev {
+        left: -19px;
     }
 }
 /************** END HAMBURGER-BTN **************/
