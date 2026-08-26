@@ -23,6 +23,8 @@
 
         <div id="topnav" class="d-flex align-items-center gap-4 ms-auto topnav">
             {% if user.is_authenticated %}
+            <a href="{% url 'dashboard' %}" class="nav-link text-decoration-none">Dashboard</a>
+
             <span class="">
                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
                      class="bi bi-person" viewBox="0 0 20 20">
@@ -30,7 +32,7 @@
                 </svg>
                 {{ user.username }}
             </span>
-            <a href="{% url 'dashboard' %}" class="nav-link text-decoration-none">Dashboard</a>
+
             {% endif %}
 
 

@@ -23,6 +23,12 @@
         </button>
 
         <div id="topnav" class="d-flex align-items-center ms-auto gap-4 px-3 topnav">
+
+
+            <a href="{% url 'home_uz' %}" class="nav-link text-decoration-none">Сайт</a>
+            <a href="{% url 'dash_answers' %}" class="nav-link text-decoration-none">Ответы</a>
+            <a href="{% url 'dashboard' %}" class="nav-link text-decoration-none">Dashboard</a>
+
             <span class="">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                      class="bi bi-person" viewBox="0 0 16 16">
@@ -30,10 +36,6 @@
                 </svg>
                 {{ user.username }}
             </span>
-
-            <a href="{% url 'home_uz' %}" class="nav-link text-decoration-none">Сайт</a>
-            <a href="{% url 'dash_answers' %}" class="nav-link text-decoration-none">Ответы</a>
-            <a href="{% url 'dashboard' %}" class="nav-link text-decoration-none">Dashboard</a>
         </div>
 
         {% endif %}
